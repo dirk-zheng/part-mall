@@ -49,7 +49,7 @@ const values = [
 ];
 
 const centers = [
-  { name: 'Guangzhou Sourcing Center', address: 'Suite 2801, CITIC Plaza, Tianhe District, Guangzhou', role: 'Supplier Management · RFQ Processing · Order Management', icon: Search },
+  { name: 'Guangzhou Sourcing Center', address: 'Building A, Guangzhou Science City, Huangpu District, Guangzhou', role: 'Supplier Management · RFQ Processing · Order Management', icon: Search },
   { name: 'Panyu Inspection Center', address: 'Building 5, Huachuang Industrial Park, Panyu District, Guangzhou', role: 'Incoming Inspection · In-Process Audit · Pre-Shipment QC', icon: ShieldCheck },
   { name: 'Nansha Logistics Hub', address: 'Warehouse Zone A, Nansha Port Logistics Park, Guangzhou', role: 'Consolidation · Customs Clearance · Container Loading', icon: Truck },
 ];
@@ -98,7 +98,7 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>
-                  It started in a small office in Yuexiu, Guangzhou in 2014. Our founder, David Chen,
+                  It started in a small office in Tianhe Gangding, Guangzhou in 2014. Our founder, David Chen,
                   saw firsthand how overseas buyers struggled to navigate Guangdong's fragmented auto parts
                   supply chain — language barriers, unreliable quality, and opaque pricing were constant headaches.
                   He envisioned a company that could bridge this gap: a distributor that vets suppliers, inspects
@@ -265,7 +265,7 @@ export default function About() {
               
               <div className="mt-6 flex items-center justify-center gap-2 text-blue-200/60 text-sm">
                 <MapPin size={14} />
-                <span>Suite 2801, CITIC Plaza, Tianhe, Guangzhou, China</span>
+                <span>Building A, Guangzhou Science City, Huangpu, Guangzhou, China</span>
               </div>
             </div>
           </div>

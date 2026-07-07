@@ -44,7 +44,7 @@ const stats = [
 ];
 
 const milestones = [
-  { year: '2014', title: 'Founded in Guangzhou', desc: 'Started as a trading office in Yuexiu, connecting overseas buyers with Guangdong\'s booming auto parts manufacturers.' },
+  { year: '2014', title: 'Founded in Guangzhou', desc: 'Started as a trading office in Tianhe Gangding, connecting overseas buyers with Guangdong\'s booming auto parts manufacturers.' },
   { year: '2016', title: 'First Major Contract', desc: 'Secured a long-term distribution contract with a European aftermarket chain — our first milestone in becoming a trusted supply partner.' },
   { year: '2018', title: 'QC Center Established', desc: 'Opened our dedicated quality inspection center in Panyu with in-house testing equipment for electronics, lighting, and body parts.' },
   { year: '2020', title: 'Supplier Network Expansion', desc: 'Grew to 150+ vetted suppliers across the Pearl River Delta, covering electronics, lighting, interior, and chassis categories.' },

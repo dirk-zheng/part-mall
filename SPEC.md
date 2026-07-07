@@ -116,7 +116,7 @@ HomePage
 ├── Milestones Timeline
 │   ├── 标题 "Our Journey"
 │   ├── 6 个里程碑节点（2014–2024）
-│   │   ├── 2014: Founded in Guangzhou（越秀起步）
+│   │   ├── 2014: Founded in Guangzhou（天河岗顶起步）
 │   │   ├── 2016: First Major Contract（首个大单）
 │   │   ├── 2018: QC Center Established（质检中心成立）
 │   │   ├── 2020: Supplier Network Expansion（供应商网络扩张）
@@ -262,7 +262,7 @@ About
 │   └── 采购中心照片
 ├── Operations Centers
 │   ├── 3 个运营中心卡片
-│   │   ├── Guangzhou Sourcing Center（天河采购中心）
+│   │   ├── Guangzhou Sourcing Center（黄埔采购中心）
 │   │   ├── Panyu Inspection Center（番禺质检中心）
 │   │   └── Nansha Logistics Hub（南沙物流枢纽）
 │   └── 悬停上浮动画
@@ -280,7 +280,7 @@ About
 └── Contact CTA
     ├── 邮箱: info@driveline-global.com
     ├── 电话: +86-20-8888-6688
-    └── 地址：广州市天河区中信广场
+    └── 地址：广州市黄埔区广州科学城
 ```
 
 ## 5. 组件清单
