@@ -50,11 +50,11 @@ export default function FloatingSupport({ isOpen, onClose }) {
     setIsTyping(true);
 
     try {
-      const res = await supportAPI.chat(inputValue.trim());
+      const data = await supportAPI.chat(inputValue.trim());
       const aiMsg = {
         id: (Date.now() + 1).toString(),
         sender: 'ai',
-        content: res.data.aiReply,
+        content: data.aiReply,
         timestamp: new Date()
       };
       dispatch({ type: 'ADD_MESSAGE', payload: aiMsg });

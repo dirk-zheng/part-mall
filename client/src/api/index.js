@@ -1,139 +1,74 @@
 /**
- * API 服务层 - 与数码商城后端对接
- * 
- * 使用方式：当后端服务运行后，前端可通过此模块调用后端 API。
- * 当前前端使用 Context + localStorage 做本地状态管理，
- * 如需切换为后端模式，只需修改 Context 中的 dispatch 逻辑调用此模块即可。
+ * API 服务层 — 基于 WebSocket 通信
+ *
+ * 所有 API 调用通过 WebSocket 持久连接发送，支持请求-响应与实时推送。
  */
 
-// 开发模式下 Vite proxy 会将 /api 代理到后端，生产部署时可改为实际地址
-const API_BASE = '/api';
-
-// 通用请求方法
-async function request(url, options = {}) {
-  const token = JSON.parse(localStorage.getItem('mall_user') || '{}')?.token;
-  
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...options.headers
-    },
-    ...options
-  };
-
-  const response = await fetch(`${API_BASE}${url}`, config);
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || '请求失败');
-  }
-
-  return data;
-}
+import wsClient from './ws';
 
 // ─── 认证 API ─────────────────────────────────────
 
 export const authAPI = {
-  /** 登录 */
   login: (username, password) =>
-    request('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ username, password })
-    }),
+    wsClient.send('auth.login', { username, password }),
 
-  /** 注册 */
   register: (username, password, name) =>
-    request('/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({ username, password, name })
-    }),
+    wsClient.send('auth.register', { username, password, name }),
 
-  /** 获取当前登录用户 */
-  getMe: () => request('/auth/me')
+  getMe: () =>
+    wsClient.send('auth.me'),
 };
 
 // ─── 商品 API ─────────────────────────────────────
 
 export const productAPI = {
-  /** 获取商品列表（支持搜索、分类、排序、分页） */
-  getList: (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    return request(`/products${query ? '?' + query : ''}`);
-  },
+  getList: (params = {}) =>
+    wsClient.send('products.list', params),
 
-  /** 获取分类统计 */
-  getCategories: () => request('/products/categories'),
+  getCategories: () =>
+    wsClient.send('products.categories'),
 
-  /** 获取单个商品 */
-  getById: (id) => request(`/products/${id}`),
+  getById: (id) =>
+    wsClient.send('products.get', { id }),
 
-  /** 添加商品（管理员） */
   create: (product) =>
-    request('/products', {
-      method: 'POST',
-      body: JSON.stringify(product)
-    }),
+    wsClient.send('products.create', product),
 
-  /** 更新商品（管理员） */
   update: (id, product) =>
-    request(`/products/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(product)
-    }),
+    wsClient.send('products.update', { id, ...product }),
 
-  /** 删除商品（管理员） */
   delete: (id) =>
-    request(`/products/${id}`, {
-      method: 'DELETE'
-    })
+    wsClient.send('products.delete', { id }),
 };
 
 // ─── 购物车 API ──────────────────────────────────
 
 export const cartAPI = {
-  /** 获取购物车 */
-  getList: () => request('/cart'),
+  getList: () =>
+    wsClient.send('cart.get'),
 
-  /** 添加商品到购物车 */
   add: (productId, quantity = 1) =>
-    request('/cart', {
-      method: 'POST',
-      body: JSON.stringify({ productId, quantity })
-    }),
+    wsClient.send('cart.add', { productId, quantity }),
 
-  /** 更新购物车商品数量 */
   updateQuantity: (productId, quantity) =>
-    request(`/cart/${productId}`, {
-      method: 'PUT',
-      body: JSON.stringify({ quantity })
-    }),
+    wsClient.send('cart.update', { productId, quantity }),
 
-  /** 从购物车移除商品 */
   remove: (productId) =>
-    request(`/cart/${productId}`, {
-      method: 'DELETE'
-    }),
+    wsClient.send('cart.remove', { productId }),
 
-  /** 清空购物车 */
   clear: () =>
-    request('/cart', {
-      method: 'DELETE'
-    })
+    wsClient.send('cart.clear'),
 };
 
 // ─── 客服 API ─────────────────────────────────────
 
 export const supportAPI = {
-  /** 发送消息获取 AI 回复 */
   chat: (message) =>
-    request('/support/chat', {
-      method: 'POST',
-      body: JSON.stringify({ message })
-    }),
+    wsClient.send('support.chat', { message }),
 
-  /** 获取常见问题 */
-  getFAQ: () => request('/support/faq')
+  getFAQ: () =>
+    wsClient.send('support.faq'),
 };
 
+export { wsClient };
 export default { authAPI, productAPI, cartAPI, supportAPI };

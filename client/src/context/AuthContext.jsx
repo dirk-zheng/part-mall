@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../api';
+import { authAPI, wsClient } from '../api';
 
 const AuthContext = createContext(null);
 
@@ -15,12 +15,13 @@ export function AuthProvider({ children }) {
         const parsed = JSON.parse(saved);
         if (parsed.token) {
           setUser(parsed);
-          // 可选：验证 token 是否仍然有效
-          authAPI.getMe().then(res => {
-            setUser({ ...res.data.user, token: parsed.token });
+          // 验证 token 是否仍然有效
+          authAPI.getMe().then(userData => {
+            setUser({ ...userData, token: parsed.token });
           }).catch(() => {
             // token 失效，清除登录状态
             localStorage.removeItem('mall_user');
+            wsClient.setToken(null);
             setUser(null);
           });
         } else {
@@ -36,18 +37,20 @@ export function AuthProvider({ children }) {
   // 登录函数
   const login = async (username, password) => {
     const res = await authAPI.login(username, password);
-    const userData = { ...res.data.user, token: res.data.token };
+    const userData = { ...res.user, token: res.token };
     setUser(userData);
     localStorage.setItem('mall_user', JSON.stringify(userData));
+    wsClient.setToken(res.token);
     return userData;
   };
 
   // 注册函数
   const register = async (username, password, name) => {
     const res = await authAPI.register(username, password, name);
-    const userData = { ...res.data.user, token: res.data.token };
+    const userData = { ...res.user, token: res.token };
     setUser(userData);
     localStorage.setItem('mall_user', JSON.stringify(userData));
+    wsClient.setToken(res.token);
     return userData;
   };
 
@@ -55,6 +58,7 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('mall_user');
+    wsClient.disconnect();
   };
 
   // 检查是否为管理员

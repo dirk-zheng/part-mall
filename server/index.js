@@ -1,10 +1,12 @@
 require('dotenv').config();
 
+const http = require('http');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const createWSServer = require('./websocket');
 
-// Route modules
+// Route modules (kept for backward compatibility / health check)
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
@@ -57,31 +59,17 @@ app.use((err, req, res, next) => {
 
 // ─── Start Server ────────────────────────────────
 const displayHost = HOST === '0.0.0.0' ? 'localhost' : HOST;
-app.listen(PORT, HOST, () => {
+const server = http.createServer(app);
+
+// Attach WebSocket server
+createWSServer(server);
+
+server.listen(PORT, HOST, () => {
   console.log('╔══════════════════════════════════════════╗');
   console.log('║     DriveLine International                ║');
   console.log('║     Auto Parts Sourcing & Distribution   ║');
-  console.log(`║   Address:  http://${HOST}:${PORT}                    ║`);
-  console.log(`║   Local:    http://${displayHost}:${PORT}                    ║`);
-  console.log(`║   Mode:     ${ENV}                  ║`);
+  console.log(`║   HTTP:   http://${displayHost}:${PORT}                    ║`);
+  console.log(`║   WS:     ws://${displayHost}:${PORT}/ws                    ║`);
+  console.log(`║   Mode:   ${ENV}                  ║`);
   console.log('╚══════════════════════════════════════════╝');
-  console.log('');
-  console.log('API Endpoints:');
-  console.log(`  POST   /api/auth/login          - User login`);
-  console.log(`  POST   /api/auth/register       - User registration`);
-  console.log(`  GET    /api/auth/me             - Current user info`);
-  console.log(`  GET    /api/products            - Product list`);
-  console.log(`  GET    /api/products/categories - Category stats`);
-  console.log(`  GET    /api/products/:id        - Product details`);
-  console.log(`  POST   /api/products            - Add product (admin)`);
-  console.log(`  PUT    /api/products/:id        - Update product (admin)`);
-  console.log(`  DELETE /api/products/:id        - Delete product (admin)`);
-  console.log(`  GET    /api/cart                - Cart list`);
-  console.log(`  POST   /api/cart                - Add to cart`);
-  console.log(`  PUT    /api/cart/:productId     - Update quantity`);
-  console.log(`  DELETE /api/cart/:productId     - Remove from cart`);
-  console.log(`  DELETE /api/cart                - Clear cart`);
-  console.log(`  POST   /api/support/chat        - AI support chat`);
-  console.log(`  GET    /api/support/faq         - FAQ list`);
-  console.log(`  GET    /api/health              - Health check`);
 });

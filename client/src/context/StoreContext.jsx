@@ -44,8 +44,8 @@ export function StoreProvider({ children }) {
   const loadProducts = useCallback(async () => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
-      const res = await productAPI.getList({ pageSize: 100 });
-      dispatch({ type: 'SET_PRODUCTS', payload: res.data.list });
+      const data = await productAPI.getList({ pageSize: 100 });
+      dispatch({ type: 'SET_PRODUCTS', payload: data.list });
     } catch (err) {
       console.error('加载商品失败:', err);
       dispatch({ type: 'SET_LOADING', payload: false });
@@ -55,8 +55,8 @@ export function StoreProvider({ children }) {
   // 加载购物车
   const loadCart = useCallback(async () => {
     try {
-      const res = await cartAPI.getList();
-      dispatch({ type: 'SET_CART', payload: res.data.items });
+      const data = await cartAPI.getList();
+      dispatch({ type: 'SET_CART', payload: data.items });
     } catch (err) {
       console.error('加载购物车失败:', err);
     }
