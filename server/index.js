@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -9,7 +11,11 @@ const cartRoutes = require('./routes/cart');
 const supportRoutes = require('./routes/support');
 
 const app = express();
+
+// ─── Config ──────────────────────────────────────
+const HOST = process.env.HOST || '0.0.0.0';
 const PORT = process.env.PORT || 3001;
+const ENV = process.env.NODE_ENV || 'development';
 
 // ─── Middleware ──────────────────────────────────
 app.use(cors());
@@ -50,11 +56,13 @@ app.use((err, req, res, next) => {
 });
 
 // ─── Start Server ────────────────────────────────
-app.listen(PORT, () => {
+const displayHost = HOST === '0.0.0.0' ? 'localhost' : HOST;
+app.listen(PORT, HOST, () => {
   console.log('╔══════════════════════════════════════════╗');
   console.log('║   Atlas Bridge International API Server  ║');
-  console.log(`║   Running at: http://localhost:${PORT}        ║`);
-  console.log('║   Environment: development              ║');
+  console.log(`║   Address:  http://${HOST}:${PORT}                    ║`);
+  console.log(`║   Local:    http://${displayHost}:${PORT}                    ║`);
+  console.log(`║   Mode:     ${ENV}                  ║`);
   console.log('╚══════════════════════════════════════════╝');
   console.log('');
   console.log('API Endpoints:');
