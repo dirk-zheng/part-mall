@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { 
-  ArrowRight, Shield, Zap, Users, Globe, Award, ChevronRight, 
-  Smartphone, Laptop, Cable, Watch, Headphones, TrendingUp, Package, Ship, Handshake
+  ArrowRight, Shield, Zap, Users, Search, Award, ChevronRight, 
+  Smartphone, Car, Cable, Watch, Headphones, Package, Cog, Truck
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 
 const CategoryIcons = {
   phone: Smartphone,
-  computer: Laptop,
+  computer: Car,
   accessory: Cable,
   wearable: Watch,
   audio: Headphones,
@@ -15,58 +15,58 @@ const CategoryIcons = {
 
 const features = [
   {
-    icon: Globe,
-    title: 'Global Sourcing',
-    description: 'Access premium suppliers across 50+ countries. We source the best products at competitive prices through our extensive network.'
-  },
-  {
-    icon: Ship,
-    title: 'End-to-End Logistics',
-    description: 'From factory to destination, we handle shipping, customs clearance, warehousing, and last-mile delivery seamlessly.'
+    icon: Search,
+    title: 'Extensive Supplier Network',
+    description: 'Deep connections across the Pearl River Delta automotive supply chain. We source from 200+ vetted factories — the right part at the right price, every time.'
   },
   {
     icon: Shield,
-    title: 'Quality Assurance',
-    description: 'Rigorous quality control at every stage. ISO 9001 certified inspection processes ensure every shipment meets international standards.'
+    title: 'Rigorous Quality Inspection',
+    description: 'Multi-point inspection at source, during transit, and pre-shipment. IATF 16949-aligned QC protocols for automotive-grade reliability.'
   },
   {
-    icon: Handshake,
-    title: 'Trusted Partnership',
-    description: '10,000+ satisfied clients worldwide trust us for reliable supply chain management and long-term business relationships.'
+    icon: Truck,
+    title: 'Fast Global Distribution',
+    description: 'Integrated logistics with sea, air, and express options. 48-hour dispatch from our Guangzhou consolidation center to ports worldwide.'
+  },
+  {
+    icon: Cog,
+    title: 'Industry Expertise',
+    description: 'A team with deep automotive domain knowledge — from OEM specs to aftermarket trends. We speak your language, technically and commercially.'
   },
 ];
 
 const stats = [
-  { value: '50+', label: 'Countries Served' },
-  { value: '10K+', label: 'Happy Clients' },
-  { value: '5M+', label: 'Products Shipped' },
-  { value: '99.7%', label: 'On-Time Delivery' },
+  { value: '10+ Years', label: 'Industry Experience' },
+  { value: '200+', label: 'Vetted Suppliers' },
+  { value: '50+', label: 'Export Countries' },
+  { value: '5,000+', label: 'Parts SKUs' },
 ];
 
 const milestones = [
-  { year: '2012', title: 'Company Founded', desc: 'Atlas Bridge was established in Shenzhen with a vision to connect global markets through efficient trade solutions.' },
-  { year: '2014', title: 'First Major Contract', desc: 'Secured partnership with top European retailers, expanding our supply chain across 12 countries.' },
-  { year: '2016', title: 'Warehouse Expansion', desc: 'Opened distribution centers in Rotterdam, Los Angeles, and Dubai, tripling our logistics capacity.' },
-  { year: '2018', title: 'Digital Platform Launch', desc: 'Launched our proprietary B2B trading platform, enabling real-time order tracking and supplier management.' },
-  { year: '2020', title: 'Global Resilience', desc: 'Navigated global supply chain challenges, maintaining 98% fulfillment rate while expanding to new markets.' },
-  { year: '2024', title: 'Industry Leadership', desc: 'Recognized as a Top 50 Global Trading Company with annual revenue exceeding $2 billion.' },
+  { year: '2014', title: 'Founded in Guangzhou', desc: 'Started as a trading office in Yuexiu, connecting overseas buyers with Guangdong\'s booming auto parts manufacturers.' },
+  { year: '2016', title: 'First Major Contract', desc: 'Secured a long-term distribution contract with a European aftermarket chain — our first milestone in becoming a trusted supply partner.' },
+  { year: '2018', title: 'QC Center Established', desc: 'Opened our dedicated quality inspection center in Panyu with in-house testing equipment for electronics, lighting, and body parts.' },
+  { year: '2020', title: 'Supplier Network Expansion', desc: 'Grew to 150+ vetted suppliers across the Pearl River Delta, covering electronics, lighting, interior, and chassis categories.' },
+  { year: '2022', title: 'Digital Procurement Platform', desc: 'Launched our online B2B catalog with real-time inventory, transparent pricing, and end-to-end order tracking for global buyers.' },
+  { year: '2024', title: '200+ Suppliers, 50+ Countries', desc: 'Reached 200+ qualified suppliers and export coverage across 50+ countries — our global distribution network continues to grow.' },
 ];
 
 const services = [
   {
-    icon: Package,
-    title: 'Product Sourcing',
-    desc: 'Find the right suppliers across Asia, Europe, and the Americas. We negotiate the best terms on your behalf.'
+    icon: Search,
+    title: 'Auto Parts Sourcing',
+    desc: 'Find the exact OEM, aftermarket, or performance parts you need. We leverage our 200+ supplier network across Guangdong to deliver competitive quotes within 48 hours.'
   },
   {
-    icon: Ship,
-    title: 'Shipping & Logistics',
-    desc: 'Air, sea, and rail freight solutions tailored to your timeline and budget. Full customs documentation included.'
+    icon: Shield,
+    title: 'Quality Inspection',
+    desc: 'In-house QC team with automotive-grade inspection protocols. Every shipment is verified before it leaves Guangzhou — reducing your defect risk to near zero.'
   },
   {
-    icon: TrendingUp,
-    title: 'Market Intelligence',
-    desc: 'Data-driven insights on pricing trends, demand forecasting, and competitive analysis to guide your purchasing decisions.'
+    icon: Truck,
+    title: 'Global Distribution',
+    desc: 'End-to-end logistics management: consolidation, customs documentation, freight booking, and shipment tracking. From our warehouse to your doorstep.'
   },
 ];
 
@@ -83,19 +83,19 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-sm mb-8">
-              <Award size={16} className="text-blue-400" />
-              <span className="text-sm text-blue-200">Global Sourcing · Supply Chain · Trade Solutions</span>
+              <Car size={16} className="text-blue-400" />
+              <span className="text-sm text-blue-200">Guangzhou · Auto Parts Sourcing · Global Distribution</span>
             </div>
             
             <h1 className="font-heading text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Bridging Markets<br />
+              Quality Auto Parts<br />
               <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                Delivering Excellence
+                from Guangzhou to the World
               </span>
             </h1>
             
             <p className="text-lg md:text-xl text-blue-100/80 mb-10 leading-relaxed max-w-2xl">
-              Atlas Bridge International — Your trusted partner in global trade. We source, ship, and deliver quality products across borders with unmatched reliability.
+              DriveLine International — your trusted automotive parts distributor rooted in Guangzhou, China's largest auto manufacturing hub. We source, inspect, and deliver quality parts to buyers worldwide.
             </p>
             
             <div className="flex flex-wrap gap-4">
@@ -103,14 +103,14 @@ export default function HomePage() {
                 to="/products"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
               >
-                View Products
+                Browse Parts Catalog
                 <ArrowRight size={20} />
               </Link>
               <Link
                 to="/about"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white/10 border border-white/10 text-white font-semibold hover:bg-white/20 transition-all backdrop-blur-sm"
               >
-                About Us
+                About Our Company
                 <ChevronRight size={20} />
               </Link>
             </div>
@@ -148,7 +148,7 @@ export default function HomePage() {
               Our <span className="text-primary">Services</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              Comprehensive trade solutions tailored to your business needs
+              End-to-end auto parts distribution from our Guangzhou hub
             </p>
           </div>
           
@@ -178,10 +178,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Why Choose <span className="text-primary">Atlas Bridge</span>
+              Why <span className="text-primary">DriveLine</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              We deliver value through expertise, reliability, and a global network built over a decade
+              A decade of automotive supply chain expertise, grounded in Guangzhou's industrial ecosystem
             </p>
           </div>
           
@@ -212,22 +212,22 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
             <div>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-                Featured Products
+                Featured Auto Parts
               </h2>
-              <p className="text-slate-500 text-lg">Explore our extensive product catalog</p>
+              <p className="text-slate-500 text-lg">Quality automotive parts sourced from our supplier network</p>
             </div>
             <Link 
               to="/products"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white hover:opacity-90 transition-all font-medium"
             >
-              View All Products
+              View All Parts
               <ArrowRight size={18} />
             </Link>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {state.products.slice(0, 8).map((product) => {
-              const Icon = CategoryIcons[product.category] || Smartphone;
+              const Icon = CategoryIcons[product.category] || Cog;
               return (
                 <Link
                   key={product.id}
@@ -275,7 +275,7 @@ export default function HomePage() {
               Our Journey
             </h2>
             <p className="text-blue-200/80 text-lg max-w-2xl mx-auto">
-              From a small trading desk to a global supply chain leader
+              From a small trading office to a trusted global auto parts distributor
             </p>
           </div>
           
@@ -316,23 +316,23 @@ export default function HomePage() {
       <section className="py-20 bg-slate-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Ready to Grow Your Business?
+            Ready to Source Quality Auto Parts?
           </h2>
           <p className="text-slate-500 text-lg mb-10 max-w-2xl mx-auto">
-            Whether you're sourcing products or expanding into new markets, Atlas Bridge has the expertise and network to make it happen.
+            From OEM components to aftermarket accessories, we find the right parts at the right price. Partner with DriveLine for reliable automotive supply chain solutions.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
               to="/products"
               className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/25"
             >
-              Browse Products
+              Browse Parts Catalog
             </Link>
             <Link
               to="/about"
               className="px-8 py-4 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold hover:border-primary/30 hover:text-primary transition-all"
             >
-              Learn More
+              Learn More About Us
             </Link>
           </div>
         </div>

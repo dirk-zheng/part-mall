@@ -23,7 +23,7 @@ export default function FloatingSupport({ isOpen, onClose }) {
         const welcomeMsg = {
           id: 'welcome',
           sender: 'ai',
-          content: 'Hello! Welcome to Atlas Bridge International. I am your dedicated support assistant. How can I help you today?',
+          content: 'Hello! Welcome to DriveLine International. I am your dedicated support assistant. How can I help you today?',
           timestamp: new Date()
         };
         dispatch({ type: 'ADD_MESSAGE', payload: welcomeMsg });

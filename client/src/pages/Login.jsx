@@ -38,9 +38,9 @@ export default function Login() {
   };
 
   const features = [
-    { icon: Shield, text: 'Secure Transactions' },
-    { icon: Users, text: 'Trusted by 10,000+ Clients' },
-    { icon: Globe, text: 'Global Shipping Network' },
+    { icon: Shield, text: 'Vetted Supplier Network' },
+    { icon: Users, text: '200+ Quality Suppliers' },
+    { icon: Globe, text: 'Based in Guangzhou, China' },
   ];
 
   return (
@@ -56,23 +56,23 @@ export default function Login() {
         <div className="hidden lg:flex flex-col items-center lg:items-start max-w-md">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-xl shadow-primary/20">
-              <span className="text-white font-heading font-bold text-3xl">A</span>
+              <span className="text-white font-heading font-bold text-3xl">D</span>
             </div>
             <div>
-              <h1 className="font-heading text-3xl font-bold text-dark-900">Atlas Bridge</h1>
-              <p className="text-dark-500">International Trading</p>
+              <h1 className="font-heading text-3xl font-bold text-dark-900">DriveLine</h1>
+              <p className="text-dark-500">Auto Parts Distribution</p>
             </div>
           </div>
           
           <h2 className="text-4xl font-heading font-bold text-dark-900 mb-4 leading-tight">
             Welcome to<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-              Atlas Bridge
+              DriveLine
             </span>
           </h2>
           
           <p className="text-dark-500 mb-8">
-            Sign in to access your account, track orders, manage sourcing requests, and enjoy member benefits.
+            Sign in to browse our auto parts catalog, place wholesale orders, and access distributor pricing.
           </p>
 
           <div className="space-y-4">
@@ -102,7 +102,7 @@ export default function Login() {
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </h3>
               <p className="text-white/80 text-sm mt-1">
-                {isLogin ? 'Sign in to access your account' : 'Register to start sourcing products'}
+                {isLogin ? 'Sign in to your account' : 'Register to get distributor pricing'}
               </p>
             </div>
 

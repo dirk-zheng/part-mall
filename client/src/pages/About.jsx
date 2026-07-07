@@ -1,58 +1,57 @@
 import { 
-  Target, Eye, Heart, Users, MapPin, Mail, Phone, 
-  Linkedin, Github, Globe, Award, TrendingUp 
+  ShieldCheck, Truck, PackageCheck, Users, MapPin, 
+  Mail, Phone, Search, Globe, Cog 
 } from 'lucide-react';
 
 const teamMembers = [
   {
     name: 'David Chen',
-    role: 'Founder & CEO',
+    role: 'Founder & Managing Director',
     avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
-    bio: '20+ years in international trade, former VP at a Fortune 500 trading group'
+    bio: '20 years in automotive supply chain, formerly procurement director at a major auto parts trading group'
   },
   {
-    name: 'Sarah Mitchell',
-    role: 'Chief Operations Officer',
+    name: 'Sara Li',
+    role: 'Operations Director',
     avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
-    bio: 'Supply chain expert with deep experience across Asia-Pacific and European markets'
+    bio: '15 years in international trade and logistics, expert in Pearl River Delta automotive supply chain'
   },
   {
-    name: 'James Wilson',
-    role: 'VP of Global Sales',
+    name: 'James Zhang',
+    role: 'Sourcing Director',
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
-    bio: '15 years of B2B sales leadership across 6 continents, 200+ major accounts'
+    bio: 'Former GAC Group supply chain manager, deep relationships with 200+ auto parts manufacturers across Guangdong'
   },
   {
-    name: 'Emma Rodriguez',
-    role: 'Head of Quality Control',
+    name: 'Emma Lin',
+    role: 'Quality Manager',
     avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
-    bio: 'Certified quality management professional with ISO, CE, and FDA compliance expertise'
+    bio: 'Certified IATF 16949 auditor with over a decade of automotive parts quality inspection experience'
   },
 ];
 
 const values = [
   {
-    icon: Target,
-    title: 'Our Mission',
-    description: 'To bridge global markets by providing seamless, reliable, and cost-effective trade solutions. We empower businesses of all sizes to access international markets with confidence.'
+    icon: Search,
+    title: 'Vetted Supplier Network',
+    description: 'Rooted in Guangzhou, the heart of China\'s automotive industry. We curate 200+ manufacturers with proven quality records — every supplier is audited before you see their parts.'
   },
   {
-    icon: Eye,
-    title: 'Our Vision',
-    description: 'To become the world\'s most trusted trading partner — connecting suppliers and buyers across every continent through innovation, integrity, and excellence.'
+    icon: ShieldCheck,
+    title: 'Automotive-Grade Quality',
+    description: 'Our QC team follows IATF 16949-aligned protocols. Every shipment undergoes multi-point inspection — from source factory to our consolidation center to pre-shipment. Zero tolerance for substandard parts.'
   },
   {
-    icon: Heart,
-    title: 'Our Values',
-    description: 'Integrity in every deal. Excellence in every shipment. Partnership in every relationship. We believe long-term success comes from putting our clients first.'
+    icon: PackageCheck,
+    title: 'Reliable Distribution',
+    description: 'In-house logistics team managing consolidation, customs, and freight. Full tracking from Guangzhou to your destination with 99%+ on-time delivery rate.'
   },
 ];
 
-const offices = [
-  { city: 'Shenzhen', address: '15 Keyuan Road, Nanshan District, Shenzhen 518057, China', role: 'Global Headquarters · Sourcing Center' },
-  { city: 'Rotterdam', address: 'Wilhelminakade 123, 3072 AP Rotterdam, Netherlands', role: 'European Hub · Distribution Center' },
-  { city: 'Los Angeles', address: '555 W 5th Street, Los Angeles, CA 90013, USA', role: 'Americas HQ · West Coast Logistics' },
-  { city: 'Dubai', address: 'Jebel Ali Free Zone, Plot S-201, Dubai, UAE', role: 'MENA Regional Hub · Trade Finance' },
+const centers = [
+  { name: 'Guangzhou Sourcing Center', address: 'Suite 2801, CITIC Plaza, Tianhe District, Guangzhou', role: 'Supplier Management · RFQ Processing · Order Management', icon: Search },
+  { name: 'Panyu Inspection Center', address: 'Building 5, Huachuang Industrial Park, Panyu District, Guangzhou', role: 'Incoming Inspection · In-Process Audit · Pre-Shipment QC', icon: ShieldCheck },
+  { name: 'Nansha Logistics Hub', address: 'Warehouse Zone A, Nansha Port Logistics Park, Guangzhou', role: 'Consolidation · Customs Clearance · Container Loading', icon: Truck },
 ];
 
 export default function About() {
@@ -64,13 +63,28 @@ export default function About() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-28 text-center">
           <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6">
-            About <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">Atlas Bridge</span>
+            Your Auto Parts Partner<br className="md:hidden" />
+            <span className="bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent"> in Guangzhou</span>
           </h1>
           <p className="text-lg md:text-xl text-blue-100/80 max-w-3xl mx-auto leading-relaxed">
-            Founded in 2012, Atlas Bridge International is a leading global trading company specializing in 
-            product sourcing, supply chain management, and cross-border trade solutions. 
-            We connect manufacturers with buyers worldwide, delivering quality products with reliability and speed.
+            Rooted in Guangzhou, the largest automotive manufacturing hub in China. We source, inspect,
+            and distribute quality auto parts to buyers across 50+ countries.
           </p>
+          
+          <div className="flex flex-wrap justify-center gap-6 mt-10">
+            {[
+              { icon: Globe, value: '10+ Years', label: 'Industry Experience' },
+              { icon: Users, value: '200+', label: 'Vetted Suppliers' },
+              { icon: ShieldCheck, value: 'IATF 16949', label: 'QC Standard' },
+              { icon: Truck, value: '48H', label: 'Fast Dispatch' },
+            ].map((item) => (
+              <div key={item.label} className="bg-white/10 backdrop-blur rounded-2xl px-6 py-4 text-center min-w-[120px]">
+                <item.icon size={24} className="text-blue-400 mx-auto mb-2" />
+                <div className="font-heading text-xl font-bold">{item.value}</div>
+                <div className="text-xs text-blue-200/60">{item.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -84,52 +98,39 @@ export default function About() {
               </h2>
               <div className="space-y-4 text-slate-600 leading-relaxed">
                 <p>
-                  Atlas Bridge was born in a small office in Shenzhen, China's manufacturing powerhouse. 
-                  Our founder, David Chen, saw firsthand how small and medium businesses struggled to access 
-                  quality suppliers overseas. Language barriers, cultural differences, quality concerns, 
-                  and complex logistics stood in the way of great business opportunities.
+                  It started in a small office in Yuexiu, Guangzhou in 2014. Our founder, David Chen,
+                  saw firsthand how overseas buyers struggled to navigate Guangdong's fragmented auto parts
+                  supply chain — language barriers, unreliable quality, and opaque pricing were constant headaches.
+                  He envisioned a company that could bridge this gap: a distributor that vets suppliers, inspects
+                  parts, and manages logistics so buyers could focus on their business.
                 </p>
                 <p>
-                  Starting with just three clients and a deep knowledge of the electronics supply chain, 
-                  we built our reputation one successful shipment at a time. By 2016, we had expanded 
-                  into European and Middle Eastern markets, adding warehousing and logistics to our 
-                  core sourcing services.
+                  We started with a handful of suppliers and a single shared office. Through word-of-mouth and
+                  consistent delivery, our reputation grew. European and Middle Eastern buyers began to trust us
+                  as their procurement partner in China. We expanded the team, built a dedicated inspection center
+                  in Panyu, and established logistics operations at Nansha Port.
                 </p>
                 <p>
-                  Today, Atlas Bridge operates across four continents with a team of 300+ professionals 
-                  speaking 15+ languages. We've facilitated over $8 billion in trade volume, serving 
-                  clients ranging from startups to Fortune 500 enterprises. But we haven't forgotten 
-                  where we came from — every client, big or small, receives the same dedication and care.
+                  Today, DriveLine International connects 200+ vetted auto parts manufacturers in the Pearl
+                  River Delta with buyers across 50+ countries. From electronics and lighting to body parts and
+                  accessories — we handle sourcing, quality inspection, and global distribution under one roof.
+                  Our simple promise hasn't changed: deliver the right parts, at the right quality, on time.
                 </p>
-              </div>
-              
-              <div className="grid grid-cols-3 gap-6 mt-10">
-                {[
-                  { icon: Globe, value: '50+', label: 'Countries' },
-                  { icon: TrendingUp, value: '$8B+', label: 'Trade Volume' },
-                  { icon: Award, value: '12 Years', label: 'Experience' },
-                ].map((item) => (
-                  <div key={item.label} className="text-center p-4 rounded-xl bg-slate-50">
-                    <item.icon size={24} className="text-primary mx-auto mb-2" />
-                    <div className="font-heading text-xl font-bold text-slate-900">{item.value}</div>
-                    <div className="text-xs text-slate-500">{item.label}</div>
-                  </div>
-                ))}
               </div>
             </div>
             
             <div className="relative">
               <div className="aspect-[4/5] rounded-3xl overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=750&fit=crop"
-                  alt="Atlas Bridge Team"
+                  src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=750&fit=crop"
+                  alt="Auto parts quality inspection center"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-xl">
+              <div className="absolute -bottom-6 -left-6 w-36 h-36 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-xl">
                 <div className="text-center text-white">
-                  <div className="text-2xl font-heading font-bold">300+</div>
-                  <div className="text-xs opacity-80">Team Members</div>
+                  <div className="text-2xl font-heading font-bold">50+</div>
+                  <div className="text-xs opacity-80">Countries Served</div>
                 </div>
               </div>
             </div>
@@ -137,40 +138,51 @@ export default function About() {
         </div>
       </section>
 
-      {/* What We Do */}
-      <section className="py-20 bg-slate-50">
+      {/* Operations Centers */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              What We Do
+              Our Operations in Guangzhou
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              End-to-end trade services that simplify global commerce
+              Three dedicated facilities covering the complete distribution chain — from sourcing to shipment
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: Globe, title: 'Sourcing', desc: 'We identify and vet manufacturers across Asia, matching you with suppliers that meet your quality, price, and capacity requirements.' },
-              { icon: TrendingUp, title: 'Negotiation', desc: 'Our bilingual teams negotiate prices, MOQs, and payment terms so you get the best deal without the language barrier.' },
-              { icon: MapPin, title: 'Logistics', desc: 'Full freight management — ocean, air, and rail — plus customs brokerage, warehousing, and last-mile delivery.' },
-              { icon: Award, title: 'Compliance', desc: 'We handle all regulatory documentation, product certifications (CE, FCC, FDA, RoHS), and quality inspections.' },
-            ].map((item) => (
-              <div key={item.title} className="bg-white rounded-2xl p-6 border border-slate-200 hover:border-primary/20 hover:shadow-lg transition-all">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {centers.map((center) => (
+              <div 
+                key={center.name}
+                className="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-primary/20 hover:shadow-lg transition-all"
+              >
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center mb-4">
-                  <item.icon size={24} className="text-primary" />
+                  <center.icon size={24} className="text-primary" />
                 </div>
-                <h3 className="font-heading font-semibold text-lg text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                <h3 className="font-heading font-semibold text-lg text-slate-900 mb-2">{center.name}</h3>
+                <p className="text-xs text-primary font-medium mb-2">{center.role}</p>
+                <div className="flex items-start gap-2 mt-3">
+                  <MapPin size={14} className="text-slate-400 shrink-0 mt-0.5" />
+                  <p className="text-sm text-slate-500">{center.address}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Mission & Values */}
-      <section className="py-20 bg-white">
+      {/* Values */}
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+              What Sets Us Apart
+            </h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+              From supplier vetting to final delivery — quality you can count on at every step
+            </p>
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {values.map((value) => (
               <div 
@@ -193,14 +205,14 @@ export default function About() {
       </section>
 
       {/* Team Section */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
               Leadership Team
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              Decades of combined experience in international trade and supply chain management
+              Deep expertise in automotive supply chain — delivering reliable parts through experience and domain knowledge
             </p>
           </div>
           
@@ -226,38 +238,6 @@ export default function About() {
         </div>
       </section>
 
-      {/* Global Offices */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Global Offices
-            </h2>
-            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              Strategically located to serve clients across every time zone
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {offices.map((office) => (
-              <div 
-                key={office.city}
-                className="bg-slate-50 rounded-2xl p-6 border border-slate-200 hover:border-primary/20 hover:shadow-lg transition-all flex items-start gap-5"
-              >
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shrink-0 mt-1">
-                  <MapPin size={22} className="text-white" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-lg text-slate-900">{office.city}</h3>
-                  <p className="text-xs text-primary font-medium mb-1">{office.role}</p>
-                  <p className="text-sm text-slate-500">{office.address}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Contact CTA */}
       <section className="py-20 bg-slate-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -266,33 +246,26 @@ export default function About() {
             
             <div className="relative">
               <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-                Get in Touch
+                Let's Talk
               </h2>
               <p className="text-blue-200/80 mb-10 max-w-xl mx-auto">
-                Have questions about sourcing, logistics, or partnership opportunities? We'd love to hear from you.
+                Looking for a reliable auto parts distributor in Guangzhou? Reach out for a quote or schedule a visit to our sourcing center.
               </p>
               
               <div className="flex flex-col md:flex-row justify-center gap-6">
-                <a href="mailto:info@atlasbridge.com" className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white/10 border border-white/10 hover:bg-white/20 transition-all">
+                <a href="mailto:info@driveline-global.com" className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white/10 border border-white/10 hover:bg-white/20 transition-all">
                   <Mail size={20} className="text-blue-400" />
-                  <span>info@atlasbridge.com</span>
+                  <span>info@driveline-global.com</span>
                 </a>
-                <a href="tel:+86-755-8888-6688" className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white/10 border border-white/10 hover:bg-white/20 transition-all">
+                <a href="tel:+86-20-8888-6688" className="flex items-center gap-3 px-6 py-4 rounded-xl bg-white/10 border border-white/10 hover:bg-white/20 transition-all">
                   <Phone size={20} className="text-blue-400" />
-                  <span>+86-755-8888-6688</span>
+                  <span>+86-20-8888-6688</span>
                 </a>
               </div>
               
-              <div className="flex justify-center gap-4 mt-8">
-                <a href="#" className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all">
-                  <Linkedin size={18} className="text-blue-400" />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all">
-                  <Github size={18} className="text-blue-400" />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/10 border border-white/10 flex items-center justify-center hover:bg-white/20 transition-all">
-                  <Globe size={18} className="text-blue-400" />
-                </a>
+              <div className="mt-6 flex items-center justify-center gap-2 text-blue-200/60 text-sm">
+                <MapPin size={14} />
+                <span>Suite 2801, CITIC Plaza, Tianhe, Guangzhou, China</span>
               </div>
             </div>
           </div>

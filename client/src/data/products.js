@@ -122,7 +122,7 @@ export const categories = [
 
 // AI 客服回复模板
 export const aiResponses = {
-  greeting: 'Hello! Welcome to Atlas Bridge International. I am your dedicated support assistant. How can I help you today?',
+  greeting: 'Hello! Welcome to DriveLine International. I am your dedicated support assistant. How can I help you today?',
   keywords: {
     price: {
       patterns: ['price', 'cost', 'how much', 'cheap', 'discount', 'promotion', 'pricing'],

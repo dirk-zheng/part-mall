@@ -48,10 +48,10 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg shadow-primary/20">
-              <span className="text-white font-heading font-bold text-lg">A</span>
+              <span className="text-white font-heading font-bold text-lg">D</span>
             </div>
             <span className="font-heading font-semibold text-lg hidden sm:block text-dark-900">
-              Atlas Bridge
+              DriveLine
             </span>
           </Link>
 

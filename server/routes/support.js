@@ -7,7 +7,7 @@ const router = express.Router();
 const keywordRules = [
   {
     keywords: ['price', 'cost', 'how much', 'cheap', 'discount', 'promotion', 'pricing', 'quote'],
-    response: 'Atlas Bridge offers competitive wholesale pricing! 💰\n\n🔥 Current Promotions:\n• Volume discounts for bulk orders\n• New client: 5% off first order\n• Long-term partnership pricing available\n• Factory-direct pricing on select lines\n\nContact our sales team for a personalized quote, or browse our product catalog for reference pricing.'
+    response: 'DriveLine offers competitive wholesale pricing! 💰\n\n🔥 Current Promotions:\n• Volume discounts for bulk orders\n• New client: 5% off first order\n• Long-term partnership pricing available\n• Factory-direct pricing on select lines\n\nContact our sales team for a personalized quote, or browse our product catalog for reference pricing.'
   },
   {
     keywords: ['shipping', 'delivery', 'logistics', 'transport', 'how long', 'freight', 'tracking'],
@@ -15,7 +15,7 @@ const keywordRules = [
   },
   {
     keywords: ['return', 'refund', 'warranty', 'quality', 'damage', 'defect', 'exchange'],
-    response: 'Atlas Bridge Quality Guarantee 🛡️\n\n✓ 30-day inspection period upon receipt\n✓ Full refund or replacement for defective goods\n✓ 1-year warranty on all products\n✓ Third-party quality inspection available\n✓ Pre-shipment sample approval\n\n📝 Return Process:\n1. Document any issues with photos\n2. Contact your account manager within 48 hours\n3. We arrange return shipping\n4. Refund or replacement processed within 7 business days\n\nCustomer satisfaction is our top priority!'
+    response: 'DriveLine Quality Guarantee 🛡️\n\n✓ 30-day inspection period upon receipt\n✓ Full refund or replacement for defective goods\n✓ 1-year warranty on all products\n✓ Third-party quality inspection available\n✓ Pre-shipment sample approval\n\n📝 Return Process:\n1. Document any issues with photos\n2. Contact your account manager within 48 hours\n3. We arrange return shipping\n4. Refund or replacement processed within 7 business days\n\nCustomer satisfaction is our top priority!'
   },
   {
     keywords: ['payment', 'pay', 'method', 'wire', 'bank', 'credit', 'terms', 'TT', 'LC'],
@@ -25,9 +25,9 @@ const keywordRules = [
 
 // Default fallback replies
 const defaultReplies = [
-  'Thank you for reaching out to Atlas Bridge! Your inquiry has been received. A trade specialist will follow up shortly.\n\n💡 In the meantime, you can ask about:\n• Product pricing & MOQ\n• Shipping & delivery times\n• Return policy & warranty\n• Payment methods',
-  'Hello! I\'m Atlas Bridge\'s virtual assistant. 🤖\n\nI can help with:\n• 📦 Product sourcing & pricing\n• 🚢 Shipping & logistics\n• 🔄 Returns & quality assurance\n• 💳 Payment terms & methods\n\nWhat would you like to know?',
-  'Welcome to Atlas Bridge International! 😊\n\nWe specialize in global product sourcing and supply chain solutions across consumer electronics, accessories, wearables, and audio equipment. All products meet international quality standards with full warranty support.\n\nHow can I assist you today?'
+  'Thank you for reaching out to DriveLine! Your inquiry has been received. A trade specialist will follow up shortly.\n\n💡 In the meantime, you can ask about:\n• Product pricing & MOQ\n• Shipping & delivery times\n• Return policy & warranty\n• Payment methods',
+  'Hello! I\'m DriveLine\'s virtual assistant. 🤖\n\nI can help with:\n• 📦 Product sourcing & pricing\n• 🚢 Shipping & logistics\n• 🔄 Returns & quality assurance\n• 💳 Payment terms & methods\n\nWhat would you like to know?',
+  'Welcome to DriveLine International! 😊\n\nWe specialize in global product sourcing and supply chain solutions across consumer electronics, accessories, wearables, and audio equipment. All products meet international quality standards with full warranty support.\n\nHow can I assist you today?'
 ];
 
 // Get AI response based on keywords
