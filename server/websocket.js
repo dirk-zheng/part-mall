@@ -35,6 +35,52 @@ function getUserCart(userId) {
   return cartStore[userId];
 }
 
+// ─── In-Memory IM Store ──────────────────────────
+const imRooms = {};      // roomId → { roomId, members[], memberNames{}, lastMessage, updatedAt }
+const imMessages = {};   // roomId → [ { id, roomId, senderId, senderName, content, timestamp } ]
+const clientMap = new Map(); // userId → Set<WebSocket>
+
+function getOrCreateRoom(userA, userB) {
+  const ids = [userA.id, userB.id].sort();
+  const roomId = `chat_${ids[0]}_${ids[1]}`;
+  if (!imRooms[roomId]) {
+    imRooms[roomId] = {
+      roomId,
+      members: ids,
+      memberNames: { [userA.id]: userA.name || userA.username, [userB.id]: userB.name || userB.username },
+      lastMessage: '',
+      updatedAt: new Date().toISOString()
+    };
+  }
+  if (!imMessages[roomId]) {
+    imMessages[roomId] = [];
+  }
+  return imRooms[roomId];
+}
+
+function addClient(userId, ws) {
+  if (!clientMap.has(userId)) clientMap.set(userId, new Set());
+  clientMap.get(userId).add(ws);
+}
+
+function removeClient(userId, ws) {
+  const set = clientMap.get(userId);
+  if (set) {
+    set.delete(ws);
+    if (set.size === 0) clientMap.delete(userId);
+  }
+}
+
+function sendToUser(userId, data) {
+  const set = clientMap.get(userId);
+  if (set) {
+    const payload = JSON.stringify(data);
+    set.forEach(ws => {
+      if (ws.readyState === 1) ws.send(payload);
+    });
+  }
+}
+
 function buildCartItems(userId) {
   const cart = getUserCart(userId);
   const products = readProducts();
@@ -137,6 +183,7 @@ async function handleLogin(payload, ws) {
   // Update this connection's auth
   ws.user = { id: user.id, username: user.username, role: user.role, name: user.name };
   ws.userId = user.id;
+  addClient(user.id, ws);
 
   return { user: safeUser, token };
 }
@@ -165,6 +212,7 @@ async function handleRegister(payload, ws) {
 
   ws.user = { id: newUser.id, username: newUser.username, role: newUser.role, name: newUser.name };
   ws.userId = newUser.id;
+  addClient(newUser.id, ws);
 
   return { user: safeUser, token };
 }
@@ -352,6 +400,94 @@ function handleSupportFAQ() {
   ];
 }
 
+// ─── IM (Instant Messaging) ───────────────────────
+
+function handleGetSales() {
+  const users = readUsers();
+  return users
+    .filter(u => u.role === 'admin')
+    .map(u => ({ id: u.id, username: u.username, name: u.name, role: u.role }));
+}
+
+function handleGetIMRooms(payload, ws) {
+  checkAuth(ws);
+  const userId = ws.userId;
+  const allUsers = readUsers();
+
+  const rooms = [];
+  for (const roomId of Object.keys(imRooms)) {
+    const room = imRooms[roomId];
+    if (room.members.includes(userId)) {
+      const otherId = room.members.find(id => id !== userId);
+      const otherUser = allUsers.find(u => u.id === otherId);
+      rooms.push({
+        roomId: room.roomId,
+        otherUser: otherUser
+          ? { id: otherUser.id, name: otherUser.name, username: otherUser.username, role: otherUser.role }
+          : room.memberNames[otherId] || { id: otherId, name: 'Unknown' },
+        lastMessage: room.lastMessage,
+        updatedAt: room.updatedAt
+      });
+    }
+  }
+
+  // Sort by most recent
+  rooms.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  return rooms;
+}
+
+function handleGetIMMessages(payload, ws) {
+  checkAuth(ws);
+  const { roomId } = payload || {};
+  if (!roomId || !imRooms[roomId]) throw new Error('Conversation not found');
+  if (!imRooms[roomId].members.includes(ws.userId)) throw new Error('Access denied');
+
+  return (imMessages[roomId] || []).slice(-100); // Last 100 messages
+}
+
+function handleIMSend(payload, ws) {
+  checkAuth(ws);
+  let { roomId, toUserId, content } = payload || {};
+  if (!content || !content.trim()) throw new Error('Message cannot be empty');
+
+  // Create room if toUserId provided and roomId doesn't exist
+  if (!roomId && toUserId) {
+    const allUsers = readUsers();
+    const targetUser = allUsers.find(u => u.id === toUserId);
+    if (!targetUser) throw new Error('Recipient not found');
+
+    const senderUser = { id: ws.userId, name: ws.user.name || ws.user.username, username: ws.user.username };
+    const room = getOrCreateRoom(senderUser, targetUser);
+    roomId = room.roomId;
+  }
+
+  if (!roomId || !imRooms[roomId]) throw new Error('Conversation not found');
+  if (!imRooms[roomId].members.includes(ws.userId)) throw new Error('Access denied');
+
+  const msg = {
+    id: uuidv4(),
+    roomId,
+    senderId: ws.userId,
+    senderName: ws.user.name || ws.user.username,
+    content: content.trim(),
+    timestamp: new Date().toISOString()
+  };
+
+  imMessages[roomId].push(msg);
+  imRooms[roomId].lastMessage = content.trim().slice(0, 50);
+  imRooms[roomId].updatedAt = msg.timestamp;
+
+  // Forward to all room members EXCEPT sender
+  const pushMsg = { type: 'im.message', success: true, data: msg };
+  imRooms[roomId].members.forEach(memberId => {
+    if (memberId !== ws.userId) {
+      sendToUser(memberId, pushMsg);
+    }
+  });
+
+  return msg;
+}
+
 // ─── Handler Map ─────────────────────────────────
 const handlers = {
   'auth.login':         { fn: handleLogin,         auth: false },
@@ -370,6 +506,10 @@ const handlers = {
   'cart.clear':         { fn: handleCartClear,     auth: true  },
   'support.chat':       { fn: handleSupportChat,   auth: true  },
   'support.faq':        { fn: handleSupportFAQ,    auth: false },
+  'im.sales':           { fn: handleGetSales,      auth: true  },
+  'im.rooms':           { fn: handleGetIMRooms,    auth: true  },
+  'im.messages':        { fn: handleGetIMMessages, auth: true  },
+  'im.send':            { fn: handleIMSend,        auth: true  },
 };
 
 // ─── Create WS Server ────────────────────────────
@@ -387,7 +527,7 @@ function createWSServer(server) {
 
   wss.on('close', () => clearInterval(heartbeat));
 
-  wss.on('connection', (ws, req) => {
+    wss.on('connection', (ws, req) => {
     ws.__alive = true;
     ws.user = null;
     ws.userId = null;
@@ -400,10 +540,15 @@ function createWSServer(server) {
         const decoded = jwt.verify(token, JWT_SECRET);
         ws.user = decoded;
         ws.userId = decoded.id;
+        addClient(decoded.id, ws);
       }
     } catch (e) { /* invalid/expired token, continue unauthenticated */ }
 
     ws.on('pong', () => { ws.__alive = true; });
+
+    ws.on('close', () => {
+      if (ws.userId) removeClient(ws.userId, ws);
+    });
 
     ws.on('message', async (raw) => {
       let msg;

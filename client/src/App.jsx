@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { StoreProvider } from './context/StoreContext';
@@ -10,13 +9,10 @@ import About from './pages/About';
 import Cart from './pages/Cart';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
-import FloatingSupport from './components/FloatingSupport';
+import SupportWidget from './components/SupportWidget';
 import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
-import { MessageCircle } from 'lucide-react';
 
 function App() {
-  const [isSupportOpen, setIsSupportOpen] = useState(false);
-
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -48,28 +44,9 @@ function App() {
               </Routes>
             </main>
             <Footer />
-            
-            {/* Floating Support Button */}
-            <button
-              onClick={() => setIsSupportOpen(!isSupportOpen)}
-              className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/30 flex items-center justify-center z-50 transition-all hover:scale-110 hover:shadow-xl hover:shadow-primary/40 ${
-                isSupportOpen ? 'rotate-90' : ''
-              }`}
-            >
-              {isSupportOpen ? (
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <MessageCircle size={26} className="text-white" />
-              )}
-            </button>
 
-            {/* Floating Support Panel */}
-            <FloatingSupport 
-              isOpen={isSupportOpen} 
-              onClose={() => setIsSupportOpen(false)} 
-            />
+            {/* Floating Support FAB + Chat Panel */}
+            <SupportWidget />
           </div>
         </StoreProvider>
       </AuthProvider>

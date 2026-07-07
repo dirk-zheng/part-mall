@@ -1,2 +1,9 @@
-◇ injected env (3) from .env // tip: ◈ secrets for agents [www.dotenvx.com]
+◇ injected env (3) from .env // tip: ⌁ auth for agents [www.vestauth.com]
   WebSocket server: ws://localhost:3001/ws
+╔══════════════════════════════════════════╗
+║     DriveLine International                ║
+║     Auto Parts Sourcing & Distribution   ║
+║   HTTP:   http://localhost:3001                    ║
+║   WS:     ws://localhost:3001/ws                    ║
+║   Mode:   development                  ║
+╚══════════════════════════════════════════╝

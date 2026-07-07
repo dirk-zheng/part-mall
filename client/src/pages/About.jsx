@@ -7,25 +7,25 @@ const teamMembers = [
   {
     name: 'David Chen',
     role: 'Founder & Managing Director',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop',
+    avatar: '/team/david-chen.png',
     bio: '20 years in automotive supply chain, formerly procurement director at a major auto parts trading group'
   },
   {
     name: 'Sara Li',
     role: 'Operations Director',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop',
+    avatar: '/team/sara-li.png',
     bio: '15 years in international trade and logistics, expert in Pearl River Delta automotive supply chain'
   },
   {
     name: 'James Zhang',
     role: 'Sourcing Director',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop',
+    avatar: '/team/james-zhang.png',
     bio: 'Former GAC Group supply chain manager, deep relationships with 200+ auto parts manufacturers across Guangdong'
   },
   {
     name: 'Emma Lin',
     role: 'Quality Manager',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop',
+    avatar: '/team/emma-lin.png',
     bio: 'Certified IATF 16949 auditor with over a decade of automotive parts quality inspection experience'
   },
 ];

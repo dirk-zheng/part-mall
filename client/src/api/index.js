@@ -70,5 +70,21 @@ export const supportAPI = {
     wsClient.send('support.faq'),
 };
 
+// ─── IM API ───────────────────────────────────────
+
+export const imAPI = {
+  getSales: () =>
+    wsClient.send('im.sales'),
+
+  getRooms: () =>
+    wsClient.send('im.rooms'),
+
+  getMessages: (roomId) =>
+    wsClient.send('im.messages', { roomId }),
+
+  sendMessage: (content, roomId, toUserId) =>
+    wsClient.send('im.send', { roomId, toUserId, content }),
+};
+
 export { wsClient };
-export default { authAPI, productAPI, cartAPI, supportAPI };
+export default { authAPI, productAPI, cartAPI, supportAPI, imAPI };
