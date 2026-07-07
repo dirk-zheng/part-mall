@@ -1,6 +1,6 @@
 import { 
   ShieldCheck, Truck, PackageCheck, Users, MapPin, 
-  Mail, Phone, Search, Globe, Award, Target, Eye
+  Mail, Phone, Search, Award, Target, Eye
 } from 'lucide-react';
 
 const teamMembers = [
@@ -110,13 +110,7 @@ export default function About() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              {/* Decorative Element */}
-              <div className="absolute -bottom-8 -right-8 w-40 h-40 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-2xl">
-                <div className="text-center text-white">
-                  <Globe size={28} className="mx-auto mb-1" />
-                  <div className="text-xs font-medium opacity-80">Global Reach</div>
-                </div>
-              </div>
+
               {/* Small badge */}
               <div className="absolute -top-4 -left-4 bg-white rounded-xl shadow-lg px-4 py-3 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
