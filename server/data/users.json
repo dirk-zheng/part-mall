@@ -3,30 +3,16 @@
     {
       "id": "1",
       "username": "admin",
-      "password": "$2a$10$yfTTUPzZq6HiWqYvmod5Fudmw7gLcRjbmUMP4d2IiUC0MjTdCbg76",
+      "password": "$2a$10$DpvQRY4T.VVeExHjRSFs9OH0DMkiDnFpWYuDaYAhrhlZN51xsshWq",
       "role": "admin",
       "name": "Admin"
     },
     {
       "id": "2",
       "username": "user",
-      "password": "$2a$10$zmdcNdJRAX3Zps3Gj/j1b.Y0nwhMWb9sKdYbqZPRGKUuJ4m4/.06i",
+      "password": "$2a$10$oHjUyhx8mPQOJpmsqaya4egQ9W3PnNxNNEV21Nr5qogCyEQ88BY5C",
       "role": "user",
       "name": "Demo User"
-    },
-    {
-      "id": "f3f09064-993e-4934-a601-913429e0a1d4",
-      "username": "cust_1783428188303",
-      "password": "$2a$10$fSePqUAXxcTU31DUJdoVGu9d4tgGo7iGuLuaALXh.aRQ2LArXl3NC",
-      "role": "user",
-      "name": "Test Customer"
-    },
-    {
-      "id": "5b44d4b7-e4d0-4666-bd7d-c42f55889bc7",
-      "username": "cust_1783428211814",
-      "password": "$2a$10$nvm6ok48b46D7gz0s0fI3ednhGSq5Se3myPU/67QQzmuYyxZLdf4i",
-      "role": "user",
-      "name": "Test Customer"
     }
   ]
 }

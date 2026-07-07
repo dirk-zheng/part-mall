@@ -104,7 +104,7 @@ export default function Cart() {
                 alt={item.product.name}
                 className="w-24 h-24 rounded-xl object-cover"
                 onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/96/f1f5f9/94a3b8?text=No';
+                  e.target.src = '/no-image.png';
                 }}
               />
 

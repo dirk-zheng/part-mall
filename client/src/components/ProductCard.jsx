@@ -60,7 +60,7 @@ export default function ProductCard({ product }) {
             isHovered ? 'scale-110' : ''
           }`}
           onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/400x300/f1f5f9/94a3b8?text=No+Image';
+            e.target.src = '/no-image.png';
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />

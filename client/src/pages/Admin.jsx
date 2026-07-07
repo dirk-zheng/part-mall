@@ -183,7 +183,7 @@ export default function Admin() {
                             alt={product.name}
                             className="w-12 h-12 rounded-lg object-cover"
                             onError={(e) => {
-                              e.target.src = 'https://via.placeholder.com/48/f1f5f9/94a3b8?text=No';
+                              e.target.src = '/no-image.png';
                             }}
                           />
                           <div className="min-w-0">

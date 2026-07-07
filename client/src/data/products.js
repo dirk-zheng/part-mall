@@ -6,7 +6,7 @@ export const initialProducts = [
     category: 'phone',
     price: 9999,
     stock: 50,
-    image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=400&h=300&fit=crop',
+    image: '/products/iphone15.png',
     description: 'A17 Pro 芯片，钛金属设计，全新 Action 按钮'
   },
   {
@@ -15,7 +15,7 @@ export const initialProducts = [
     category: 'computer',
     price: 27999,
     stock: 25,
-    image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop',
+    image: '/products/macbook.png',
     description: 'M3 Max 芯片，48GB 统一内存，1TB SSD'
   },
   {
@@ -24,7 +24,7 @@ export const initialProducts = [
     category: 'audio',
     price: 1899,
     stock: 100,
-    image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?w=400&h=300&fit=crop',
+    image: '/products/airpods.png',
     description: '主动降噪，自适应音频，个性化空间音频'
   },
   {
@@ -33,7 +33,7 @@ export const initialProducts = [
     category: 'wearable',
     price: 6499,
     stock: 40,
-    image: 'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=400&h=300&fit=crop',
+    image: '/products/applewatch.png',
     description: '49mm 钛金属表壳，双频 GPS，100 米防水'
   },
   {
@@ -42,7 +42,7 @@ export const initialProducts = [
     category: 'phone',
     price: 9699,
     stock: 60,
-    image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=300&fit=crop',
+    image: '/products/samsung.png',
     description: '骁龙 8 Gen 3，200MP 摄像头，Galaxy AI'
   },
   {
@@ -51,7 +51,7 @@ export const initialProducts = [
     category: 'audio',
     price: 2699,
     stock: 80,
-    image: 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=400&h=300&fit=crop',
+    image: '/products/sony.png',
     description: '行业领先降噪，30 小时续航，LDAC 高解析'
   },
   {
@@ -60,7 +60,7 @@ export const initialProducts = [
     category: 'computer',
     price: 14999,
     stock: 35,
-    image: 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=400&h=300&fit=crop',
+    image: '/products/dell.png',
     description: 'Intel i9-13900H，32GB DDR5，RTX 4060'
   },
   {
@@ -69,7 +69,7 @@ export const initialProducts = [
     category: 'phone',
     price: 6999,
     stock: 45,
-    image: 'https://images.unsplash.com/photo-1598321273864-5197b4a9bb57?w=400&h=300&fit=crop',
+    image: '/products/huawei.png',
     description: '麒麟 9000S，卫星通话，XMAGE 影像'
   },
   {
@@ -78,7 +78,7 @@ export const initialProducts = [
     category: 'accessory',
     price: 299,
     stock: 200,
-    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&h=300&fit=crop',
+    image: '/products/keyboard.png',
     description: '多设备切换，舒适敲击，轻薄便携'
   },
   {
@@ -87,7 +87,7 @@ export const initialProducts = [
     category: 'accessory',
     price: 799,
     stock: 150,
-    image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=300&fit=crop',
+    image: '/products/logitech.png',
     description: '电磁滚轮，8K DPI 传感器，静音点击'
   },
   {
@@ -96,7 +96,7 @@ export const initialProducts = [
     category: 'wearable',
     price: 399,
     stock: 300,
-    image: 'https://images.unsplash.com/photo-1575311373937-040b8e1fd5b6?w=400&h=300&fit=crop',
+    image: '/products/miband.png',
     description: '1.74 英寸 AMOLED，健康监测全升级'
   },
   {
@@ -105,7 +105,7 @@ export const initialProducts = [
     category: 'accessory',
     price: 2599,
     stock: 70,
-    image: 'https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?w=400&h=300&fit=crop',
+    image: '/products/switch.png',
     description: '7 英寸 OLED 屏幕，增强型底座，LAN 口'
   }
 ];

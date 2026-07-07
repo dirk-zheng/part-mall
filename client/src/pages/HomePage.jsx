@@ -240,7 +240,7 @@ export default function HomePage() {
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/400x300/f1f5f9/94a3b8?text=No+Image';
+                        e.target.src = '/no-image.png';
                       }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
