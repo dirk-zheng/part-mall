@@ -41,23 +41,30 @@ export const productAPI = {
     wsClient.send('products.delete', { id }),
 };
 
-// ─── 购物车 API ──────────────────────────────────
+// ─── 混装清单 API ────────────────────────────────
 
-export const cartAPI = {
+export const mixedLoadAPI = {
   getList: () =>
-    wsClient.send('cart.get'),
+    wsClient.send('mix.get'),
 
   add: (productId, quantity = 1) =>
-    wsClient.send('cart.add', { productId, quantity }),
+    wsClient.send('mix.add', { productId, quantity }),
 
   updateQuantity: (productId, quantity) =>
-    wsClient.send('cart.update', { productId, quantity }),
+    wsClient.send('mix.update', { productId, quantity }),
 
   remove: (productId) =>
-    wsClient.send('cart.remove', { productId }),
+    wsClient.send('mix.remove', { productId }),
 
   clear: () =>
-    wsClient.send('cart.clear'),
+    wsClient.send('mix.clear'),
+};
+
+// ─── 询盘 API ────────────────────────────────────
+
+export const quoteAPI = {
+  submit: (request) =>
+    wsClient.send('quote.submit', request),
 };
 
 // ─── 客服 API ─────────────────────────────────────
@@ -87,4 +94,4 @@ export const imAPI = {
 };
 
 export { wsClient };
-export default { authAPI, productAPI, cartAPI, supportAPI, imAPI };
+export default { authAPI, productAPI, mixedLoadAPI, quoteAPI, supportAPI, imAPI };

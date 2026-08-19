@@ -3,26 +3,8 @@
 > vite
 
 
-  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m424[22m[2m[0m ms[22m
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m816[22m[2m[0m ms[22m
 
   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
 [2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
 [2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
-[2m19:44:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/About.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:02:57[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/HomePage.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:06:42[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/About.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:10:54[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mindex.html[22m
-[2m20:10:54[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/Header.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:10:55[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/Footer.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:10:56[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/Login.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:10:57[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/FloatingSupport.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:10:58[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/About.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:11:59[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/HomePage.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:12:00[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/About.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:19:05[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/App.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:19:06[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/Header.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:19:07[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/Footer.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:19:47[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/NewsBlog.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:20:59[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/FloatingSupport.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:28:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/Products.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
-[2m20:28:25[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/HomePage.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m

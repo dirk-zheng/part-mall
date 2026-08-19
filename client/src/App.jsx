@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { StoreProvider } from './context/StoreContext';
 import Header from './components/Header';
@@ -6,7 +6,7 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import Products from './pages/Products';
 import About from './pages/About';
-import Cart from './pages/Cart';
+import QuoteRequest from './pages/QuoteRequest';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
 import NewsBlog from './pages/NewsBlog';
@@ -29,14 +29,15 @@ function App() {
                 <Route path="/news-blog/" element={<NewsBlog />} />
                 <Route path="/faq" element={<FAQ />} />
                 <Route path="/login" element={<Login />} />
-                <Route 
-                  path="/cart" 
+                <Route
+                  path="/quote"
                   element={
                     <RequireAuth>
-                      <Cart />
+                      <QuoteRequest />
                     </RequireAuth>
-                  } 
+                  }
                 />
+                <Route path="/cart" element={<Navigate to="/quote" replace />} />
                 <Route 
                   path="/admin" 
                   element={

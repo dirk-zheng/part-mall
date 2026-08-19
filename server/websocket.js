@@ -9,6 +9,7 @@ const { JWT_SECRET, generateToken } = require('./middleware/auth');
 // ─── Data Paths ──────────────────────────────────
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
+const QUOTES_FILE = path.join(__dirname, 'data', 'quotes.json');
 
 // ─── File Helpers ────────────────────────────────
 function readProducts() {
@@ -27,12 +28,21 @@ function writeUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify({ users }, null, 2), 'utf-8');
 }
 
-// ─── In-Memory Cart ──────────────────────────────
-const cartStore = {};
+function readQuotes() {
+  if (!fs.existsSync(QUOTES_FILE)) return [];
+  return JSON.parse(fs.readFileSync(QUOTES_FILE, 'utf-8'));
+}
 
-function getUserCart(userId) {
-  if (!cartStore[userId]) cartStore[userId] = [];
-  return cartStore[userId];
+function writeQuotes(quotes) {
+  fs.writeFileSync(QUOTES_FILE, JSON.stringify(quotes, null, 2), 'utf-8');
+}
+
+// ─── In-Memory Mixed-load Builder ────────────────
+const mixedLoadStore = {};
+
+function getUserMixedLoad(userId) {
+  if (!mixedLoadStore[userId]) mixedLoadStore[userId] = [];
+  return mixedLoadStore[userId];
 }
 
 // ─── In-Memory IM Store ──────────────────────────
@@ -81,10 +91,10 @@ function sendToUser(userId, data) {
   }
 }
 
-function buildCartItems(userId) {
-  const cart = getUserCart(userId);
+function buildMixedLoadItems(userId) {
+  const mixedLoad = getUserMixedLoad(userId);
   const products = readProducts();
-  const items = cart
+  const items = mixedLoad
     .map(item => {
       const product = products.find(p => p.id === item.productId);
       if (!product) return null;
@@ -331,13 +341,13 @@ function handleProductDelete(payload, ws) {
   return removed;
 }
 
-// Cart
-function handleCartGet(payload, ws) {
+// Mixed-load builder
+function handleMixedLoadGet(payload, ws) {
   checkAuth(ws);
-  return buildCartItems(ws.userId);
+  return buildMixedLoadItems(ws.userId);
 }
 
-function handleCartAdd(payload, ws) {
+function handleMixedLoadAdd(payload, ws) {
   checkAuth(ws);
   const { productId, quantity = 1 } = payload || {};
   if (!productId) throw new Error('Product ID is required');
@@ -347,43 +357,108 @@ function handleCartAdd(payload, ws) {
   if (!product) throw new Error('Product not found');
   if (product.stock < quantity) throw new Error('Insufficient stock');
 
-  const cart = getUserCart(ws.userId);
-  const existing = cart.find(i => i.productId === productId);
+  const mixedLoad = getUserMixedLoad(ws.userId);
+  const existing = mixedLoad.find(i => i.productId === productId);
   if (existing) existing.quantity += quantity;
-  else cart.push({ productId, quantity });
+  else mixedLoad.push({ productId, quantity });
 
   return { productId, quantity: existing ? existing.quantity : quantity };
 }
 
-function handleCartUpdate(payload, ws) {
+function handleMixedLoadUpdate(payload, ws) {
   checkAuth(ws);
   const { productId, quantity } = payload || {};
   if (!quantity || quantity < 1 || !Number.isInteger(quantity))
     throw new Error('Quantity must be a positive integer');
 
-  const cart = getUserCart(ws.userId);
-  const item = cart.find(i => i.productId === productId);
-  if (!item) throw new Error('Item not found in cart');
+  const mixedLoad = getUserMixedLoad(ws.userId);
+  const item = mixedLoad.find(i => i.productId === productId);
+  if (!item) throw new Error('Item not found in mixed load');
 
   item.quantity = quantity;
   return { productId, quantity };
 }
 
-function handleCartRemove(payload, ws) {
+function handleMixedLoadRemove(payload, ws) {
   checkAuth(ws);
   const { productId } = payload || {};
-  const cart = getUserCart(ws.userId);
-  const idx = cart.findIndex(i => i.productId === productId);
-  if (idx === -1) throw new Error('Item not found in cart');
+  const mixedLoad = getUserMixedLoad(ws.userId);
+  const idx = mixedLoad.findIndex(i => i.productId === productId);
+  if (idx === -1) throw new Error('Item not found in mixed load');
 
-  cart.splice(idx, 1);
+  mixedLoad.splice(idx, 1);
   return { removed: productId };
 }
 
-function handleCartClear(payload, ws) {
+function handleMixedLoadClear(payload, ws) {
   checkAuth(ws);
-  cartStore[ws.userId] = [];
+  mixedLoadStore[ws.userId] = [];
   return { cleared: true };
+}
+
+function handleQuoteSubmit(payload, ws) {
+  checkAuth(ws);
+  const {
+    market,
+    vehicleModels,
+    specifications,
+    estimatedQuantity,
+    containerType,
+    reportRequirements = [],
+    notes = ''
+  } = payload || {};
+
+  if (!market?.trim()) throw new Error('Target market is required');
+  if (!vehicleModels?.trim()) throw new Error('Vehicle models are required');
+  if (!specifications?.trim()) throw new Error('Wheel specifications are required');
+  const quantity = Number(estimatedQuantity);
+  if (!Number.isInteger(quantity) || quantity < 1) throw new Error('Estimated quantity must be a positive integer');
+  const allowedContainers = ['mixed-lcl', '20gp', '40hq', 'undecided'];
+  if (!allowedContainers.includes(containerType)) throw new Error('Please select a valid container plan');
+  if (!Array.isArray(reportRequirements)) throw new Error('Report requirements must be a list');
+
+  const { items } = buildMixedLoadItems(ws.userId);
+  if (items.length === 0) throw new Error('Add at least one wheel program to the mixed load');
+
+  const now = new Date();
+  const datePart = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const reference = `RFQ-${datePart}-${uuidv4().slice(0, 6).toUpperCase()}`;
+  const quote = {
+    id: uuidv4(),
+    reference,
+    status: 'new',
+    customer: {
+      id: ws.userId,
+      username: ws.user.username,
+      name: ws.user.name || ws.user.username
+    },
+    market: market.trim(),
+    vehicleModels: vehicleModels.trim(),
+    specifications: specifications.trim(),
+    estimatedQuantity: quantity,
+    containerType,
+    reportRequirements: reportRequirements.map(item => String(item).trim()).filter(Boolean),
+    notes: String(notes).trim(),
+    items: items.map(({ product, quantity: itemQuantity }) => ({
+      productId: product.id,
+      name: product.name,
+      description: product.description,
+      quantity: itemQuantity
+    })),
+    createdAt: now.toISOString()
+  };
+
+  const quotes = readQuotes();
+  quotes.push(quote);
+  writeQuotes(quotes);
+  mixedLoadStore[ws.userId] = [];
+
+  return {
+    reference,
+    status: quote.status,
+    createdAt: quote.createdAt,
+    message: 'Quote request received. Our team will review fitment, loading and report requirements.'
+  };
 }
 
 // Support
@@ -511,11 +586,12 @@ const handlers = {
   'products.create':    { fn: handleProductCreate, auth: true  },
   'products.update':    { fn: handleProductUpdate, auth: true  },
   'products.delete':    { fn: handleProductDelete, auth: true  },
-  'cart.get':           { fn: handleCartGet,       auth: true  },
-  'cart.add':           { fn: handleCartAdd,       auth: true  },
-  'cart.update':        { fn: handleCartUpdate,    auth: true  },
-  'cart.remove':        { fn: handleCartRemove,    auth: true  },
-  'cart.clear':         { fn: handleCartClear,     auth: true  },
+  'mix.get':            { fn: handleMixedLoadGet,    auth: true  },
+  'mix.add':            { fn: handleMixedLoadAdd,    auth: true  },
+  'mix.update':         { fn: handleMixedLoadUpdate, auth: true  },
+  'mix.remove':         { fn: handleMixedLoadRemove, auth: true  },
+  'mix.clear':          { fn: handleMixedLoadClear,  auth: true  },
+  'quote.submit':       { fn: handleQuoteSubmit,     auth: true  },
   'support.chat':       { fn: handleSupportChat,   auth: true  },
   'support.faq':        { fn: handleSupportFAQ,    auth: false },
   'im.sales':           { fn: handleGetSales,      auth: true  },

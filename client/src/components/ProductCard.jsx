@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShoppingCart, Check, CircleDot, Disc3, Circle, Package, Wrench } from 'lucide-react';
+import { ClipboardList, Check, CircleDot, Disc3, Circle, Package, Wrench } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { categoryNames } from '../data/products';
 
@@ -20,18 +20,18 @@ const categoryColors = {
 };
 
 export default function ProductCard({ product }) {
-  const { addToCart } = useStore();
+  const { addToMixedLoad } = useStore();
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleAddToCart = async (e) => {
+  const handleRequestQuote = async (e) => {
     e.preventDefault();
     try {
-      await addToCart(product);
+      await addToMixedLoad(product);
       setIsAdded(true);
       setTimeout(() => setIsAdded(false), 2000);
     } catch (err) {
-      alert(err.message || 'Failed to add item. Please sign in first');
+      alert(err.message || 'Sign in to add this program to your mixed-load request');
     }
   };
 
@@ -63,11 +63,9 @@ export default function ProductCard({ product }) {
           <span className="text-xs font-medium">{categoryNames[product.category]}</span>
         </div>
 
-        {product.stock < 20 && (
-          <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-orange-500 text-xs font-medium text-white">
-            Only {product.stock} left
-          </div>
-        )}
+        <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-slate-950/80 text-xs font-medium text-white backdrop-blur-sm">
+          Fitment confirmed before quote
+        </div>
       </div>
 
       <div className="p-4">
@@ -80,37 +78,28 @@ export default function ProductCard({ product }) {
         </p>
 
         <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="font-mono text-xl font-bold text-primary">
-              ¥{product.price.toLocaleString()}
-            </span>
-            {product.stock > 0 ? (
-              <span className="text-xs text-dark-400">Stock {product.stock}</span>
-            ) : (
-              <span className="text-xs text-red-500">Out of stock</span>
-            )}
+          <div className="flex flex-col pr-3">
+            <span className="text-sm font-semibold text-dark-800">Volume-based quotation</span>
+            <span className="text-xs text-dark-400">Fitment · finish · packing · quantity</span>
           </div>
 
           <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
+            onClick={handleRequestQuote}
             className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ${
               isAdded
                 ? 'bg-green-100 text-green-600 border border-green-200'
-                : product.stock === 0
-                ? 'bg-dark-100 text-dark-400 cursor-not-allowed'
                 : 'bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 btn-glow'
             }`}
           >
             {isAdded ? (
               <>
                 <Check size={18} />
-                Added
+                Added to Mix
               </>
             ) : (
               <>
-                <ShoppingCart size={18} />
-                Add
+                <ClipboardList size={18} />
+                Request Quote
               </>
             )}
           </button>

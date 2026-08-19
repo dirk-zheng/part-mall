@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp } from 'lucide-react';
+import { Layers3, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,7 +13,7 @@ export default function Header() {
   const { state } = useStore();
   const { user, logout, isAdmin } = useAuth();
   
-  const cartCount = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const mixedLoadCount = state.mixedLoad.reduce((sum, item) => sum + item.quantity, 0);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -75,15 +75,15 @@ export default function Header() {
             {user && (
               <>
                 <Link
-                  to="/cart"
+                  to="/quote"
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-                    isActive('/cart')
+                    isActive('/quote')
                       ? 'bg-primary/10 text-primary font-medium'
                       : 'text-dark-600 hover:bg-primary/5 hover:text-primary'
                   }`}
                 >
-                  <ShoppingCart size={18} />
-                  <span>Cart</span>
+                  <Layers3 size={18} />
+                  <span>Mixed Load</span>
                 </Link>
                 {isAdmin() && (
                   <Link
@@ -105,13 +105,13 @@ export default function Header() {
           <div className="flex items-center gap-4">
             {user && (
               <Link
-                to="/cart"
+                to="/quote"
                 className="relative p-2 rounded-lg hover:bg-primary/5 transition-colors group"
               >
-                <ShoppingCart size={22} className="text-dark-600 group-hover:text-primary transition-colors" />
-                {cartCount > 0 && (
+                <Layers3 size={22} className="text-dark-600 group-hover:text-primary transition-colors" />
+                {mixedLoadCount > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white rounded-full text-xs flex items-center justify-center font-medium animate-bounce-in">
-                    {cartCount}
+                    {mixedLoadCount}
                   </span>
                 )}
               </Link>
@@ -210,15 +210,15 @@ export default function Header() {
             {user ? (
               <>
                 <Link
-                  to="/cart"
+                  to="/quote"
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 rounded-lg text-dark-600 hover:bg-primary/5"
                 >
-                  <ShoppingCart size={20} />
-                  <span>Cart</span>
-                  {cartCount > 0 && (
+                  <Layers3 size={20} />
+                  <span>Mixed Load</span>
+                  {mixedLoadCount > 0 && (
                     <span className="ml-auto px-2 py-0.5 bg-primary text-white rounded-full text-xs">
-                      {cartCount}
+                      {mixedLoadCount}
                     </span>
                   )}
                 </Link>

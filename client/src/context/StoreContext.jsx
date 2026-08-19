@@ -1,12 +1,12 @@
 import { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { productAPI, cartAPI } from '../api';
+import { productAPI, mixedLoadAPI, quoteAPI } from '../api';
 
 const StoreContext = createContext();
 
 const initialState = {
   products: [],
-  cart: [],
+  mixedLoad: [],
   chatHistory: [],
   loading: true,
 };
@@ -16,8 +16,8 @@ function reducer(state, action) {
     case 'SET_PRODUCTS':
       return { ...state, products: action.payload, loading: false };
 
-    case 'SET_CART':
-      return { ...state, cart: action.payload };
+    case 'SET_MIXED_LOAD':
+      return { ...state, mixedLoad: action.payload };
 
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
@@ -52,13 +52,13 @@ export function StoreProvider({ children }) {
     }
   }, []);
 
-  // 加载购物车
-  const loadCart = useCallback(async () => {
+  // 加载混装清单
+  const loadMixedLoad = useCallback(async () => {
     try {
-      const data = await cartAPI.getList();
-      dispatch({ type: 'SET_CART', payload: data.items });
+      const data = await mixedLoadAPI.getList();
+      dispatch({ type: 'SET_MIXED_LOAD', payload: data.items });
     } catch (err) {
-      console.error('加载购物车失败:', err);
+      console.error('加载混装清单失败:', err);
     }
   }, []);
 
@@ -67,55 +67,61 @@ export function StoreProvider({ children }) {
     loadProducts();
   }, [loadProducts]);
 
-  // 用户变化时加载/清空购物车
+  // 用户变化时加载/清空混装清单
   useEffect(() => {
     if (user?.token) {
-      loadCart();
+      loadMixedLoad();
     } else {
-      dispatch({ type: 'SET_CART', payload: [] });
+      dispatch({ type: 'SET_MIXED_LOAD', payload: [] });
     }
-  }, [user, loadCart]);
+  }, [user, loadMixedLoad]);
 
-  // ─── 购物车操作 ────────────────────────────
+  // ─── 混装清单与询盘操作 ────────────────────
 
-  const addToCart = async (product) => {
+  const addToMixedLoad = async (product) => {
     try {
-      await cartAPI.add(product.id, 1);
-      await loadCart();
+      await mixedLoadAPI.add(product.id, 1);
+      await loadMixedLoad();
     } catch (err) {
-      console.error('添加到购物车失败:', err);
+      console.error('添加到混装清单失败:', err);
       throw err;
     }
   };
 
-  const removeFromCart = async (productId) => {
+  const removeFromMixedLoad = async (productId) => {
     try {
-      await cartAPI.remove(productId);
-      await loadCart();
+      await mixedLoadAPI.remove(productId);
+      await loadMixedLoad();
     } catch (err) {
-      console.error('移除购物车商品失败:', err);
+      console.error('移除混装清单商品失败:', err);
       throw err;
     }
   };
 
   const updateQuantity = async (productId, quantity) => {
     try {
-      await cartAPI.updateQuantity(productId, quantity);
-      await loadCart();
+      await mixedLoadAPI.updateQuantity(productId, quantity);
+      await loadMixedLoad();
     } catch (err) {
       console.error('更新数量失败:', err);
       throw err;
     }
   };
 
-  const clearCart = async () => {
+  const clearMixedLoad = async () => {
     try {
-      await cartAPI.clear();
-      dispatch({ type: 'SET_CART', payload: [] });
+      await mixedLoadAPI.clear();
+      dispatch({ type: 'SET_MIXED_LOAD', payload: [] });
     } catch (err) {
-      console.error('清空购物车失败:', err);
+      console.error('清空混装清单失败:', err);
       throw err;
     }
+  };
+
+  const submitQuote = async (request) => {
+    const result = await quoteAPI.submit(request);
+    dispatch({ type: 'SET_MIXED_LOAD', payload: [] });
+    return result;
   };
 
   // ─── 商品管理操作 ──────────────────────────
@@ -154,11 +160,12 @@ export function StoreProvider({ children }) {
     state,
     dispatch,
     loadProducts,
-    // 购物车
-    addToCart,
-    removeFromCart,
+    // 混装清单与询盘
+    addToMixedLoad,
+    removeFromMixedLoad,
     updateQuantity,
-    clearCart,
+    clearMixedLoad,
+    submitQuote,
     // 商品管理
     addProduct,
     updateProduct,

@@ -34,10 +34,10 @@ export default function Products() {
       );
     }
 
-    if (sortOrder === 'price-asc') {
-      result.sort((a, b) => a.price - b.price);
-    } else if (sortOrder === 'price-desc') {
-      result.sort((a, b) => b.price - a.price);
+    if (sortOrder === 'name-asc') {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOrder === 'name-desc') {
+      result.sort((a, b) => b.name.localeCompare(a.name));
     }
 
     return result;
@@ -81,8 +81,8 @@ export default function Products() {
               className="px-4 py-3 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer"
             >
               <option value="default">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
+              <option value="name-asc">Name: A to Z</option>
+              <option value="name-desc">Name: Z to A</option>
             </select>
           </div>
         </div>

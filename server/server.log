@@ -1,10 +1,10 @@
-◇ injected env (3) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+◇ injected env (3) from .env // tip: ⌘ override existing { override: true }
   WebSocket server: ws://localhost:3001/ws
 ╔══════════════════════════════════════════╗
-║     DriveLine International                ║
+║     Driveline Wheels                     ║
 ║     Wheels, Tires & Fitment Solutions    ║
 ║   HTTP:   http://localhost:3001                    ║
 ║   WS:     ws://localhost:3001/ws                    ║
 ║   Mode:   development                  ║
 ╚══════════════════════════════════════════╝
-[2026-08-19T11:31:18.460Z] GET /api/health
+[2026-08-19T12:58:48.828Z] GET /api/health

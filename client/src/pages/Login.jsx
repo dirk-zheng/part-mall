@@ -102,7 +102,7 @@ export default function Login() {
                 {isLogin ? 'Welcome Back' : 'Create Account'}
               </h3>
               <p className="text-white/80 text-sm mt-1">
-                {isLogin ? 'Sign in to your account' : 'Register to get distributor pricing'}
+                {isLogin ? 'Sign in to your account' : 'Register for distributor quote access'}
               </p>
             </div>
 

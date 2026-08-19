@@ -20,17 +20,17 @@
 - 商品卡片网格展示，响应式 1–4 列布局
 - 分类筛选：All Products / Forged Wheels / Alloy Wheels / Tires / Wheel Sets / Accessories
 - 实时搜索（按名称 + 描述模糊匹配）
-- 价格排序（默认 / 升序 / 降序）
+- 名称排序（默认 / A–Z / Z–A）
 - 后端分页支持，底部统计面板（总数 / 当前展示 / 分类数）
 - 卡片悬浮动画效果
 
-### 购物车
-- 已登录用户专属，数据与服务端同步
-- 商品数量增减调节
-- 单商品删除 + 整购物车清空（带确认弹窗）
-- 订单汇总：小计 + 运费（满 ¥5,000 免运费，否则 ¥120）
-- 结账模拟（3 秒处理动画 + 成功弹窗）
-- 空购物车引导状态
+### 混装询盘
+- 已登录经销商可将多个轮毂方案加入 Mixed Load
+- 支持逐款数量调整、单项删除和整单清空
+- 询盘字段：目标市场、车型、轮毂规格、预计数量、柜型、报告及清关要求
+- 柜型支持拼柜/LCL、20GP、40HQ 和待建议方案
+- 提交后生成 RFQ 编号，询盘记录持久化到 JSON 文件
+- 明确区分“询盘”与付款/确认订单，避免零售结账误导
 
 ### 商品管理（仅管理员）
 - 商品 CRUD：表格展示 + 弹窗表单
@@ -81,7 +81,7 @@
 | 跨域 | cors | 2.8.5 |
 | 环境变量 | dotenv | 17.4.2 |
 | ID 生成 | uuid | 10.0.0 |
-| 数据存储 | JSON 文件（商品 + 用户）+ 内存（购物车） | - |
+| 数据存储 | JSON 文件（商品 + 用户 + 询盘）+ 内存（混装清单） | - |
 
 ## 项目结构
 
@@ -115,7 +115,7 @@ part-mall/
 │           ├── Products.jsx         # 商品列表页
 │           ├── About.jsx            # 关于我们页
 │           ├── Login.jsx            # 登录 / 注册页
-│           ├── Cart.jsx             # 购物车页
+│           ├── QuoteRequest.jsx     # 混装清单 + RFQ 询盘表单
 │           └── Admin.jsx            # 商品管理页
 │
 ├── server/                          # 后端项目 (Node.js + Express)
@@ -133,7 +133,8 @@ part-mall/
 │   │   └── support.js               # 客服路由
 │   └── data/
 │       ├── products.json            # 商品数据（12 条初始数据）
-│       └── users.json               # 用户数据（admin + user）
+│       ├── users.json               # 用户数据（admin + user）
+│       └── quotes.json              # RFQ 询盘记录
 │
 ├── package.json                     # 根启动脚本
 ├── README.md
@@ -224,17 +225,18 @@ cd client && npm run build
 | PUT | `/api/products/:id` | 管理员 | 更新商品 |
 | DELETE | `/api/products/:id` | 管理员 | 删除商品 |
 
-### 购物车接口 `/api/cart`
+### 混装询盘 WebSocket 协议
 
-| 方法 | 路径 | 认证 | 说明 |
-|------|------|------|------|
-| GET | `/api/cart` | 是 | 获取当前用户购物车 |
-| POST | `/api/cart` | 是 | 添加商品 `{productId, quantity?}`，已存在则累加 |
-| PUT | `/api/cart/:productId` | 是 | 更新数量 `{quantity}` |
-| DELETE | `/api/cart/:productId` | 是 | 移除单个商品 |
-| DELETE | `/api/cart` | 是 | 清空购物车 |
+| 消息类型 | 认证 | 说明 |
+|----------|------|------|
+| `mix.get` | 是 | 获取当前用户混装清单 |
+| `mix.add` | 是 | 添加方案 `{productId, quantity?}` |
+| `mix.update` | 是 | 更新方案数量 `{productId, quantity}` |
+| `mix.remove` | 是 | 移除单个方案 `{productId}` |
+| `mix.clear` | 是 | 清空混装清单 |
+| `quote.submit` | 是 | 提交市场、车型、规格、数量、柜型和报告要求，返回 RFQ 编号 |
 
-> 注意：购物车数据存储在服务端**内存**中，服务重启后数据清空。
+> 混装清单存储在服务端内存中；已提交询盘持久化在 `server/data/quotes.json`。
 
 ### 客服接口 `/api/support`
 
@@ -303,7 +305,8 @@ interface User {
 | `/products` | 商品列表 | 所有人 |
 | `/about` | 关于我们 | 所有人 |
 | `/login` | 登录注册 | 未登录用户 |
-| `/cart` | 购物车 | 已登录用户 |
+| `/quote` | 混装清单与询盘表单 | 已登录用户 |
+| `/cart` | 兼容旧链接，自动跳转 `/quote` | 已登录用户 |
 | `/admin` | 商品管理 | 仅管理员 |
 
 ## License

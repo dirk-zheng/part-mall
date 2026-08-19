@@ -36,8 +36,8 @@ export default function Footer() {
               <Link to="/faq" className="text-dark-500 hover:text-primary transition-colors text-sm">
                 Buyer FAQ
               </Link>
-              <Link to="/cart" className="text-dark-500 hover:text-primary transition-colors text-sm">
-                Cart
+              <Link to="/quote" className="text-dark-500 hover:text-primary transition-colors text-sm">
+                Build Mixed Load
               </Link>
             </div>
           </div>

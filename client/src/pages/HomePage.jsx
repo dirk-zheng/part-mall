@@ -222,7 +222,7 @@ export default function HomePage() {
               to="/products"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white hover:opacity-90 transition-all font-medium"
             >
-              View All Parts
+              View All Programs
               <ArrowRight size={18} />
             </Link>
           </div>
@@ -258,8 +258,8 @@ export default function HomePage() {
                     <p className="text-slate-500 text-sm mb-3 line-clamp-2">
                       {product.description}
                     </p>
-                    <span className="font-mono text-lg font-bold text-primary">
-                      ¥{product.price.toLocaleString()}
+                    <span className="text-sm font-semibold text-primary">
+                      Request fitment &amp; volume quote
                     </span>
                   </div>
                 </Link>
@@ -325,10 +325,10 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              to="/products"
+              to="/quote"
               className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/25"
             >
-              Browse Parts Catalog
+              Build Mixed Load
             </Link>
             <Link
               to="/about"
