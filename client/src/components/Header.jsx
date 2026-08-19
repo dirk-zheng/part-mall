@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { ShoppingCart, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -27,7 +27,9 @@ export default function Header() {
 
   const navItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/products', label: 'Products', icon: Grid3X3 },
+    { path: '/products', label: 'Wheels & Tires', icon: Grid3X3 },
+    { path: '/news-blog/', label: 'Insights', icon: BookOpen },
+    { path: '/faq', label: 'FAQ', icon: CircleHelp },
     { path: '/about', label: 'About Us', icon: Info },
   ];
 
@@ -51,7 +53,7 @@ export default function Header() {
               <span className="text-white font-heading font-bold text-lg">D</span>
             </div>
             <span className="font-heading font-semibold text-lg hidden sm:block text-dark-900">
-              DriveLine
+              Driveline Wheels
             </span>
           </Link>
 
@@ -60,7 +62,7 @@ export default function Header() {
               <Link
                 key={path}
                 to={path}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
                   isActive(path)
                     ? 'bg-primary/10 text-primary font-medium'
                     : 'text-dark-600 hover:bg-primary/5 hover:text-primary'

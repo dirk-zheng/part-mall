@@ -1,7 +1,7 @@
 {
-  "name": "digital-mall-server",
+  "name": "driveline-wheel-tire-server",
   "version": "1.0.0",
-  "description": "数码商城后端服务",
+  "description": "DriveLine 车轮、轮胎与轮毂商城后端服务",
   "main": "index.js",
   "scripts": {
     "start": "node seed.js && node index.js",

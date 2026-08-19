@@ -1,14 +1,19 @@
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, X, Smartphone, Laptop, Cable, Watch, Headphones, Package } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, CircleDot, Disc3, Circle, Wrench, Package } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
-import { categories } from '../data/products';
+import { categories, categoryNames } from '../data/products';
 
-const categoryIcons = { phone: Smartphone, computer: Laptop, accessory: Cable, wearable: Watch, audio: Headphones };
-const categoryNames = { phone: 'Phone', computer: 'Computer', accessory: 'Accessory', wearable: 'Wearable', audio: 'Audio' };
+const categoryIcons = {
+  'forged-wheel': Disc3,
+  'cast-wheel': CircleDot,
+  tire: Circle,
+  'wheel-set': Package,
+  accessory: Wrench,
+};
 
 const initialForm = {
   name: '',
-  category: 'phone',
+  category: 'forged-wheel',
   price: '',
   stock: '',
   image: '',
@@ -201,7 +206,7 @@ export default function Admin() {
                         </div>
                       </td>
                       <td className="p-4 text-right">
-                        <span className="font-mono text-primary font-semibold">${product.price.toLocaleString()}</span>
+                  <span className="font-mono text-primary font-semibold">¥{product.price.toLocaleString()}</span>
                       </td>
                       <td className="p-4 text-right">
                         <span className={`font-mono ${product.stock < 20 ? 'text-orange-500' : 'text-dark-600'}`}>
@@ -285,7 +290,7 @@ export default function Admin() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-dark-700">Price ($)</label>
+                  <label className="block text-sm font-medium mb-2 text-dark-700">Price (¥)</label>
                   <input
                     type="number"
                     value={form.price}

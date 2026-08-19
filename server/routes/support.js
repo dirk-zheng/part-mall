@@ -6,28 +6,40 @@ const router = express.Router();
 // AI Keyword matching configuration
 const keywordRules = [
   {
+    keywords: ['fitment', 'pcd', 'offset', 'center bore', 'vehicle', 'fit', 'size'],
+    response: 'Local-market Fitment Support 🛞\n\nTell us your market and popular vehicle models. We keep frequently used selections for Southeast Asian Japanese sedans, Middle Eastern SUVs and Hilux pickups, then verify size, PCD, offset, center bore and load requirements.'
+  },
+  {
+    keywords: ['moq', 'minimum order', 'sample', 'quantity', 'private label', 'mixed load', 'mixed-container', 'trial order', 'full container'],
+    response: 'Flexible Order Planning 📦\n\nStart with a mixed-container trial instead of holding heavy inventory. After styles and fitments are proven in your market, we can support stable full-container repeat orders.'
+  },
+  {
+    keywords: ['document', 'report', 'customs', 'clearance', 'fatigue test', 'impact test', 'material test'],
+    response: 'Test Reports & Clearance Documents 📄\n\nWe can provide supporting material reports and fatigue-impact test reports for wheel orders, coordinated with packing and loading documents to support customs clearance.'
+  },
+  {
     keywords: ['price', 'cost', 'how much', 'cheap', 'discount', 'promotion', 'pricing', 'quote'],
-    response: 'DriveLine offers competitive wholesale pricing! 💰\n\n🔥 Current Promotions:\n• Volume discounts for bulk orders\n• New client: 5% off first order\n• Long-term partnership pricing available\n• Factory-direct pricing on select lines\n\nContact our sales team for a personalized quote, or browse our product catalog for reference pricing.'
+    response: 'Practical Wheel Quotation 💰\n\nPricing depends on construction, size, finish, fitment mix, packaging and volume. Send us your market, vehicle list and target styles for a clear quotation and practical loading plan.'
   },
   {
     keywords: ['shipping', 'delivery', 'logistics', 'transport', 'how long', 'freight', 'tracking'],
-    response: 'Global Shipping & Logistics 🚢\n\n📦 Our Shipping Options:\n• Air Freight: 3-7 days worldwide\n• Sea Freight: 15-30 days (most economical)\n• Express Courier (DHL/FedEx/UPS): 2-5 days\n• Rail Freight: 12-18 days (Asia-Europe)\n\n📋 What We Handle:\n• Full customs documentation\n• Cargo insurance\n• Real-time shipment tracking\n• Warehousing & consolidation\n\nWe ship from our Shenzhen, Rotterdam, and Los Angeles hubs for fastest delivery.'
+    response: 'Order & Export Support 🚢\n\nWe support mixed-container trials and stable full containers, with convenient loading through nearby Huangpu Port. Material and fatigue-impact test reports can be supplied for clearance support.'
   },
   {
-    keywords: ['return', 'refund', 'warranty', 'quality', 'damage', 'defect', 'exchange'],
-    response: 'DriveLine Quality Guarantee 🛡️\n\n✓ 30-day inspection period upon receipt\n✓ Full refund or replacement for defective goods\n✓ 1-year warranty on all products\n✓ Third-party quality inspection available\n✓ Pre-shipment sample approval\n\n📝 Return Process:\n1. Document any issues with photos\n2. Contact your account manager within 48 hours\n3. We arrange return shipping\n4. Refund or replacement processed within 7 business days\n\nCustomer satisfaction is our top priority!'
+    keywords: ['return', 'refund', 'warranty', 'quality', 'damage', 'defect', 'exchange', 'inspect', 'inspection', 'qc', 'crack', 'porosity', 'balance', 'coating'],
+    response: 'On-site Pre-shipment QC 🛡️\n\nWe draw cartons at random from the finished-goods warehouse instead of accepting pre-selected samples. The checklist focuses on spoke-root cracks, porosity, dimensions, dynamic balance and coating adhesion.'
   },
   {
     keywords: ['payment', 'pay', 'method', 'wire', 'bank', 'credit', 'terms', 'TT', 'LC'],
-    response: 'Flexible Payment Options 💳\n\nWe Accept:\n• T/T (Bank Wire Transfer)\n• L/C (Letter of Credit)\n• Western Union\n• PayPal\n• Alibaba Trade Assurance\n\n💼 Payment Terms:\n• Standard: 30% deposit, 70% before shipment\n• Established partners: Net 30/60 available\n• Large orders: Negotiable milestone payments\n\n🔒 All transactions are secured and insured. Your financial safety is guaranteed!'
+    response: 'Order Terms 💳\n\nPayment terms are confirmed clearly in the quotation and proforma invoice for each order. We keep order, QC, loading and document requirements aligned before shipment.'
   }
 ];
 
 // Default fallback replies
 const defaultReplies = [
-  'Thank you for reaching out to DriveLine! Your inquiry has been received. A trade specialist will follow up shortly.\n\n💡 In the meantime, you can ask about:\n• Product pricing & MOQ\n• Shipping & delivery times\n• Return policy & warranty\n• Payment methods',
-  'Hello! I\'m DriveLine\'s virtual assistant. 🤖\n\nI can help with:\n• 📦 Product sourcing & pricing\n• 🚢 Shipping & logistics\n• 🔄 Returns & quality assurance\n• 💳 Payment terms & methods\n\nWhat would you like to know?',
-  'Welcome to DriveLine International! 😊\n\nWe specialize in global product sourcing and supply chain solutions across consumer electronics, accessories, wearables, and audio equipment. All products meet international quality standards with full warranty support.\n\nHow can I assist you today?'
+  'Thank you for contacting Driveline Wheels. Ask us about local-market fitments, mixed-container trials, on-site QC or export documents.',
+  'Hello! We work close to Yongning wheel factories and follow every order carefully. Share your market, popular vehicles and target styles, and we will help plan the next step.',
+  'Welcome to Driveline Wheels. We support distributors and modification shops with practical selection, random-carton QC, flexible loading and Huangpu Port export coordination.'
 ];
 
 // Get AI response based on keywords
@@ -77,12 +89,12 @@ router.get('/faq', (req, res) => {
   res.json({
     code: 200,
     data: [
-      { id: 1, question: 'Product pricing and discounts', category: 'Pricing' },
-      { id: 2, question: 'Shipping and delivery times', category: 'Shipping' },
-      { id: 3, question: 'Return and refund policy', category: 'After-Sales' },
-      { id: 4, question: 'Accepted payment methods', category: 'Payment' },
-      { id: 5, question: 'How to track my order', category: 'Orders' },
-      { id: 6, question: 'Product warranty coverage', category: 'After-Sales' }
+      { id: 1, question: 'Which local-market wheel fitments do you keep?', category: 'Fitment' },
+      { id: 2, question: 'Can I begin with a mixed-container trial?', category: 'Orders' },
+      { id: 3, question: 'How do you select cartons for on-site QC?', category: 'Quality' },
+      { id: 4, question: 'What items are included in the QC checklist?', category: 'Quality' },
+      { id: 5, question: 'Can you load full containers through Huangpu Port?', category: 'Shipping' },
+      { id: 6, question: 'Which test reports support customs clearance?', category: 'Documents' }
     ]
   });
 });

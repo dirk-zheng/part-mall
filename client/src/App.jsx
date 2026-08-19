@@ -9,6 +9,8 @@ import About from './pages/About';
 import Cart from './pages/Cart';
 import Admin from './pages/Admin';
 import Login from './pages/Login';
+import NewsBlog from './pages/NewsBlog';
+import FAQ from './pages/FAQ';
 import SupportWidget from './components/SupportWidget';
 import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
 
@@ -24,6 +26,8 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/products" element={<Products />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/news-blog/" element={<NewsBlog />} />
+                <Route path="/faq" element={<FAQ />} />
                 <Route path="/login" element={<Login />} />
                 <Route 
                   path="/cart" 

@@ -6,52 +6,52 @@ import {
 const teamMembers = [
   {
     name: 'David Chen',
-    role: 'Founder & Managing Director',
-    avatar: '/team/david-chen.png',
-    bio: '20 years in automotive supply chain, formerly procurement director at a major auto parts trading group'
+    role: 'Trade & Customer Service',
+    avatar: '/team/david-chen-v2.png',
+    bio: 'Based in Guangzhou Yongning wheel industry cluster, David stays close to factories and customers, follows every order, and builds long-term partnerships through practical, reliable service.'
   },
   {
     name: 'Sara Li',
-    role: 'Operations Director',
-    avatar: '/team/sara-li.png',
-    bio: '15 years in international trade and logistics, expert in Pearl River Delta automotive supply chain'
+    role: 'Vehicle Fitment & Product Selection',
+    avatar: '/team/sara-li-v2.png',
+    bio: 'Maintains fitment libraries for popular Southeast Asian Japanese sedans, Middle Eastern SUVs and Hilux pickups, reducing repeated parameter checks and helping customers select faster.'
   },
   {
     name: 'James Zhang',
-    role: 'Sourcing Director',
-    avatar: '/team/james-zhang.png',
-    bio: 'Former GAC Group supply chain manager, deep relationships with 200+ auto parts manufacturers across Guangdong'
+    role: 'Order & Export Documentation',
+    avatar: '/team/james-zhang-v2.png',
+    bio: 'Coordinates flexible mixed-container trial orders and stable full-container deliveries from nearby Huangpu Port, with material and fatigue-impact test reports prepared for customs clearance.'
   },
   {
     name: 'Emma Lin',
-    role: 'Quality Manager',
-    avatar: '/team/emma-lin.png',
-    bio: 'Certified IATF 16949 auditor with over a decade of automotive parts quality inspection experience'
+    role: 'On-site Quality Control',
+    avatar: '/team/emma-lin-v2.png',
+    bio: 'Randomly opens cartons in the finished-goods warehouse instead of accepting pre-selected samples, checking spoke-root cracks, porosity, dimensions, balance and coating adhesion against a complete checklist.'
   },
 ];
 
 const values = [
   {
     icon: Eye,
-    title: 'Vision',
-    description: 'To become the most trusted bridge between global buyers and China\'s premium auto parts manufacturers — making quality sourcing simple, transparent, and reliable.'
+    title: 'Practical Service',
+    description: 'We are wheel traders, not a distant platform. We stay close to factories, respond directly, and follow the details of every order.'
   },
   {
     icon: Target,
-    title: 'Mission',
-    description: 'We vet, inspect, and deliver quality auto parts from Guangzhou\'s finest factories to customers worldwide — handling complexity so you don\'t have to.'
+    title: 'Quality Before Shipment',
+    description: 'Our QC starts in the finished-goods warehouse. Random cartons are inspected by us, not pre-selected by the factory.'
   },
   {
     icon: Award,
-    title: 'Commitment',
-    description: 'Every part shipped carries our reputation. IATF 16949-aligned QC, factory audits, and end-to-end logistics — quality you can count on, every single time.'
+    title: 'Long-term Partnership',
+    description: 'We help distributors and modification shops test the market with flexible orders, then build stable repeat business together.'
   },
 ];
 
 const centers = [
-  { name: 'Guangzhou Sourcing Center', address: 'Building A, Guangzhou Science City, Huangpu District, Guangzhou', role: 'Supplier Management · RFQ Processing · Order Management', icon: Search },
-  { name: 'Panyu Inspection Center', address: 'Building 5, Huachuang Industrial Park, Panyu District, Guangzhou', role: 'Incoming Inspection · In-Process Audit · Pre-Shipment QC', icon: ShieldCheck },
-  { name: 'Nansha Logistics Hub', address: 'Warehouse Zone A, Nansha Port Logistics Park, Guangzhou', role: 'Consolidation · Customs Clearance · Container Loading', icon: Truck },
+  { name: 'Yongning Wheel Industry Cluster', address: 'Yongning, Zengcheng District, Guangzhou', role: 'Factory Access · Product Selection · Order Follow-up', icon: Search },
+  { name: 'Factory Finished-goods Warehouse', address: 'On site at partner wheel factories', role: 'Random Cartons · Full Checklist · No Pre-selected Samples', icon: ShieldCheck },
+  { name: 'Huangpu Port Export Route', address: 'Huangpu Port, Guangzhou', role: 'Mixed Loads · Full Containers · Clearance Documents', icon: Truck },
 ];
 
 export default function About() {
@@ -65,26 +65,26 @@ export default function About() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-medium tracking-widest uppercase rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/20">
-            Established 2014 · Guangzhou, China
+            Rooted in Yongning · Guangzhou, China
           </span>
           <h1 className="font-heading text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            Your Trusted Auto Parts<br />
+            A Practical Wheel Trading<br />
             <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              Sourcing Partner in Guangzhou
+              Partner Close to Production
             </span>
           </h1>
           <p className="text-lg md:text-xl text-blue-100/70 max-w-2xl mx-auto leading-relaxed">
-            We source, inspect, and distribute quality auto parts from 200+ vetted manufacturers 
-            in the Pearl River Delta to buyers across 50+ countries.
+            Driveline Wheels works from Guangzhou's Yongning wheel industry cluster, helping distributors
+            and modification shops select fitments, control quality and move each order reliably.
           </p>
           
           {/* Stats Row */}
           <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-14">
             {[
-              { value: '10+', label: 'Years Experience' },
-              { value: '200+', label: 'Vetted Suppliers' },
-              { value: '50+', label: 'Countries Served' },
-              { value: '99%', label: 'On-Time Delivery' },
+              { value: 'Yongning', label: 'Close to Wheel Production' },
+              { value: 'Random', label: 'Carton Sampling' },
+              { value: 'Flexible', label: 'Mixed or Full Container' },
+              { value: 'Huangpu', label: 'Nearby Export Port' },
             ].map((item) => (
               <div key={item.label} className="text-center">
                 <div className="font-heading text-3xl md:text-4xl font-bold bg-gradient-to-b from-white to-blue-200 bg-clip-text text-transparent">
@@ -105,8 +105,8 @@ export default function About() {
             <div className="relative order-2 lg:order-1">
               <div className="aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl">
                 <img
-                  src="/quality-center.png"
-                  alt="Auto parts quality inspection center"
+                  src="/wheels/wheel-qc-lab.png"
+                  alt="Wheel inspection by the Driveline Wheels on-site QC team"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -117,8 +117,8 @@ export default function About() {
                   <ShieldCheck size={16} className="text-green-600" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold text-slate-900">IATF 16949</div>
-                  <div className="text-[10px] text-slate-400">QC Standard</div>
+                  <div className="text-xs font-semibold text-slate-900">Random Carton QC</div>
+                  <div className="text-[10px] text-slate-400">No pre-selected samples</div>
                 </div>
               </div>
             </div>
@@ -129,27 +129,24 @@ export default function About() {
                 Our Story
               </span>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-8 leading-tight">
-                From a Small Office<br />
-                <span className="text-blue-600">to a Global Supply Chain</span>
+                Wheel Trade Built<br />
+                <span className="text-blue-600">Close to the Factory Floor</span>
               </h2>
               <div className="space-y-5 text-slate-600 leading-relaxed text-base">
                 <p>
-                  It started in a small office in Tianhe Gangding, Guangzhou in 2014. Our founder, 
-                  David Chen, saw firsthand how overseas buyers struggled to navigate Guangdong's 
-                  fragmented auto parts supply chain — language barriers, unreliable quality, and 
-                  opaque pricing were constant headaches.
+                  Driveline Wheels is rooted in Yongning, Guangzhou — a wheel industry cluster where
+                  factories, products and finished-goods warehouses are close at hand. We do trade,
+                  and we believe the value of a trader is practical service and responsibility for details.
                 </p>
                 <p>
-                  Through word-of-mouth and consistent delivery, our reputation grew. European and 
-                  Middle Eastern buyers began to trust us as their procurement partner. We expanded 
-                  the team, built a dedicated inspection center in Panyu, and established logistics 
-                  operations at Nansha Port.
+                  Before shipment, we go to the finished-goods warehouse and draw cartons at random.
+                  Following a complete checklist, we focus on spoke-root cracks, porosity, dimensions,
+                  dynamic balance and coating adhesion. We do not accept samples selected in advance.
                 </p>
                 <p>
-                  Today, DriveLine International connects 200+ vetted auto parts manufacturers in the 
-                  Pearl River Delta with buyers worldwide. From electronics and lighting to body parts 
-                  and accessories — we handle sourcing, quality inspection, and global distribution 
-                  under one roof.
+                  We also keep fitment selections for Southeast Asian Japanese sedans, Middle Eastern
+                  SUVs and Hilux pickups. Buyers can begin with mixed-container trials, move to stable
+                  full containers, and receive material and fatigue-impact reports for customs clearance.
                 </p>
               </div>
             </div>
@@ -189,13 +186,13 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wide uppercase rounded-full bg-blue-50 text-blue-600">
-              Our Infrastructure
+              Where We Work
             </span>
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Three Facilities, One Mission
+              Close to Every Step of the Order
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              Covering the complete distribution chain — from sourcing to shipment — all based in Guangzhou
+              From Yongning factory access and warehouse QC to convenient loading through Huangpu Port
             </p>
           </div>
           
@@ -237,13 +234,13 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wide uppercase rounded-full bg-blue-50 text-blue-600">
-              Our People
+              Behind Every Order
             </span>
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Leadership Team
+              A Hands-on Team You Can Reach
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              Decades of combined expertise in automotive supply chain — guiding every decision with deep domain knowledge
+              We are wheel traders rooted in Guangzhou Yongning. From on-site QC and vehicle fitment to flexible loading and export documents, the same team follows every order through to shipment.
             </p>
           </div>
           
@@ -288,11 +285,11 @@ export default function About() {
                 Get in Touch
               </span>
               <h2 className="font-heading text-3xl md:text-5xl font-bold mb-4">
-                Ready to Source Smarter?
+                Looking for a Reliable Wheel Partner?
               </h2>
               <p className="text-blue-200/70 mb-12 max-w-xl mx-auto text-lg leading-relaxed">
-                Looking for a reliable auto parts distributor in Guangzhou? 
-                Reach out for a quote or schedule a visit to our sourcing center.
+              We welcome distributors and modification shops looking for steady, long-term cooperation.
+              Start with a mixed-container trial and let us take care of each order step by step.
               </p>
               
               <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
@@ -314,7 +311,7 @@ export default function About() {
               
               <div className="flex items-center justify-center gap-2 text-blue-300/50 text-sm">
                 <MapPin size={14} />
-                <span>Building A, Guangzhou Science City, Huangpu, Guangzhou, China</span>
+                <span>Yongning, Zengcheng District, Guangzhou, China</span>
               </div>
             </div>
           </div>

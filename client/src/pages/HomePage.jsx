@@ -1,72 +1,73 @@
 import { Link } from 'react-router-dom';
 import { 
   ArrowRight, Shield, Zap, Users, Search, Award, ChevronRight, 
-  Smartphone, Car, Cable, Watch, Headphones, Package, Cog, Truck
+  CircleDot, Car, Disc3, Circle, Wrench, Package, Cog, Truck
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
+import { categoryNames } from '../data/products';
 
 const CategoryIcons = {
-  phone: Smartphone,
-  computer: Car,
-  accessory: Cable,
-  wearable: Watch,
-  audio: Headphones,
+  'forged-wheel': Disc3,
+  'cast-wheel': CircleDot,
+  tire: Circle,
+  'wheel-set': Package,
+  accessory: Wrench,
 };
 
 const features = [
   {
-    icon: Search,
-    title: 'Extensive Supplier Network',
-    description: 'Deep connections across the Pearl River Delta automotive supply chain. We source from 200+ vetted factories — the right part at the right price, every time.'
+    icon: Shield,
+    title: 'On-site QC Before Shipment',
+    description: 'We randomly open cartons in the finished-goods warehouse and inspect against a complete checklist. Factory-selected samples are not accepted.'
   },
   {
-    icon: Shield,
-    title: 'Rigorous Quality Inspection',
-    description: 'Multi-point inspection at source, during transit, and pre-shipment. IATF 16949-aligned QC protocols for automotive-grade reliability.'
+    icon: Search,
+    title: 'Local-market Fitment Library',
+    description: 'Ready fitment selections for popular Japanese sedans in Southeast Asia, Middle Eastern SUVs and high-volume Hilux pickup applications.'
+  },
+  {
+    icon: Package,
+    title: 'Flexible Order Volumes',
+    description: 'Start with a mixed-container trial instead of holding heavy inventory. Move to stable full-container supply when the market is proven.'
   },
   {
     icon: Truck,
-    title: 'Fast Global Distribution',
-    description: 'Integrated logistics with sea, air, and express options. 48-hour dispatch from our Guangzhou consolidation center to ports worldwide.'
-  },
-  {
-    icon: Cog,
-    title: 'Industry Expertise',
-    description: 'A team with deep automotive domain knowledge — from OEM specs to aftermarket trends. We speak your language, technically and commercially.'
+    title: 'Reports & Export Support',
+    description: 'Material, fatigue and impact test reports are prepared to support customs clearance, with convenient loading through nearby Huangpu Port.'
   },
 ];
 
 const stats = [
-  { value: '10+ Years', label: 'Industry Experience' },
-  { value: '200+', label: 'Vetted Suppliers' },
-  { value: '50+', label: 'Export Countries' },
-  { value: '5,000+', label: 'Parts SKUs' },
+  { value: 'Yongning', label: 'Wheel Industry Cluster' },
+  { value: 'Random QC', label: 'Cartons Opened On Site' },
+  { value: 'Mixed Load', label: 'Trial Orders Welcome' },
+  { value: 'Huangpu', label: 'Nearby Export Port' },
 ];
 
 const milestones = [
-  { year: '2014', title: 'Founded in Guangzhou', desc: 'Started as a trading office in Tianhe Gangding, connecting overseas buyers with Guangdong\'s booming auto parts manufacturers.' },
-  { year: '2016', title: 'First Major Contract', desc: 'Secured a long-term distribution contract with a European aftermarket chain — our first milestone in becoming a trusted supply partner.' },
-  { year: '2018', title: 'QC Center Established', desc: 'Opened our dedicated quality inspection center in Panyu with in-house testing equipment for electronics, lighting, and body parts.' },
-  { year: '2020', title: 'Supplier Network Expansion', desc: 'Grew to 150+ vetted suppliers across the Pearl River Delta, covering electronics, lighting, interior, and chassis categories.' },
-  { year: '2022', title: 'Digital Procurement Platform', desc: 'Launched our online B2B catalog with real-time inventory, transparent pricing, and end-to-end order tracking for global buyers.' },
-  { year: '2024', title: '200+ Suppliers, 50+ Countries', desc: 'Reached 200+ qualified suppliers and export coverage across 50+ countries — our global distribution network continues to grow.' },
+  { year: '01', title: 'Understand Your Market', desc: 'We start with your sales region, target customers and locally popular vehicles instead of pushing a generic catalog.' },
+  { year: '02', title: 'Confirm the Right Fitments', desc: 'PCD, offset, center bore, wheel size and load requirements are matched against our regional application library.' },
+  { year: '03', title: 'Choose a Practical Order Plan', desc: 'Use a mixed-container trial to test demand, then move proven fitments into repeat full-container orders.' },
+  { year: '04', title: 'Follow Production Closely', desc: 'Our team stays close to Yongning factories and follows specification, finish, packing and production progress.' },
+  { year: '05', title: 'Random-carton On-site QC', desc: 'We draw cartons from finished stock ourselves and check spoke roots, porosity, dimensions, balance and coating adhesion.' },
+  { year: '06', title: 'Documents & Huangpu Loading', desc: 'Material and fatigue-impact reports support clearance, while nearby Huangpu Port keeps export handling straightforward.' },
 ];
 
 const services = [
   {
     icon: Search,
-    title: 'Auto Parts Sourcing',
-    desc: 'Find the exact OEM, aftermarket, or performance parts you need. We leverage our 200+ supplier network across Guangdong to deliver competitive quotes within 48 hours.'
+    title: 'Market-ready Wheel Selection',
+    desc: 'We maintain practical fitment options for Southeast Asian Japanese sedans, Middle Eastern SUVs and Hilux pickups so buyers spend less time reconfirming parameters.'
   },
   {
     icon: Shield,
-    title: 'Quality Inspection',
-    desc: 'In-house QC team with automotive-grade inspection protocols. Every shipment is verified before it leaves Guangzhou — reducing your defect risk to near zero.'
+    title: 'Pre-shipment On-site QC',
+    desc: 'Random cartons are taken directly from finished stock. Spoke-root cracks, porosity, dimensions, dynamic balance and coating adhesion are checked before loading.'
   },
   {
     icon: Truck,
-    title: 'Global Distribution',
-    desc: 'End-to-end logistics management: consolidation, customs documentation, freight booking, and shipment tracking. From our warehouse to your doorstep.'
+    title: 'Flexible Orders & Documents',
+    desc: 'Start with mixed-container trials, scale to stable full containers, and receive the material and fatigue-impact reports needed for customs clearance.'
   },
 ];
 
@@ -76,26 +77,27 @@ export default function HomePage() {
   return (
     <div className="min-h-screen pt-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(0,102,255,0.2),transparent_50%),radial-gradient(circle_at_80%_50%,rgba(99,102,241,0.15),transparent_50%)]" />
+      <section className="relative overflow-hidden bg-zinc-950 text-white">
+        <img src="/wheels/hero-wheel.png" alt="Performance wheel and tire" className="absolute inset-0 w-full h-full object-cover object-center md:object-right" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/20" />
         <div className="absolute inset-0 cyber-grid opacity-20" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-sm mb-8">
               <Car size={16} className="text-blue-400" />
-              <span className="text-sm text-blue-200">Guangzhou · Auto Parts Sourcing · Global Distribution</span>
+              <span className="text-sm text-orange-200">Guangzhou Yongning · Wheel Trading · On-site QC</span>
             </div>
             
             <h1 className="font-heading text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Quality Auto Parts<br />
-              <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                from Guangzhou to the World
+              Wheel trading,<br />
+              <span className="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">
+                done carefully.
               </span>
             </h1>
             
             <p className="text-lg md:text-xl text-blue-100/80 mb-10 leading-relaxed max-w-2xl">
-              DriveLine International — your trusted automotive parts distributor rooted in Guangzhou, China's largest auto manufacturing hub. We source, inspect, and deliver quality parts to buyers worldwide.
+              Driveline Wheels is rooted in Guangzhou's Yongning wheel industry cluster. We work hard, stay practical, and take care of every order from fitment selection to on-site QC and export documents.
             </p>
             
             <div className="flex flex-wrap gap-4">
@@ -103,14 +105,14 @@ export default function HomePage() {
                 to="/products"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40"
               >
-                Browse Parts Catalog
+                Explore Wheel Catalog
                 <ArrowRight size={20} />
               </Link>
               <Link
                 to="/about"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white/10 border border-white/10 text-white font-semibold hover:bg-white/20 transition-all backdrop-blur-sm"
               >
-                About Our Company
+                Why Driveline Wheels
                 <ChevronRight size={20} />
               </Link>
             </div>
@@ -148,7 +150,7 @@ export default function HomePage() {
               Our <span className="text-primary">Services</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              End-to-end auto parts distribution from our Guangzhou hub
+              Practical support for wheel distributors and modification shops
             </p>
           </div>
           
@@ -178,10 +180,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Why <span className="text-primary">DriveLine</span>
+              Why <span className="text-primary">Driveline Wheels</span>
             </h2>
             <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              A decade of automotive supply chain expertise, grounded in Guangzhou's industrial ecosystem
+              Close to production, careful with quality, flexible with orders
             </p>
           </div>
           
@@ -212,9 +214,9 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-12">
             <div>
               <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-3">
-                Featured Auto Parts
+                Featured Wheel Programs
               </h2>
-              <p className="text-slate-500 text-lg">Quality automotive parts sourced from our supplier network</p>
+              <p className="text-slate-500 text-lg">Practical styles and fitments for local aftermarket demand</p>
             </div>
             <Link 
               to="/products"
@@ -246,7 +248,7 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
                     <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm border border-slate-200">
                       <Icon size={12} className="text-primary" />
-                      <span className="text-xs font-medium text-slate-600 capitalize">{product.category}</span>
+                      <span className="text-xs font-medium text-slate-600">{categoryNames[product.category]}</span>
                     </div>
                   </div>
                   <div className="p-4">
@@ -257,7 +259,7 @@ export default function HomePage() {
                       {product.description}
                     </p>
                     <span className="font-mono text-lg font-bold text-primary">
-                      ${product.price.toLocaleString()}
+                      ¥{product.price.toLocaleString()}
                     </span>
                   </div>
                 </Link>
@@ -272,10 +274,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-              Our Journey
+              How We Handle Every Order
             </h2>
             <p className="text-blue-200/80 text-lg max-w-2xl mx-auto">
-              From a small trading office to a trusted global auto parts distributor
+              A clear, practical process from market fitment to shipment
             </p>
           </div>
           
@@ -316,10 +318,10 @@ export default function HomePage() {
       <section className="py-20 bg-slate-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Ready to Source Quality Auto Parts?
+            Start small. Build a reliable wheel program.
           </h2>
           <p className="text-slate-500 text-lg mb-10 max-w-2xl mx-auto">
-            From OEM components to aftermarket accessories, we find the right parts at the right price. Partner with DriveLine for reliable automotive supply chain solutions.
+            Tell us your market, popular vehicle models and target styles. Mixed-container trials are welcome, and proven fitments can scale into stable full-container supply.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

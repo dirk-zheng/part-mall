@@ -480,3 +480,27 @@ interface ChatMessage {
 4. **支付集成**: 结账功能为模拟实现，后续可接入真实支付网关。
 5. **订单管理**: 当前无订单系统，购物车结账后直接清空。
 6. **国际化**: 前端部分文案未统一国际化（¥ 与 $ 混用）。
+
+
+## 10. 营销文案
+
+扎根广州永宁轮毂产业带，Driveline Wheels 做贸易，努力踏实做好服务，做好每张订单。
+1、**前置现场 QC**：从成品仓随机抽箱，按完整检查表检验，重点排查辐条根部裂纹、气孔、尺寸、动平衡、涂层附着力；拒绝工厂预先挑选样品。
+2、**适配当地热销车型**：针对东南亚日系轿车、中东 SUV、Hilux 皮卡高频规格常备选型库，减少反复确认参数。
+3、**订单模式灵活**：拼柜试单起步，不用一开始大批量压货；整柜稳定交付，黄埔港就近出货。
+4、**文件配套**：提供材质、疲劳冲击测试报告，配合清关。
+
+每一套出货的轮毂都经过我们的质量把关。期待和经销商、改装门店长期共赢。
+
+### English
+
+Driveline Wheels is professionally based in theYongning wheel industrial cluster, Guangzhou. As a reliable wheel trading & export supplier, we focus on steady quality, sincere service, and strict control over every single order.
+1. Pre-shipment On-site QC Inspection
+We randomly select finished goods directly from the warehouse for full checklist inspection. Strictly check for hidden cracks, porosity, dimensional accuracy, dynamic balance performance and coating adhesion. We never accept pre-selected factory samples to ensure real and stable quality for every batch.
+2. Market-oriented Fitment Library
+We maintain a complete specification library for best-selling models, covering Japanese sedans for Southeast Asia, as well as mainstream SUVs and Hilux pickup wheels for the Middle East, greatly reducing repeated confirmation and improving order efficiency.
+3. Flexible Order Modes
+We support LCL mixed container trial orders for new clients without large upfront inventory pressure, while providing stable FCL full-container mass shipment. Located near Huangpu Port, we ensure fast delivery and cost-effective logistics.
+4. Complete Document Support
+Full supporting documents are available for customs clearance, including material composition reports, fatigue test reports and impact test reports.
+Every wheel delivered is strictly quality-checked by our team. We sincerely look forward to long-term win-win cooperation with global auto distributors and modification shops.

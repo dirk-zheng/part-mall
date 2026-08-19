@@ -76,7 +76,7 @@ export default function SupportWidget() {
         className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/30 flex items-center justify-center z-50 transition-all hover:scale-110 hover:shadow-xl hover:shadow-primary/40 ${
           isOpen ? 'rotate-90' : ''
         }`}
-        title={isAdmin ? 'Customer Messages' : 'Support & Chat'}
+        title={isAdmin ? 'Customer Messages' : 'Fitment & Sales Support'}
       >
         {/* Big Red Dot */}
         {showDot && (

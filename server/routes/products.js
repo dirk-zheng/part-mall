@@ -100,7 +100,7 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
     if (!name || name.length < 2 || name.length > 50) {
       errors.push('Product name must be 2-50 characters');
     }
-    if (!category || !['phone', 'computer', 'accessory', 'wearable', 'audio'].includes(category)) {
+    if (!category || !['forged-wheel', 'cast-wheel', 'tire', 'wheel-set', 'accessory'].includes(category)) {
       errors.push('Please select a valid product category');
     }
     if (!price || price <= 0) {
@@ -157,7 +157,7 @@ router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
     if (!name || name.length < 2 || name.length > 50) {
       errors.push('Product name must be 2-50 characters');
     }
-    if (!category || !['phone', 'computer', 'accessory', 'wearable', 'audio'].includes(category)) {
+    if (!category || !['forged-wheel', 'cast-wheel', 'tire', 'wheel-set', 'accessory'].includes(category)) {
       errors.push('Please select a valid product category');
     }
     if (!price || price <= 0) {

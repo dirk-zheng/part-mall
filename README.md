@@ -1,6 +1,6 @@
-# DriveLine International — 汽车配套产品分销
+# Driveline Wheels — 广州永宁轮毂贸易
 
-一家扎根广州的汽车配套产品分销商，基于 React + Vite + Tailwind CSS 构建前端，Node.js + Express 构建后端 RESTful API。
+一家扎根广州永宁轮毂产业带的轮毂贸易团队，面向经销商和改装门店提供当地热销车型选型、成品仓随机抽箱 QC、拼柜试单、整柜交付以及测试报告与清关文件配套。前端基于 React + Vite + Tailwind CSS，主要业务通过 Node.js WebSocket 服务通信，同时保留 Express REST API。
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![React](https://img.shields.io/badge/React-18.3-green)
@@ -11,14 +11,14 @@
 
 ### 首页 Landing Page
 - Hero 大屏展示（渐变深色背景 + 核心数据统计）
-- 三大核心服务：汽车零部件采购、质量检测、全球分销物流
-- 四大核心优势：广袤供应商网络、严格品控、快速分销、行业专长
-- 里程碑时间线（2014–2024 六个关键节点：从天河岗顶贸易办公室到 200+ 供应商、50+ 国家）
+- 三大核心服务：当地车型选型、前置现场 QC、灵活订单与文件配套
+- 四大核心优势：永宁产业带区位、随机抽箱检查、拼柜试单、黄埔港就近出货
+- 六步订单流程：市场需求、参数适配、订单方案、生产跟进、现场 QC、单证与装运
 - CTA 行动号召区域
 
 ### 商品列表
 - 商品卡片网格展示，响应式 1–4 列布局
-- 分类筛选：All / Phones / Computers / Accessories / Wearables / Audio
+- 分类筛选：All Products / Forged Wheels / Alloy Wheels / Tires / Wheel Sets / Accessories
 - 实时搜索（按名称 + 描述模糊匹配）
 - 价格排序（默认 / 升序 / 降序）
 - 后端分页支持，底部统计面板（总数 / 当前展示 / 分类数）
@@ -28,7 +28,7 @@
 - 已登录用户专属，数据与服务端同步
 - 商品数量增减调节
 - 单商品删除 + 整购物车清空（带确认弹窗）
-- 订单汇总：小计 + 运费（满 $500 免运费，否则 $20）
+- 订单汇总：小计 + 运费（满 ¥5,000 免运费，否则 ¥120）
 - 结账模拟（3 秒处理动画 + 成功弹窗）
 - 空购物车引导状态
 
@@ -40,7 +40,7 @@
 
 ### 客服系统
 - 悬浮右下角图标入口
-- AI 关键词匹配智能回复（价格 / 物流 / 退货 / 支付四大类）
+- AI 关键词匹配智能回复（车型适配 / 拼柜试单 / 现场 QC / 清关文件）
 - 快捷问题按钮
 - 消息时间戳 + 打字指示器动画
 - FAQ 常见问题列表
@@ -53,10 +53,10 @@
 - 路由级权限守卫，未登录自动跳转
 
 ### 关于我们
-- 公司故事与发展历程（天河岗顶一间小办公室起步）
-- 管理团队介绍（4 位汽车供应链核心成员）
-- 三大广州运营中心（黄埔采购中心 / 番禺质检中心 / 南沙物流枢纽）
-- 核心优势：精选供应商网络 / 汽车级品控 / 可靠交付
+- 扎根广州永宁轮毂产业带的务实贸易定位
+- 四位订单执行成员：客户服务 / 车型适配 / 订单单证 / 现场 QC
+- 三个关键现场：永宁产业带 / 工厂成品仓 / 黄埔港出货路线
+- 核心优势：随机抽箱 QC / 热销车型选型库 / 拼柜到整柜 / 测试报告配套
 
 ## 演示账号
 
@@ -256,7 +256,7 @@ cd client && npm run build
 interface Product {
   id: string;           // UUID
   name: string;         // 2–50 字符
-  category: 'phone' | 'computer' | 'accessory' | 'wearable' | 'audio';
+  category: 'forged-wheel' | 'cast-wheel' | 'tire' | 'wheel-set' | 'accessory';
   price: number;        // > 0
   stock: number;        // ≥ 0，整数
   image: string;        // 图片 URL
@@ -279,8 +279,8 @@ interface User {
 
 | 颜色 | 色值 | 用途 |
 |------|------|------|
-| Primary | `#0066ff` | 主色调、科技蓝 |
-| Secondary | `#6366f1` | 次要色、电紫 |
+| Primary | `#ea580c` | 主色调、性能橙 |
+| Secondary | `#f59e0b` | 次要色、暖金 |
 | Accent | `#00d4aa` | 强调色、清新绿 |
 | Background | `#f8fafc` | 页面背景 |
 | Surface | `#ffffff` | 卡片背景 |

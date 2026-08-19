@@ -12,7 +12,7 @@ export default function Cart() {
     0
   );
 
-  const shippingFee = totalPrice > 500 ? 0 : 20;
+  const shippingFee = totalPrice >= 5000 ? 0 : 120;
   const finalPrice = totalPrice + shippingFee;
 
   const handleQuantityChange = async (productId, newQuantity) => {
@@ -116,7 +116,7 @@ export default function Cart() {
                   {item.product.description}
                 </p>
                 <div className="font-mono text-primary text-lg font-semibold">
-                  ${item.product.price.toLocaleString()}
+                  ¥{item.product.price.toLocaleString()}
                 </div>
               </div>
 
@@ -156,7 +156,7 @@ export default function Cart() {
           <div className="space-y-3 mb-6">
             <div className="flex justify-between text-dark-600">
               <span>Subtotal</span>
-              <span className="font-mono">${totalPrice.toLocaleString()}</span>
+              <span className="font-mono">¥{totalPrice.toLocaleString()}</span>
             </div>
             <div className="flex justify-between text-dark-600">
               <span className="flex items-center gap-2">
@@ -164,16 +164,16 @@ export default function Cart() {
                 Shipping
               </span>
               <span className="font-mono">
-                {shippingFee === 0 ? 'Free' : `$${shippingFee}`}
+                {shippingFee === 0 ? 'Free' : `¥${shippingFee}`}
               </span>
             </div>
             {shippingFee > 0 && (
-              <p className="text-xs text-dark-400">Free shipping on orders over $500</p>
+              <p className="text-xs text-dark-400">Free domestic shipping on orders over ¥5,000</p>
             )}
             <div className="pt-3 border-t border-dark-200 flex justify-between">
               <span className="font-heading font-semibold text-dark-900">Total</span>
               <span className="font-mono text-2xl font-bold text-primary">
-                ${finalPrice.toLocaleString()}
+                ¥{finalPrice.toLocaleString()}
               </span>
             </div>
           </div>

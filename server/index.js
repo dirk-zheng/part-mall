@@ -66,8 +66,8 @@ createWSServer(server);
 
 server.listen(PORT, HOST, () => {
   console.log('╔══════════════════════════════════════════╗');
-  console.log('║     DriveLine International                ║');
-  console.log('║     Auto Parts Sourcing & Distribution   ║');
+  console.log('║     Driveline Wheels                     ║');
+  console.log('║     Wheels, Tires & Fitment Solutions    ║');
   console.log(`║   HTTP:   http://${displayHost}:${PORT}                    ║`);
   console.log(`║   WS:     ws://${displayHost}:${PORT}/ws                    ║`);
   console.log(`║   Mode:   ${ENV}                  ║`);

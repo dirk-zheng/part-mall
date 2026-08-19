@@ -1,16 +1,16 @@
 import { useState, useMemo } from 'react';
-import { Search, Grid3X3, Smartphone, Laptop, Cable, Watch, Headphones, ArrowUpDown } from 'lucide-react';
+import { Search, Grid3X3, CircleDot, Disc3, Circle, Package, Wrench, ArrowUpDown } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { categories } from '../data/products';
 import ProductCard from '../components/ProductCard';
 
 const categoryIcons = {
   all: Grid3X3,
-  phone: Smartphone,
-  computer: Laptop,
-  accessory: Cable,
-  wearable: Watch,
-  audio: Headphones,
+  'forged-wheel': Disc3,
+  'cast-wheel': CircleDot,
+  tire: Circle,
+  'wheel-set': Package,
+  accessory: Wrench,
 };
 
 export default function Products() {
@@ -51,10 +51,10 @@ export default function Products() {
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h1 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-dark-900">
-            Our <span className="text-primary">Products</span>
+            Wheel selections for <span className="text-primary">your market</span>
           </h1>
           <p className="text-dark-500 text-lg max-w-2xl mx-auto">
-            Browse our full product catalog and find the best solutions for your business
+            Browse wheel styles and fitment-ready products for distributors and modification shops.
           </p>
         </div>
       </div>
@@ -66,7 +66,7 @@ export default function Products() {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-400" size={20} />
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder="Search by product, size or specification..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"

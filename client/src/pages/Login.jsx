@@ -38,9 +38,9 @@ export default function Login() {
   };
 
   const features = [
-    { icon: Shield, text: 'Vetted Supplier Network' },
-    { icon: Users, text: '200+ Quality Suppliers' },
-    { icon: Globe, text: 'Based in Guangzhou, China' },
+    { icon: Shield, text: 'Random-carton On-site QC' },
+    { icon: Users, text: 'Mixed-load Trial Orders' },
+    { icon: Globe, text: 'Rooted in Yongning, Guangzhou' },
   ];
 
   return (
@@ -59,20 +59,20 @@ export default function Login() {
               <span className="text-white font-heading font-bold text-3xl">D</span>
             </div>
             <div>
-              <h1 className="font-heading text-3xl font-bold text-dark-900">DriveLine</h1>
-              <p className="text-dark-500">Auto Parts Distribution</p>
+              <h1 className="font-heading text-3xl font-bold text-dark-900">Driveline Wheels</h1>
+              <p className="text-dark-500">Practical Wheel Trading</p>
             </div>
           </div>
           
           <h2 className="text-4xl font-heading font-bold text-dark-900 mb-4 leading-tight">
             Welcome to<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-              DriveLine
+              Driveline Wheels
             </span>
           </h2>
           
           <p className="text-dark-500 mb-8">
-            Sign in to browse our auto parts catalog, place wholesale orders, and access distributor pricing.
+            Sign in to review wheel fitments, build a mixed-load trial order and work with our team from selection through shipment.
           </p>
 
           <div className="space-y-4">

@@ -11,10 +11,10 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
                 <span className="text-white font-heading font-bold">D</span>
               </div>
-              <span className="font-heading font-semibold text-dark-900">DriveLine</span>
+              <span className="font-heading font-semibold text-dark-900">Driveline Wheels</span>
             </div>
             <p className="text-dark-500 text-sm leading-relaxed">
-              Automotive parts distributor based in Guangzhou, China. We source, inspect, and ship quality auto parts to buyers across 50+ countries.
+              A practical wheel trading team rooted in Guangzhou Yongning. We help with local-market fitments, random-carton on-site QC, flexible orders and export documents.
             </p>
           </div>
 
@@ -25,10 +25,16 @@ export default function Footer() {
                 Home
               </Link>
               <Link to="/products" className="text-dark-500 hover:text-primary transition-colors text-sm">
-                Products
+                Wheels & Tires
               </Link>
               <Link to="/about" className="text-dark-500 hover:text-primary transition-colors text-sm">
                 About Us
+              </Link>
+              <Link to="/news-blog/" className="text-dark-500 hover:text-primary transition-colors text-sm">
+                Technical & Buying Insights
+              </Link>
+              <Link to="/faq" className="text-dark-500 hover:text-primary transition-colors text-sm">
+                Buyer FAQ
               </Link>
               <Link to="/cart" className="text-dark-500 hover:text-primary transition-colors text-sm">
                 Cart
@@ -57,7 +63,7 @@ export default function Footer() {
 
         <div className="mt-8 pt-6 border-t border-dark-200 text-center">
           <p className="text-dark-400 text-sm">
-            &copy; 2026 DriveLine International. Guangzhou, China. All rights reserved.
+            &copy; 2026 Driveline Wheels. Yongning, Guangzhou, China. All rights reserved.
           </p>
         </div>
       </div>

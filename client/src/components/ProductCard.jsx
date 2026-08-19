@@ -1,29 +1,22 @@
 import { useState } from 'react';
-import { ShoppingCart, Check, Smartphone, Laptop, Cable, Watch, Headphones } from 'lucide-react';
+import { ShoppingCart, Check, CircleDot, Disc3, Circle, Package, Wrench } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
+import { categoryNames } from '../data/products';
 
 const categoryIcons = {
-  phone: Smartphone,
-  computer: Laptop,
-  accessory: Cable,
-  wearable: Watch,
-  audio: Headphones,
+  'forged-wheel': Disc3,
+  'cast-wheel': CircleDot,
+  tire: Circle,
+  'wheel-set': Package,
+  accessory: Wrench,
 };
 
 const categoryColors = {
-  phone: 'bg-blue-100 text-blue-600 border-blue-200',
-  computer: 'bg-purple-100 text-purple-600 border-purple-200',
-  accessory: 'bg-green-100 text-green-600 border-green-200',
-  wearable: 'bg-orange-100 text-orange-600 border-orange-200',
-  audio: 'bg-pink-100 text-pink-600 border-pink-200',
-};
-
-const categoryNames = {
-  phone: 'Phone',
-  computer: 'Computer',
-  accessory: 'Accessory',
-  wearable: 'Wearable',
-  audio: 'Audio',
+  'forged-wheel': 'bg-orange-100 text-orange-700 border-orange-200',
+  'cast-wheel': 'bg-slate-100 text-slate-700 border-slate-200',
+  tire: 'bg-zinc-900 text-white border-zinc-700',
+  'wheel-set': 'bg-amber-100 text-amber-700 border-amber-200',
+  accessory: 'bg-emerald-100 text-emerald-700 border-emerald-200',
 };
 
 export default function ProductCard({ product }) {
@@ -42,7 +35,7 @@ export default function ProductCard({ product }) {
     }
   };
 
-  const CategoryIcon = categoryIcons[product.category] || Smartphone;
+  const CategoryIcon = categoryIcons[product.category] || CircleDot;
 
   return (
     <div

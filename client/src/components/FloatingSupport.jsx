@@ -9,10 +9,10 @@ import { supportAPI, imAPI, wsClient } from '../api';
 
 // ─── Quick Questions for AI Tab ──────────────────
 const quickQuestions = [
-  { icon: ShoppingBag, text: 'Pricing', message: 'What promotions do you have?' },
-  { icon: Truck, text: 'Shipping', message: 'How long does shipping take?' },
-  { icon: RefreshCw, text: 'Returns', message: 'What is the return policy?' },
-  { icon: CreditCard, text: 'Payment', message: 'What payment methods are accepted?' },
+  { icon: ShoppingBag, text: 'Fitment', message: 'Which fitments do you keep for my local market?' },
+  { icon: CreditCard, text: 'On-site QC', message: 'How do you randomly inspect finished wheels?' },
+  { icon: RefreshCw, text: 'Mixed Load', message: 'Can I start with a mixed-container trial order?' },
+  { icon: Truck, text: 'Documents', message: 'Which test reports can you provide for customs clearance?' },
 ];
 
 function formatTime(date) {
@@ -36,7 +36,7 @@ function AIChatView({ state, dispatch, onClose }) {
           payload: {
             id: 'welcome',
             sender: 'ai',
-            content: 'Hello! Welcome to DriveLine International. I am your dedicated support assistant. How can I help you today?',
+            content: 'Welcome to Driveline Wheels. Tell us your market, popular vehicle models and target wheel styles. We can help with fitment selection, mixed-load trials, on-site QC and export documents.',
             timestamp: new Date()
           }
         });
