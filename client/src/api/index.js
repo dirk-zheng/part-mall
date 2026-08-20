@@ -93,5 +93,17 @@ export const imAPI = {
     wsClient.send('im.send', { roomId, toUserId, content }),
 };
 
+// ─── 管理员内容与用户 API ─────────────────────────
+
+export const adminAPI = {
+  getUsers: () => wsClient.send('admin.users'),
+  getArticles: () => wsClient.send('admin.articles.list'),
+  createArticle: (article) => wsClient.send('admin.articles.create', article),
+  deleteArticle: (id) => wsClient.send('admin.articles.delete', { id }),
+  getFaqs: () => wsClient.send('admin.faqs.list'),
+  createFaq: (faq) => wsClient.send('admin.faqs.create', faq),
+  deleteFaq: (id) => wsClient.send('admin.faqs.delete', { id }),
+};
+
 export { wsClient };
-export default { authAPI, productAPI, mixedLoadAPI, quoteAPI, supportAPI, imAPI };
+export default { authAPI, productAPI, mixedLoadAPI, quoteAPI, supportAPI, imAPI, adminAPI };

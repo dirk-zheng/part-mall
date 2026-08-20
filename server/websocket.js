@@ -10,6 +10,8 @@ const { JWT_SECRET, generateToken } = require('./middleware/auth');
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 const QUOTES_FILE = path.join(__dirname, 'data', 'quotes.json');
+const ARTICLES_FILE = path.join(__dirname, 'data', 'articles.json');
+const FAQS_FILE = path.join(__dirname, 'data', 'faqs.json');
 
 // ─── File Helpers ────────────────────────────────
 function readProducts() {
@@ -35,6 +37,16 @@ function readQuotes() {
 
 function writeQuotes(quotes) {
   fs.writeFileSync(QUOTES_FILE, JSON.stringify(quotes, null, 2), 'utf-8');
+}
+
+function readList(file) {
+  if (!fs.existsSync(file)) return [];
+  const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
+  return Array.isArray(data) ? data : [];
+}
+
+function writeList(file, list) {
+  fs.writeFileSync(file, JSON.stringify(list, null, 2), 'utf-8');
 }
 
 // ─── In-Memory Mixed-load Builder ────────────────
@@ -487,6 +499,101 @@ function handleSupportFAQ() {
   ];
 }
 
+// ─── Administrator workspace ────────────────────
+function handleAdminUsers(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  return readUsers().map(({ password, ...user }) => user);
+}
+
+function createSlug(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/["'“”]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+    .slice(0, 120);
+}
+
+function handleAdminArticlesList(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  return readList(ARTICLES_FILE).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+}
+
+function handleAdminArticleCreate(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  const title = String(payload?.title || '').trim();
+  const summary = String(payload?.summary || '').trim();
+  const content = String(payload?.content || '').trim();
+  const slug = createSlug(payload?.slug || title);
+  if (title.length < 5 || title.length > 160) throw new Error('Article title must be 5-160 characters');
+  if (summary.length < 20 || summary.length > 320) throw new Error('Search summary must be 20-320 characters');
+  if (content.length < 100) throw new Error('Article content must be at least 100 characters');
+  if (!slug) throw new Error('A valid English URL slug is required');
+  const allowedStatuses = ['draft', 'review', 'published'];
+  const status = allowedStatuses.includes(payload?.status) ? payload.status : 'draft';
+  const articles = readList(ARTICLES_FILE);
+  if (articles.some((article) => article.slug === slug)) throw new Error('This article URL slug already exists');
+  const now = new Date().toISOString();
+  const article = {
+    id: uuidv4(), title, slug, summary, content,
+    image: String(payload?.image || '').trim().slice(0, 500), status,
+    authorId: ws.userId, authorName: ws.user.name || ws.user.username,
+    createdAt: now, updatedAt: now,
+  };
+  articles.push(article);
+  writeList(ARTICLES_FILE, articles);
+  return article;
+}
+
+function handleAdminArticleDelete(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  const articles = readList(ARTICLES_FILE);
+  const index = articles.findIndex((article) => article.id === payload?.id);
+  if (index === -1) throw new Error('Article record not found');
+  const [removed] = articles.splice(index, 1);
+  writeList(ARTICLES_FILE, articles);
+  return removed;
+}
+
+function handleAdminFaqsList(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  return readList(FAQS_FILE).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+}
+
+function handleAdminFaqCreate(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  const question = String(payload?.question || '').trim();
+  const answer = String(payload?.answer || '').trim();
+  const category = String(payload?.category || 'General').trim().slice(0, 60);
+  if (question.length < 10 || question.length > 240) throw new Error('FAQ question must be 10-240 characters');
+  if (answer.length < 20 || answer.length > 2000) throw new Error('FAQ answer must be 20-2000 characters');
+  const allowedStatuses = ['draft', 'review', 'published'];
+  const status = allowedStatuses.includes(payload?.status) ? payload.status : 'draft';
+  const now = new Date().toISOString();
+  const faq = { id: uuidv4(), question, answer, category, status, authorId: ws.userId, createdAt: now, updatedAt: now };
+  const faqs = readList(FAQS_FILE);
+  faqs.push(faq);
+  writeList(FAQS_FILE, faqs);
+  return faq;
+}
+
+function handleAdminFaqDelete(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  const faqs = readList(FAQS_FILE);
+  const index = faqs.findIndex((faq) => faq.id === payload?.id);
+  if (index === -1) throw new Error('FAQ record not found');
+  const [removed] = faqs.splice(index, 1);
+  writeList(FAQS_FILE, faqs);
+  return removed;
+}
+
 // ─── IM (Instant Messaging) ───────────────────────
 
 function handleGetSales() {
@@ -594,6 +701,13 @@ const handlers = {
   'quote.submit':       { fn: handleQuoteSubmit,     auth: true  },
   'support.chat':       { fn: handleSupportChat,   auth: true  },
   'support.faq':        { fn: handleSupportFAQ,    auth: false },
+  'admin.users':        { fn: handleAdminUsers, auth: true },
+  'admin.articles.list':{ fn: handleAdminArticlesList, auth: true },
+  'admin.articles.create': { fn: handleAdminArticleCreate, auth: true },
+  'admin.articles.delete': { fn: handleAdminArticleDelete, auth: true },
+  'admin.faqs.list':    { fn: handleAdminFaqsList, auth: true },
+  'admin.faqs.create':  { fn: handleAdminFaqCreate, auth: true },
+  'admin.faqs.delete':  { fn: handleAdminFaqDelete, auth: true },
   'im.sales':           { fn: handleGetSales,      auth: true  },
   'im.rooms':           { fn: handleGetIMRooms,    auth: true  },
   'im.messages':        { fn: handleGetIMMessages, auth: true  },

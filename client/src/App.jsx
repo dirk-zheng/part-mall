@@ -18,6 +18,10 @@ import Contact from './pages/Contact';
 import SupportWidget from './components/SupportWidget';
 import SEOManager from './components/SEOManager';
 import NotFound from './pages/NotFound';
+import AdminToolRail from './components/AdminToolRail';
+import AdminUsers from './pages/AdminUsers';
+import AdminArticles from './pages/AdminArticles';
+import AdminFaqs from './pages/AdminFaqs';
 import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
 
 export function AppContent({ initialProducts = [] }) {
@@ -27,6 +31,7 @@ export function AppContent({ initialProducts = [] }) {
           <div className="min-h-screen flex flex-col">
             <SEOManager />
             <Header />
+            <AdminToolRail />
             <main className="flex-1">
               <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -56,6 +61,9 @@ export function AppContent({ initialProducts = [] }) {
                     </RequireAdmin>
                   } 
                 />
+                <Route path="/admin/users" element={<RequireAdmin><AdminUsers /></RequireAdmin>} />
+                <Route path="/admin/articles" element={<RequireAdmin><AdminArticles /></RequireAdmin>} />
+                <Route path="/admin/faqs" element={<RequireAdmin><AdminFaqs /></RequireAdmin>} />
                 <Route path="/404" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -15,6 +15,9 @@ const privatePages = {
   '/login': ['Distributor Sign In | Driveline Wheels', 'Sign in to build a private mixed-load wheel request.'],
   '/quote': ['Build a Mixed-load RFQ | Driveline Wheels', 'Prepare a private mixed-load wheel request.'],
   '/admin': ['Product Administration | Driveline Wheels', 'Private product administration area.'],
+  '/admin/users': ['User Lookup | Driveline Wheels Admin', 'Private administrator user information lookup.'],
+  '/admin/articles': ['Article Upload | Driveline Wheels Admin', 'Private news-blog article upload workspace.'],
+  '/admin/faqs': ['FAQ Editor | Driveline Wheels Admin', 'Private FAQ writing workspace.'],
 };
 
 export function normalizeSeoPath(pathname = '/') {
