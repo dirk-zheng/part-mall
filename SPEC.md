@@ -331,7 +331,7 @@ About
 
 | Context | 文件 | 管理状态 | 提供方法 |
 |---------|------|----------|----------|
-| AuthContext | `context/AuthContext.jsx` | `user`, `loading` | `login()`, `register()`, `logout()`, `isAdmin()` |
+| AuthContext | `context/AuthContext.jsx` | `user`, `loading` | `login()`, `register()`, `logout()`, `isAdmin()`, `isSeller()` |
 | StoreContext | `context/StoreContext.jsx` | `products[]`, `cart[]`, `chatHistory[]`, `loading` | `addToCart()`, `removeFromCart()`, `updateQuantity()`, `clearCart()`, `checkout()` 等 |
 
 **数据流**：
@@ -439,7 +439,7 @@ interface User {
   id: string;           // UUID v4
   username: string;     // 唯一
   password: string;     // bcrypt 哈希（不返回给前端）
-  role: 'admin' | 'user';
+  role: 'admin' | 'seller' | 'user';
   name: string;
 }
 

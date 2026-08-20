@@ -49,7 +49,9 @@
 - 账号密码登录 / 注册
 - 密码 bcrypt 加密存储
 - JWT Token 认证（7 天有效期）
-- 角色权限控制：管理员（admin）/ 普通用户（user）
+- 角色权限控制：管理员（admin）/ 销售员（seller）/ 普通用户（user）
+- 管理员可在成员角色页面将普通用户设置为销售员，也可撤回为普通用户
+- 销售员会出现在客户在线咨询的销售联系人列表中
 - 路由级权限守卫，未登录自动跳转
 
 ### 关于我们
@@ -280,7 +282,7 @@ interface User {
   id: string;           // UUID
   username: string;     // 唯一；询价后创建的账号使用规范化邮箱
   password: string;     // bcrypt 哈希
-  role: 'admin' | 'user';
+  role: 'admin' | 'seller' | 'user';
   name: string;
 }
 ```

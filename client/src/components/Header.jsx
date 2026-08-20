@@ -161,9 +161,11 @@ export default function Header() {
                         <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium ${
                           user.role === 'admin'
                             ? 'bg-purple-100 text-purple-700'
-                            : 'bg-blue-100 text-blue-700'
+                            : ['seller', 'salesperson'].includes(user.role)
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-blue-100 text-blue-700'
                         }`}>
-                          {user.role === 'admin' ? 'Admin' : 'User'}
+                          {user.role === 'admin' ? 'Admin' : ['seller', 'salesperson'].includes(user.role) ? 'Seller' : 'User'}
                         </span>
                       </div>
 

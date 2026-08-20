@@ -84,6 +84,7 @@ export function AppContent({ initialProducts = [] }) {
                   }
                 />
                 <Route path="/admin/users" element={<RequireAdmin><AdminUsers /></RequireAdmin>} />
+                <Route path="/admin/roles" element={<RequireAdmin><AdminUsers manageRoles /></RequireAdmin>} />
                 <Route path="/admin/articles" element={<RequireAdmin><AdminArticles /></RequireAdmin>} />
                 <Route path="/admin/faqs" element={<RequireAdmin><AdminFaqs /></RequireAdmin>} />
                 <Route path="/404" element={<NotFound />} />

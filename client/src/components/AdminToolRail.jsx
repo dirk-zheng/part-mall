@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { BookOpenText, ChevronLeft, ChevronRight, CircleHelp, Construction, UsersRound } from 'lucide-react';
+import { BookOpenText, ChevronLeft, ChevronRight, CircleHelp, Construction, UserCog, UsersRound } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const tools = [
   { path: '/admin/users', label: 'User lookup', icon: UsersRound },
+  { path: '/admin/roles', label: 'Member roles', icon: UserCog },
   { path: '/admin/articles', label: 'Upload news-blog article', icon: BookOpenText },
   { path: '/admin/faqs', label: 'Write FAQ', icon: CircleHelp },
 ];

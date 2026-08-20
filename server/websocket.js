@@ -26,7 +26,9 @@ function writeProducts(products) {
 
 //读取用户数据列表
 function readUsers() {
-  return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8')).users;
+  return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8')).users.map((user) => (
+    user.role === 'salesperson' ? { ...user, role: 'seller' } : user
+  ));
 }
 
 //将用户数据列表写入本地文件
@@ -577,6 +579,38 @@ function handleAdminUsers(payload, ws) {
   return readUsers().map(({ password, ...user }) => user);
 }
 
+//允许管理员在普通用户与销售员之间调整成员角色
+function handleAdminUpdateUserRole(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+
+  const userId = String(payload?.userId || '').trim();
+  const role = String(payload?.role || '').trim();
+  if (!['user', 'seller'].includes(role)) {
+    throw new Error('Role must be user or seller');
+  }
+
+  const users = readUsers();
+  const target = users.find((user) => user.id === userId);
+  if (!target) throw new Error('User not found');
+  if (target.role === 'admin') throw new Error('Admin accounts cannot be changed here');
+
+  target.role = role;
+  target.updatedAt = new Date().toISOString();
+  writeUsers(users);
+
+  const { password, ...safeUser } = target;
+  const token = generateToken(target);
+  const connections = clientMap.get(target.id);
+  connections?.forEach((client) => {
+    client.user = { id: target.id, username: target.username, role: target.role, name: target.name };
+    client.userId = target.id;
+  });
+  sendToUser(target.id, { type: 'auth.role_updated', success: true, data: { user: safeUser, token } });
+
+  return safeUser;
+}
+
 //将文章标题或输入值转换为URL标识
 function createSlug(value) {
   return String(value || '')
@@ -679,13 +713,13 @@ function handleAdminFaqDelete(payload, ws) {
 
 // ─── IM (Instant Messaging) ───────────────────────
 
-//返回可提供即时沟通的销售管理员列表
+//返回可提供即时沟通的销售员列表
 function handleGetSales() {
   const users = readUsers();
-  //筛选拥有管理员角色的销售账号
+  //仅销售员作为客户可选择的销售联系人
   return users
-    //逐项判断用户是否拥有管理员角色
-    .filter(u => u.role === 'admin')
+    //逐项判断用户是否拥有销售员角色
+    .filter(u => u.role === 'seller')
     //将销售账号转换为前端安全字段
     .map(u => ({ id: u.id, username: u.username, name: u.name, role: u.role }));
 }
@@ -797,6 +831,7 @@ const handlers = {
   'support.chat':       { fn: handleSupportChat,   auth: true  },
   'support.faq':        { fn: handleSupportFAQ,    auth: false },
   'admin.users':        { fn: handleAdminUsers, auth: true },
+  'admin.users.update-role': { fn: handleAdminUpdateUserRole, auth: true },
   'admin.articles.list':{ fn: handleAdminArticlesList, auth: true },
   'admin.articles.create': { fn: handleAdminArticleCreate, auth: true },
   'admin.articles.delete': { fn: handleAdminArticleDelete, auth: true },
@@ -840,9 +875,12 @@ function createWSServer(server) {
       const token = url.searchParams.get('token');
       if (token) {
         const decoded = jwt.verify(token, JWT_SECRET);
-        ws.user = decoded;
-        ws.userId = decoded.id;
-        addClient(decoded.id, ws);
+        const storedUser = readUsers().find((user) => user.id === decoded.id);
+        if (storedUser) {
+          ws.user = { id: storedUser.id, username: storedUser.username, role: storedUser.role, name: storedUser.name };
+          ws.userId = storedUser.id;
+          addClient(storedUser.id, ws);
+        }
       }
     } catch (e) { /* invalid/expired token, continue unauthenticated */ }
 

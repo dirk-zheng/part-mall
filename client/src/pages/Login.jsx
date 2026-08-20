@@ -228,20 +228,6 @@ export default function Login() {
                 </button>
               </p>
 
-              {/* Demo Hint */}
-              {isLogin && (
-                <div className="bg-blue-50 rounded-xl p-4 mt-4">
-                  <p className="text-xs text-blue-600 font-medium mb-2">Demo Accounts</p>
-                  <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
-                    <div className="bg-white rounded-lg px-3 py-2">
-                      <span className="font-medium">Admin:</span> admin / admin
-                    </div>
-                    <div className="bg-white rounded-lg px-3 py-2">
-                      <span className="font-medium">User:</span> user / user123
-                    </div>
-                  </div>
-                </div>
-              )}
             </form>
           </div>
 

@@ -8,8 +8,8 @@ CREATE DATABASE IF NOT EXISTS `part_mall`
 
 USE `part_mall`;
 
--- 用户与管理员账号
--- user_data: username, password, role, name, createdAt, updatedAt
+-- 普通用户、销售员与管理员账号
+-- user_data: username, password, role(user|seller|admin), name, createdAt, updatedAt
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id` VARCHAR(191) NOT NULL,
   `user_data` JSON NOT NULL,
@@ -88,4 +88,3 @@ CREATE TABLE IF NOT EXISTS `support_messages` (
   `support_message_data` JSON NOT NULL,
   PRIMARY KEY (`support_message_id`)
 ) ENGINE=InnoDB;
-

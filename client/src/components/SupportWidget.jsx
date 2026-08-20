@@ -16,8 +16,8 @@ export default function SupportWidget() {
 
   isOpenRef.current = isOpen; // always current
 
-  const isCustomer = !user || user.role !== 'admin';
-  const isAdmin = user?.role === 'admin';
+  const isStaff = user?.role === 'admin' || ['seller', 'salesperson'].includes(user?.role);
+  const isCustomer = !user || !isStaff;
 
   // Customer: check localStorage on mount / when user loads
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function SupportWidget() {
   useEffect(() => {
               //执行组件副作用逻辑
 
-    if (!isAdmin) return;
+    if (!isStaff) return;
 
     const unsub = wsClient.on('im.message', (data) => {
                                               //处理回调函数逻辑
@@ -53,7 +53,7 @@ export default function SupportWidget() {
     });
 
     return unsub;
-  }, [isAdmin]);
+  }, [isStaff]);
 
   const handleToggle = useCallback(() => {
                                      //创建并缓存回调函数
@@ -89,12 +89,12 @@ export default function SupportWidget() {
         className={`fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-primary to-secondary shadow-lg shadow-primary/30 flex items-center justify-center z-50 transition-all hover:scale-110 hover:shadow-xl hover:shadow-primary/40 ${
           isOpen ? 'rotate-90' : ''
         }`}
-        title={isAdmin ? 'Customer Messages' : 'Fitment & Sales Support'}
+        title={isStaff ? 'Customer Messages' : 'Fitment & Sales Support'}
       >
         {/* Big Red Dot */}
         {showDot && (
           <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-[20px] h-[20px] bg-red-500 rounded-full border-[3px] border-white shadow-lg animate-pulse">
-            {isAdmin && unreadCount > 0 ? (
+            {isStaff && unreadCount > 0 ? (
               <span className="text-white text-[10px] font-bold leading-none px-1">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>

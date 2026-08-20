@@ -12,7 +12,9 @@ const QUOTES_FILE = path.join(__dirname, '..', 'data', 'quotes.json');
 //读取用户数据列表
 function readUsers() {
   const data = fs.readFileSync(USERS_FILE, 'utf-8');
-  return JSON.parse(data).users;
+  return JSON.parse(data).users.map((user) => (
+    user.role === 'salesperson' ? { ...user, role: 'seller' } : user
+  ));
 }
 
 //将用户数据列表写入本地文件

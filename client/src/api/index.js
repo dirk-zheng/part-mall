@@ -163,6 +163,9 @@ export const adminAPI = {
               //处理回调函数逻辑
               return wsClient.send('admin.users');
             },
+  updateUserRole: (userId, role) => {
+                    return wsClient.send('admin.users.update-role', { userId, role });
+                  },
   getArticles: () => {
                  //处理回调函数逻辑
                  return wsClient.send('admin.articles.list');

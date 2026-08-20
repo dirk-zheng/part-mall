@@ -41,6 +41,17 @@ export function AuthProvider({ children }) {
     setLoading(false);
   }, []);
 
+  // 在线角色变更后立即刷新当前账号和Token
+  useEffect(() => {
+    return wsClient.on('auth.role_updated', ({ user: updatedUser, token }) => {
+      if (!updatedUser || !token) return;
+      const userData = { ...updatedUser, token };
+      setUser(userData);
+      localStorage.setItem('mall_user', JSON.stringify(userData));
+      wsClient.setToken(token);
+    });
+  }, []);
+
   // 登录函数
   const login = async (username, password) => {
                   //处理回调函数逻辑
@@ -80,6 +91,8 @@ export function AuthProvider({ children }) {
                     return user?.role === 'admin';
                   };
 
+  const isSeller = () => user?.role === 'seller' || user?.role === 'salesperson';
+
   const value = {
     user,
     loading,
@@ -87,6 +100,7 @@ export function AuthProvider({ children }) {
     register,
     logout,
     isAdmin,
+    isSeller,
   };
 
   return (

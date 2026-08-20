@@ -410,6 +410,7 @@ function RoomList({ onSelectRoom, onNewChat }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { user } = useAuth();
+  const isStaff = user?.role === 'admin' || ['seller', 'salesperson'].includes(user?.role);
 
   const loadRooms = useCallback(async () => {
                                   //创建并缓存回调函数
@@ -449,7 +450,7 @@ function RoomList({ onSelectRoom, onNewChat }) {
             <MessageCircle size={18} className="text-primary" />
             Messages
           </h3>
-          {user?.role !== 'admin' && (
+          {!isStaff && (
             <button onClick={onNewChat}
               className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors">
               <UserPlus size={14} />New
@@ -463,7 +464,7 @@ function RoomList({ onSelectRoom, onNewChat }) {
           <div className="text-center py-12 px-4">
             <MessageSquare size={32} className="mx-auto mb-3 text-dark-300" />
             <p className="text-dark-500 text-sm mb-3">No conversations yet</p>
-            {user?.role !== 'admin' && (
+            {!isStaff && (
               <button onClick={onNewChat}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
                 <UserPlus size={16} />Contact Sales
@@ -492,7 +493,7 @@ function RoomList({ onSelectRoom, onNewChat }) {
                 </span>
               </div>
               <p className="text-xs text-dark-400 truncate mt-0.5">
-                {room.otherUser?.role === 'admin' ? 'Sales Representative' : 'Customer'}
+                {['admin', 'seller', 'salesperson'].includes(room.otherUser?.role) ? 'Seller' : 'Customer'}
               </p>
               <p className="text-xs text-dark-400 truncate mt-0.5">{room.lastMessage || 'Start a conversation'}</p>
             </div>

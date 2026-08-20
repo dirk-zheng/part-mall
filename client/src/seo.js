@@ -16,6 +16,7 @@ const privatePages = {
   '/quote': ['Build a Mixed-load RFQ | Driveline Wheels', 'Prepare a private mixed-load wheel request.'],
   '/admin': ['Product Administration | Driveline Wheels', 'Private product administration area.'],
   '/admin/users': ['User Lookup | Driveline Wheels Admin', 'Private admin user information lookup.'],
+  '/admin/roles': ['Member Roles | Driveline Wheels Admin', 'Private admin workspace for assigning seller roles.'],
   '/admin/articles': ['Article Upload | Driveline Wheels Admin', 'Private news-blog article upload workspace.'],
   '/admin/faqs': ['FAQ Editor | Driveline Wheels Admin', 'Private FAQ writing workspace.'],
 };
