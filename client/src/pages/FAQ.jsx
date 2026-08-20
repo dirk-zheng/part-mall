@@ -171,6 +171,43 @@ export default function FAQ() {
             </Link>
           </aside>
         </div>
+
+        <section className="mt-16 overflow-hidden rounded-3xl bg-slate-950 text-white">
+          <div className="grid lg:grid-cols-[1.05fr_.95fr] gap-10 p-8 md:p-12 lg:p-14 items-center">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-300 mb-4">About Driveline Wheels</p>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold leading-tight mb-5">
+                A practical wheel trading team rooted in Guangzhou Yongning
+              </h2>
+              <p className="text-slate-300 leading-relaxed max-w-2xl">
+                We support distributors and modification shops with local-market fitment selection, order coordination, random-carton warehouse QC and export documents. We stay close to the work and keep the same team accountable through shipment.
+              </p>
+              <div className="flex flex-wrap gap-3 mt-8">
+                <Link to="/about" className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-slate-900 hover:bg-orange-50 transition-colors">
+                  Learn about our team <ArrowRight size={17} />
+                </Link>
+                <Link to="/contact" className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-6 py-3.5 font-semibold text-white hover:bg-white/10 transition-colors">
+                  Request a quote <ArrowRight size={17} />
+                </Link>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                'Fitment support for popular vehicles in your market',
+                'Random cartons selected from finished stock for agreed QC checks',
+                'Mixed-load planning, test-report coordination and export documents',
+              ].map((item) => {
+                return (
+                  <div key={item} className="flex gap-3 rounded-2xl border border-white/10 bg-white/5 p-5">
+                    <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-orange-300" />
+                    <p className="text-sm leading-relaxed text-slate-200">{item}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );

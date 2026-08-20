@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { StoreProvider } from './context/StoreContext';
+import { QuoteModalProvider, useQuoteModal } from './context/QuoteModalContext';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -24,11 +25,31 @@ import AdminArticles from './pages/AdminArticles';
 import AdminFaqs from './pages/AdminFaqs';
 import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
 
+function QuoteLinkInterceptor({ children }) {
+  const { openQuote } = useQuoteModal();
+
+  const handleClickCapture = (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const anchor = event.target.closest?.('a[href]');
+    if (!anchor || anchor.target === '_blank') return;
+
+    const url = new URL(anchor.href, window.location.origin);
+    if (url.origin !== window.location.origin || url.pathname !== '/contact') return;
+
+    event.preventDefault();
+    openQuote(url.searchParams.get('product') || '');
+  };
+
+  return <div onClickCapture={handleClickCapture}>{children}</div>;
+}
+
 //渲染:渲染AppContent组件或页面内容
 export function AppContent({ initialProducts = [] }) {
   return (
+    <QuoteModalProvider>
       <AuthProvider>
         <StoreProvider initialProducts={initialProducts}>
+          <QuoteLinkInterceptor>
           <div className="min-h-screen flex flex-col">
             <SEOManager />
             <Header />
@@ -74,8 +95,10 @@ export function AppContent({ initialProducts = [] }) {
             {/* Floating Support FAB + Chat Panel */}
             <SupportWidget />
           </div>
+          </QuoteLinkInterceptor>
         </StoreProvider>
       </AuthProvider>
+    </QuoteModalProvider>
   );
 }
 

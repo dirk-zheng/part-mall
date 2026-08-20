@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ClipboardList, Check, CircleDot, Disc3, Circle, Package, Wrench } from 'lucide-react';
-import { useStore } from '../context/StoreContext';
+import { ClipboardList, CircleDot, Disc3, Circle, Package, Wrench } from 'lucide-react';
+import { useQuoteModal } from '../context/QuoteModalContext';
 import { categoryNames } from '../data/products';
 import { Link } from 'react-router-dom';
 import { productSlug } from '../data/seoContent';
@@ -23,24 +23,14 @@ const categoryColors = {
 
 //渲染:渲染ProductCard组件或页面内容
 export default function ProductCard({ product }) {
-  const { addToMixedLoad } = useStore();
-  const [isAdded, setIsAdded] = useState(false);
+  const { openQuote } = useQuoteModal();
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleRequestQuote = async (e) => {
+  const handleRequestQuote = (e) => {
                                //处理回调函数逻辑
 
     e.preventDefault();
-    try {
-      await addToMixedLoad(product);
-      setIsAdded(true);
-      setTimeout(() => {
-                   //处理延时任务
-                   return setIsAdded(false);
-                 }, 2000);
-    } catch (err) {
-      alert(err.message || 'Sign in to add this program to your mixed-load request');
-    }
+    openQuote(product.name);
   };
 
   const CategoryIcon = categoryIcons[product.category] || CircleDot;
@@ -100,23 +90,10 @@ export default function ProductCard({ product }) {
 
           <button
             onClick={handleRequestQuote}
-            className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 ${
-              isAdded
-                ? 'bg-green-100 text-green-600 border border-green-200'
-                : 'bg-primary text-white shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 btn-glow'
-            }`}
+            className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl bg-primary text-white font-medium shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-200 btn-glow"
           >
-            {isAdded ? (
-              <>
-                <Check size={18} />
-                Added to Mix
-              </>
-            ) : (
-              <>
-                <ClipboardList size={18} />
-                Request Quote
-              </>
-            )}
+            <ClipboardList size={18} />
+            Request Quote
           </button>
         </div>
       </div>

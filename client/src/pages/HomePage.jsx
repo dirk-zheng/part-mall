@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
-  ArrowRight, Shield, Zap, Users, Search, Award, ChevronRight,
+  ArrowRight, Shield, Users, Search,
   CircleDot, Car, Disc3, Circle, Wrench, Package, Cog, Truck
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
@@ -54,21 +54,26 @@ const milestones = [
   { year: '06', title: 'Documents & Huangpu Loading', desc: 'Material and fatigue-impact reports support clearance, while nearby Huangpu Port keeps export handling straightforward.' },
 ];
 
-const services = [
+const orderRoles = [
+  {
+    icon: Users,
+    title: 'Customer Coordination',
+    desc: 'One contact keeps your market requirements, quotation, samples, production updates and follow-up aligned from the first discussion.'
+  },
   {
     icon: Search,
-    title: 'Market-ready Wheel Selection',
-    desc: 'We maintain practical fitment options for Southeast Asian Japanese sedans, Middle Eastern SUVs and Hilux pickups so buyers spend less time reconfirming parameters.'
+    title: 'Vehicle Fitment Support',
+    desc: 'We organize vehicle year, market, PCD, offset, center bore, load and brake-clearance details before a wheel program is confirmed.'
+  },
+  {
+    icon: Package,
+    title: 'Orders & Export Documents',
+    desc: 'The order team follows mixed-load planning, packing, production progress, test-report requirements and shipping documents through loading.'
   },
   {
     icon: Shield,
-    title: 'Pre-shipment On-site QC',
-    desc: 'Random cartons are taken directly from finished stock. Spoke-root cracks, porosity, dimensions, dynamic balance and coating adhesion are checked before loading.'
-  },
-  {
-    icon: Truck,
-    title: 'Flexible Orders & Documents',
-    desc: 'Start with mixed-container trials, scale to stable full containers, and receive the material and fatigue-impact reports needed for customs clearance.'
+    title: 'On-site Quality Control',
+    desc: 'Our QC role draws random cartons from finished stock and records agreed checks before the shipment is released.'
   },
 ];
 
@@ -111,11 +116,11 @@ export default function HomePage() {
                 <ArrowRight size={20} />
               </Link>
               <Link
-                to="/about"
+                to="/services/quality-control"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-white/10 border border-white/10 text-white font-semibold hover:bg-white/20 transition-all backdrop-blur-sm"
               >
-                Why Driveline Wheels
-                <ChevronRight size={20} />
+                See Our QC Process
+                <ArrowRight size={20} />
               </Link>
             </div>
           </div>
@@ -147,34 +152,38 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Team & Positioning Section */}
       <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Our <span className="text-primary">Services</span>
-            </h2>
-            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-              Practical support for wheel distributors and modification shops
-            </p>
+          <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-10 lg:gap-16 items-end mb-12">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary mb-4">Who we are</p>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 leading-tight">
+                A wheel trading team <span className="text-primary">close to the work</span>
+              </h2>
+            </div>
+            <div className="space-y-4 text-slate-600 leading-relaxed">
+              <p>Driveline Wheels is based in Guangzhou Yongning. We are wheel traders and order-service partners—not a distant catalog platform and not a factory presented under another name.</p>
+              <p>The same team keeps fitment, order details, warehouse QC and export documents connected, so distributors and modification shops know who is responsible at each step.</p>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {orderRoles.map((role) => {
               //渲染:渲染列表内容
               return (
 <div
-                key={service.title}
-                className="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
+                key={role.title}
+                className="group bg-white rounded-2xl p-7 border border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
               >
                 <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-                  <service.icon size={28} className="text-primary" />
+                  <role.icon size={28} className="text-primary" />
                 </div>
                 <h3 className="font-heading font-semibold text-lg text-slate-900 mb-3">
-                  {service.title}
+                  {role.title}
                 </h3>
                 <p className="text-slate-500 text-sm leading-relaxed">
-                  {service.desc}
+                  {role.desc}
                 </p>
               </div>
               );
@@ -349,10 +358,10 @@ export default function HomePage() {
               Request a Quote
             </Link>
             <Link
-              to="/about"
+              to="/services/mixed-container-orders"
               className="px-8 py-4 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold hover:border-primary/30 hover:text-primary transition-all"
             >
-              Learn More About Us
+              View Mixed-load Process
             </Link>
           </div>
         </div>
