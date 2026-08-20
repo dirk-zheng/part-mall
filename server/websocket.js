@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const path = require('path');
 const { JWT_SECRET, generateToken } = require('./middleware/auth');
+const { notifyRobotChat, notifyQuoteInquiry } = require('./services/emailNotifications');
 
 // ─── Data Paths ──────────────────────────────────
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
@@ -533,6 +534,7 @@ function handleQuoteSubmit(payload, ws) {
   quotes.push(quote);
   writeQuotes(quotes);
   mixedLoadStore[ws.userId] = [];
+  void notifyQuoteInquiry(quote);
 
   return {
     reference,
@@ -549,12 +551,15 @@ function handleSupportChat(payload, ws) {
   const { message } = payload || {};
   if (!message || !message.trim()) throw new Error('Message cannot be empty');
 
-  const result = getAIResponse(message.trim());
+  const userMessage = message.trim();
+  const result = getAIResponse(userMessage);
+  const timestamp = new Date().toISOString();
+  void notifyRobotChat({ user: ws.user, message: userMessage, matchedKeyword: result.matchedKeyword, timestamp });
   return {
-    userMessage: message.trim(),
+    userMessage,
     aiReply: result.reply,
     matchedKeyword: result.matchedKeyword,
-    timestamp: new Date().toISOString()
+    timestamp
   };
 }
 

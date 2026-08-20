@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const { notifyQuoteInquiry } = require('../services/emailNotifications');
 
 const router = express.Router();
 const quotesFile = path.join(__dirname, '..', 'data', 'quotes.json');
@@ -53,6 +54,7 @@ router.post('/public', (req, res) => {
     quotes.push(quote);
     fs.writeFileSync(quotesFile, JSON.stringify(quotes, null, 2), 'utf8');
     recentSubmissions.set(clientKey, Date.now());
+    void notifyQuoteInquiry(quote);
     res.status(201).json({ code: 201, data: { reference, message: 'Inquiry received.' } });
   } catch (error) {
     console.error('Public quote error:', error);

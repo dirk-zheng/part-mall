@@ -1,5 +1,6 @@
 const express = require('express');
 const { authenticateToken } = require('../middleware/auth');
+const { notifyRobotChat } = require('../services/emailNotifications');
 
 const router = express.Router();
 
@@ -70,15 +71,18 @@ router.post('/chat', authenticateToken, (req, res) => {
       return res.status(400).json({ code: 400, message: 'Message cannot be empty' });
     }
 
-    const result = getAIResponse(message.trim());
+    const userMessage = message.trim();
+    const result = getAIResponse(userMessage);
+    const timestamp = new Date().toISOString();
+    void notifyRobotChat({ user: req.user, message: userMessage, matchedKeyword: result.matchedKeyword, timestamp });
 
     res.json({
       code: 200,
       data: {
-        userMessage: message.trim(),
+        userMessage,
         aiReply: result.reply,
         matchedKeyword: result.matchedKeyword,
-        timestamp: new Date().toISOString()
+        timestamp
       }
     });
   } catch (err) {

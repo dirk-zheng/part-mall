@@ -166,7 +166,15 @@ JWT_SECRET=       # 生产环境必须设置至少32字符的唯一强随机值
 ADMIN_USERNAME=   # 仅首次 npm run seed 使用
 ADMIN_PASSWORD=   # 至少12字符，仅首次 npm run seed 使用
 ADMIN_NAME=Admin
+ADMIN_NOTIFICATION_EMAIL=812353475@qq.com
+SMTP_HOST=smtp.qq.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=812353475@qq.com
+SMTP_PASS=         # QQ邮箱SMTP授权码，不是QQ邮箱登录密码
 ```
+
+配置 SMTP 后，登录用户与机器人聊天、公开询单或登录后的混装询价提交成功时，系统会异步发送邮件到 `ADMIN_NOTIFICATION_EMAIL`。邮件发送失败不会中断用户聊天或询单保存。
 
 首次初始化管理员：
 
