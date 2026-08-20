@@ -43,6 +43,7 @@ const defaultReplies = [
 ];
 
 // Get AI response based on keywords
+//根据用户消息关键词生成客服回复
 function getAIResponse(userMessage) {
   const lowerMessage = userMessage.toLowerCase();
 
@@ -60,6 +61,7 @@ function getAIResponse(userMessage) {
 }
 
 // POST /api/support/chat - Send message and get AI reply
+//接收客服消息并返回关键词匹配结果
 router.post('/chat', authenticateToken, (req, res) => {
   try {
     const { message } = req.body;
@@ -85,6 +87,7 @@ router.post('/chat', authenticateToken, (req, res) => {
 });
 
 // GET /api/support/faq - Get frequently asked questions
+//返回客服模块常见问题列表
 router.get('/faq', (req, res) => {
   res.json({
     code: 200,

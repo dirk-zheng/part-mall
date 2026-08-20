@@ -4,6 +4,7 @@ const path = require('path');
 
 const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 
+//初始化管理员和演示用户数据
 async function seedUsers() {
   const passwordHashes = {
     admin: await bcrypt.hash('admin', 10),

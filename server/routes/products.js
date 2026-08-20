@@ -7,16 +7,19 @@ const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const router = express.Router();
 const PRODUCTS_FILE = path.join(__dirname, '..', 'data', 'products.json');
 
+//读取商品数据列表
 function readProducts() {
   const data = fs.readFileSync(PRODUCTS_FILE, 'utf-8');
   return JSON.parse(data);
 }
 
+//将商品数据列表写入本地文件
 function writeProducts(products) {
   fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2), 'utf-8');
 }
 
 // GET /api/products - List products (search, category filter, sort)
+//查询商品列表并支持搜索筛选排序和分页
 router.get('/', (req, res) => {
   try {
     const { search, category, sort, page = 1, pageSize = 20 } = req.query;
@@ -25,6 +28,7 @@ router.get('/', (req, res) => {
     // Search filter
     if (search) {
       const q = search.toLowerCase();
+      //根据商品名称和描述筛选搜索结果
       products = products.filter(p =>
         p.name.toLowerCase().includes(q) ||
         p.description.toLowerCase().includes(q)
@@ -33,13 +37,16 @@ router.get('/', (req, res) => {
 
     // Category filter
     if (category && category !== 'all') {
+      //根据商品分类筛选列表
       products = products.filter(p => p.category === category);
     }
 
     // Sort
     if (sort === 'price-asc') {
+      //按商品价格升序排列列表
       products.sort((a, b) => a.price - b.price);
     } else if (sort === 'price-desc') {
+      //按商品价格降序排列列表
       products.sort((a, b) => b.price - a.price);
     }
 
@@ -60,13 +67,16 @@ router.get('/', (req, res) => {
 });
 
 // GET /api/products/categories - Category statistics
+//统计并返回各商品分类的数量
 router.get('/categories', (req, res) => {
   try {
     const products = readProducts();
     const categoryMap = {};
+    //遍历商品并累计分类数量
     products.forEach(p => {
       categoryMap[p.category] = (categoryMap[p.category] || 0) + 1;
     });
+    //将分类统计对象转换为接口数组格式
     const categories = Object.entries(categoryMap).map(([name, count]) => ({ name, count }));
     res.json({ code: 200, data: { total: products.length, categories } });
   } catch (err) {
@@ -75,9 +85,11 @@ router.get('/categories', (req, res) => {
 });
 
 // GET /api/products/:id - Get single product
+//根据商品ID查询单个商品详情
 router.get('/:id', (req, res) => {
   try {
     const products = readProducts();
+    //根据请求ID查找商品详情
     const product = products.find(p => p.id === req.params.id);
 
     if (!product) {
@@ -91,6 +103,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST /api/products - Add product (admin only)
+//校验管理员提交的数据并新增商品
 router.post('/', authenticateToken, requireAdmin, (req, res) => {
   try {
     const { name, category, price, stock, image, description } = req.body;
@@ -141,9 +154,11 @@ router.post('/', authenticateToken, requireAdmin, (req, res) => {
 });
 
 // PUT /api/products/:id - Update product (admin only)
+//校验管理员提交的数据并更新指定商品
 router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
   try {
     const products = readProducts();
+    //查找需要更新的商品索引
     const index = products.findIndex(p => p.id === req.params.id);
 
     if (index === -1) {
@@ -196,9 +211,11 @@ router.put('/:id', authenticateToken, requireAdmin, (req, res) => {
 });
 
 // DELETE /api/products/:id - Delete product (admin only)
+//删除管理员指定的商品记录
 router.delete('/:id', authenticateToken, requireAdmin, (req, res) => {
   try {
     const products = readProducts();
+    //查找需要删除的商品索引
     const index = products.findIndex(p => p.id === req.params.id);
 
     if (index === -1) {

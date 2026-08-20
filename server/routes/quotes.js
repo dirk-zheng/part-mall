@@ -7,15 +7,18 @@ const router = express.Router();
 const quotesFile = path.join(__dirname, '..', 'data', 'quotes.json');
 const recentSubmissions = new Map();
 
+//清理并限制公开询价字段的文本长度
 function clean(value, max = 500) {
   return String(value || '').trim().slice(0, max);
 }
 
+//读取已保存的询价数据列表
 function readQuotes() {
   if (!fs.existsSync(quotesFile)) return [];
   return JSON.parse(fs.readFileSync(quotesFile, 'utf8'));
 }
 
+//接收无需登录的公开询价并持久化保存
 router.post('/public', (req, res) => {
   try {
     if (req.body.website) return res.status(200).json({ code: 200, data: { reference: 'RECEIVED' } });

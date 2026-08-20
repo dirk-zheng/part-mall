@@ -10,3 +10,5 @@
 [2026-08-19T12:58:48.828Z] GET /api/health
 [2026-08-20T01:31:08.301Z] POST /api/quotes/public
 [2026-08-20T01:31:10.441Z] GET /api/health
+[2026-08-20T01:50:39.029Z] POST /api/auth/login
+[2026-08-20T01:50:57.372Z] POST /api/auth/login

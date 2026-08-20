@@ -8,16 +8,19 @@ const { generateToken, authenticateToken, requireAdmin } = require('../middlewar
 const router = express.Router();
 const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
 
+//读取用户数据列表
 function readUsers() {
   const data = fs.readFileSync(USERS_FILE, 'utf-8');
   return JSON.parse(data).users;
 }
 
+//将用户数据列表写入本地文件
 function writeUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify({ users }, null, 2), 'utf-8');
 }
 
 // POST /api/auth/login
+//处理用户登录并返回用户信息与JWT令牌
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -27,6 +30,7 @@ router.post('/login', async (req, res) => {
     }
 
     const users = readUsers();
+    //根据用户名查找登录用户
     const user = users.find(u => u.username === username);
 
     if (!user) {
@@ -55,6 +59,7 @@ router.post('/login', async (req, res) => {
 });
 
 // POST /api/auth/register
+//处理新用户注册并生成登录令牌
 router.post('/register', async (req, res) => {
   try {
     const { username, password, name } = req.body;
@@ -69,6 +74,7 @@ router.post('/register', async (req, res) => {
 
     const users = readUsers();
     
+    //检查注册用户名是否已经存在
     if (users.some(u => u.username === username)) {
       return res.status(409).json({ code: 409, message: 'Username already exists' });
     }
@@ -102,6 +108,7 @@ router.post('/register', async (req, res) => {
 });
 
 // GET /api/auth/me
+//返回当前已登录用户信息
 router.get('/me', authenticateToken, (req, res) => {
   res.json({
     code: 200,

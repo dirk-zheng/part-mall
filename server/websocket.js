@@ -14,37 +14,45 @@ const ARTICLES_FILE = path.join(__dirname, 'data', 'articles.json');
 const FAQS_FILE = path.join(__dirname, 'data', 'faqs.json');
 
 // ─── File Helpers ────────────────────────────────
+//读取商品数据列表
 function readProducts() {
   return JSON.parse(fs.readFileSync(PRODUCTS_FILE, 'utf-8'));
 }
 
+//将商品数据列表写入本地文件
 function writeProducts(products) {
   fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2), 'utf-8');
 }
 
+//读取用户数据列表
 function readUsers() {
   return JSON.parse(fs.readFileSync(USERS_FILE, 'utf-8')).users;
 }
 
+//将用户数据列表写入本地文件
 function writeUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify({ users }, null, 2), 'utf-8');
 }
 
+//读取询价数据列表
 function readQuotes() {
   if (!fs.existsSync(QUOTES_FILE)) return [];
   return JSON.parse(fs.readFileSync(QUOTES_FILE, 'utf-8'));
 }
 
+//将询价数据列表写入本地文件
 function writeQuotes(quotes) {
   fs.writeFileSync(QUOTES_FILE, JSON.stringify(quotes, null, 2), 'utf-8');
 }
 
+//从指定文件读取数组类型的内容数据
 function readList(file) {
   if (!fs.existsSync(file)) return [];
   const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
   return Array.isArray(data) ? data : [];
 }
 
+//将内容数组写入指定本地文件
 function writeList(file, list) {
   fs.writeFileSync(file, JSON.stringify(list, null, 2), 'utf-8');
 }
@@ -52,6 +60,7 @@ function writeList(file, list) {
 // ─── In-Memory Mixed-load Builder ────────────────
 const mixedLoadStore = {};
 
+//获取指定用户的混装清单并在不存在时初始化
 function getUserMixedLoad(userId) {
   if (!mixedLoadStore[userId]) mixedLoadStore[userId] = [];
   return mixedLoadStore[userId];
@@ -62,6 +71,7 @@ const imRooms = {};      // roomId → { roomId, members[], memberNames{}, lastM
 const imMessages = {};   // roomId → [ { id, roomId, senderId, senderName, content, timestamp } ]
 const clientMap = new Map(); // userId → Set<WebSocket>
 
+//获取或创建两个用户之间的即时通信房间
 function getOrCreateRoom(userA, userB) {
   const ids = [userA.id, userB.id].sort();
   const roomId = `chat_${ids[0]}_${ids[1]}`;
@@ -80,11 +90,13 @@ function getOrCreateRoom(userA, userB) {
   return imRooms[roomId];
 }
 
+//登记指定用户的WebSocket客户端连接
 function addClient(userId, ws) {
   if (!clientMap.has(userId)) clientMap.set(userId, new Set());
   clientMap.get(userId).add(ws);
 }
 
+//移除指定用户的WebSocket客户端连接
 function removeClient(userId, ws) {
   const set = clientMap.get(userId);
   if (set) {
@@ -93,26 +105,32 @@ function removeClient(userId, ws) {
   }
 }
 
+//向指定用户的全部在线连接推送消息
 function sendToUser(userId, data) {
   const set = clientMap.get(userId);
   if (set) {
     const payload = JSON.stringify(data);
+    //向用户的每个有效WebSocket连接发送数据
     set.forEach(ws => {
       if (ws.readyState === 1) ws.send(payload);
     });
   }
 }
 
+//组合用户混装清单与对应商品详情
 function buildMixedLoadItems(userId) {
   const mixedLoad = getUserMixedLoad(userId);
   const products = readProducts();
   const items = mixedLoad
+    //将混装商品ID映射为完整商品信息
     .map(item => {
+      //根据混装商品ID查找商品数据
       const product = products.find(p => p.id === item.productId);
       if (!product) return null;
       return { product, quantity: item.quantity };
     })
     .filter(Boolean);
+  //累计混装清单中的商品总数量
   return { items, totalCount: items.reduce((s, i) => s + i.quantity, 0) };
 }
 
@@ -154,6 +172,7 @@ const defaultReplies = [
   'Welcome to Driveline Wheels. We support distributors and modification shops with practical product selection, random-carton pre-shipment QC, flexible loading and Huangpu Port export coordination.'
 ];
 
+//根据用户消息关键词生成客服回复
 function getAIResponse(userMessage) {
   const lower = userMessage.toLowerCase();
   for (const rule of keywordRules) {
@@ -168,6 +187,7 @@ function getAIResponse(userMessage) {
 }
 
 // ─── Validation ──────────────────────────────────
+//校验商品新增或更新数据
 function validateProduct(body) {
   const errors = [];
   if (!body.name || body.name.length < 2 || body.name.length > 50)
@@ -185,12 +205,14 @@ function validateProduct(body) {
   return errors;
 }
 
+//校验WebSocket用户是否拥有管理员权限
 function checkAdmin(ws) {
   if (!ws.user || ws.user.role !== 'admin') {
     throw new Error('Access denied. Admin only.');
   }
 }
 
+//校验WebSocket连接是否已经完成身份认证
 function checkAuth(ws) {
   if (!ws.user) {
     throw new Error('Not authenticated. Please sign in.');
@@ -200,11 +222,13 @@ function checkAuth(ws) {
 // ─── Handlers ────────────────────────────────────
 
 // Auth
+//处理WebSocket用户登录并更新连接身份
 async function handleLogin(payload, ws) {
   const { username, password } = payload || {};
   if (!username || !password) throw new Error('Username and password are required');
 
   const users = readUsers();
+  //根据用户名查找登录用户
   const user = users.find(u => u.username === username);
   if (!user) throw new Error('Invalid username or password');
 
@@ -222,12 +246,14 @@ async function handleLogin(payload, ws) {
   return { user: safeUser, token };
 }
 
+//处理WebSocket用户注册并更新连接身份
 async function handleRegister(payload, ws) {
   const { username, password, name } = payload || {};
   if (!username || !password) throw new Error('Username and password are required');
   if (password.length < 4) throw new Error('Password must be at least 4 characters');
 
   const users = readUsers();
+  //检查注册用户名是否已经存在
   if (users.some(u => u.username === username)) throw new Error('Username already exists');
 
   const hashed = await bcrypt.hash(password, 10);
@@ -251,24 +277,30 @@ async function handleRegister(payload, ws) {
   return { user: safeUser, token };
 }
 
+//返回当前WebSocket连接的用户信息
 function handleMe(payload, ws) {
   checkAuth(ws);
   return ws.user;
 }
 
 // Products
+//查询商品列表并执行搜索筛选排序和分页
 function handleProductList(payload) {
   let products = readProducts();
   const { search, category, sort, page = 1, pageSize = 20 } = payload || {};
 
   if (search) {
     const q = search.toLowerCase();
+    //根据商品名称和描述筛选搜索结果
     products = products.filter(p => p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
   }
   if (category && category !== 'all') {
+    //根据商品分类筛选商品列表
     products = products.filter(p => p.category === category);
   }
+  //根据价格按升序排列商品列表
   if (sort === 'price-asc') products.sort((a, b) => a.price - b.price);
+  //根据价格按降序排列商品列表
   else if (sort === 'price-desc') products.sort((a, b) => b.price - a.price);
 
   const total = products.length;
@@ -279,21 +311,27 @@ function handleProductList(payload) {
   return { list: paged, total, page: p, pageSize: ps, totalPages: Math.ceil(total / ps) };
 }
 
+//统计并返回商品分类数量
 function handleProductCategories() {
   const products = readProducts();
   const map = {};
+  //遍历商品并累计每个分类数量
   products.forEach(p => { map[p.category] = (map[p.category] || 0) + 1; });
+  //将分类统计对象转换为数组格式
   const categories = Object.entries(map).map(([name, count]) => ({ name, count }));
   return { total: products.length, categories };
 }
 
+//根据商品ID返回单个商品详情
 function handleProductGet(payload) {
   const products = readProducts();
+  //根据商品ID查找商品详情
   const product = products.find(p => p.id === payload.id);
   if (!product) throw new Error('Product not found');
   return product;
 }
 
+//校验管理员权限并新增商品
 function handleProductCreate(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
@@ -316,6 +354,7 @@ function handleProductCreate(payload, ws) {
   return newProduct;
 }
 
+//校验管理员权限并更新指定商品
 function handleProductUpdate(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
@@ -324,6 +363,7 @@ function handleProductUpdate(payload, ws) {
   if (errors.length > 0) throw new Error(errors.join('; '));
 
   const products = readProducts();
+  //查找需要更新的商品索引
   const idx = products.findIndex(p => p.id === payload.id);
   if (idx === -1) throw new Error('Product not found');
 
@@ -340,11 +380,13 @@ function handleProductUpdate(payload, ws) {
   return products[idx];
 }
 
+//校验管理员权限并删除指定商品
 function handleProductDelete(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
 
   const products = readProducts();
+  //查找需要删除的商品索引
   const idx = products.findIndex(p => p.id === payload.id);
   if (idx === -1) throw new Error('Product not found');
 
@@ -354,22 +396,26 @@ function handleProductDelete(payload, ws) {
 }
 
 // Mixed-load builder
+//返回当前用户的混装清单详情
 function handleMixedLoadGet(payload, ws) {
   checkAuth(ws);
   return buildMixedLoadItems(ws.userId);
 }
 
+//向当前用户混装清单添加商品
 function handleMixedLoadAdd(payload, ws) {
   checkAuth(ws);
   const { productId, quantity = 1 } = payload || {};
   if (!productId) throw new Error('Product ID is required');
 
   const products = readProducts();
+  //根据商品ID查找准备加入混装清单的商品
   const product = products.find(p => p.id === productId);
   if (!product) throw new Error('Product not found');
   if (product.stock < quantity) throw new Error('Insufficient stock');
 
   const mixedLoad = getUserMixedLoad(ws.userId);
+  //查找混装清单中是否已有相同商品
   const existing = mixedLoad.find(i => i.productId === productId);
   if (existing) existing.quantity += quantity;
   else mixedLoad.push({ productId, quantity });
@@ -377,6 +423,7 @@ function handleMixedLoadAdd(payload, ws) {
   return { productId, quantity: existing ? existing.quantity : quantity };
 }
 
+//更新混装清单中指定商品的数量
 function handleMixedLoadUpdate(payload, ws) {
   checkAuth(ws);
   const { productId, quantity } = payload || {};
@@ -384,6 +431,7 @@ function handleMixedLoadUpdate(payload, ws) {
     throw new Error('Quantity must be a positive integer');
 
   const mixedLoad = getUserMixedLoad(ws.userId);
+  //查找需要更新数量的混装商品
   const item = mixedLoad.find(i => i.productId === productId);
   if (!item) throw new Error('Item not found in mixed load');
 
@@ -391,10 +439,12 @@ function handleMixedLoadUpdate(payload, ws) {
   return { productId, quantity };
 }
 
+//从混装清单移除指定商品
 function handleMixedLoadRemove(payload, ws) {
   checkAuth(ws);
   const { productId } = payload || {};
   const mixedLoad = getUserMixedLoad(ws.userId);
+  //查找需要移除的混装商品索引
   const idx = mixedLoad.findIndex(i => i.productId === productId);
   if (idx === -1) throw new Error('Item not found in mixed load');
 
@@ -402,12 +452,14 @@ function handleMixedLoadRemove(payload, ws) {
   return { removed: productId };
 }
 
+//清空当前用户的混装清单
 function handleMixedLoadClear(payload, ws) {
   checkAuth(ws);
   mixedLoadStore[ws.userId] = [];
   return { cleared: true };
 }
 
+//校验并保存登录用户提交的混装询价
 function handleQuoteSubmit(payload, ws) {
   checkAuth(ws);
   const {
@@ -449,8 +501,10 @@ function handleQuoteSubmit(payload, ws) {
     specifications: specifications.trim(),
     estimatedQuantity: quantity,
     containerType,
+    //清理询价中的报告要求列表
     reportRequirements: reportRequirements.map(item => String(item).trim()).filter(Boolean),
     notes: String(notes).trim(),
+    //将混装商品转换为询价存档格式
     items: items.map(({ product, quantity: itemQuantity }) => ({
       productId: product.id,
       name: product.name,
@@ -474,6 +528,7 @@ function handleQuoteSubmit(payload, ws) {
 }
 
 // Support
+//处理客服聊天消息并返回匹配回复
 function handleSupportChat(payload, ws) {
   checkAuth(ws);
   const { message } = payload || {};
@@ -488,6 +543,7 @@ function handleSupportChat(payload, ws) {
   };
 }
 
+//返回WebSocket客服常见问题列表
 function handleSupportFAQ() {
   return [
     { id: 1, question: 'Which local-market wheel fitments do you keep?', category: 'Fitment' },
@@ -500,12 +556,15 @@ function handleSupportFAQ() {
 }
 
 // ─── Administrator workspace ────────────────────
+//校验管理员权限并返回脱敏用户列表
 function handleAdminUsers(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
+  //移除用户密码后返回安全用户数据
   return readUsers().map(({ password, ...user }) => user);
 }
 
+//将文章标题或输入值转换为URL标识
 function createSlug(value) {
   return String(value || '')
     .toLowerCase()
@@ -515,12 +574,15 @@ function createSlug(value) {
     .slice(0, 120);
 }
 
+//校验管理员权限并返回文章内容记录
 function handleAdminArticlesList(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
+  //按更新时间倒序排列文章记录
   return readList(ARTICLES_FILE).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 }
 
+//校验文章内容并创建管理员文章记录
 function handleAdminArticleCreate(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
@@ -535,6 +597,7 @@ function handleAdminArticleCreate(payload, ws) {
   const allowedStatuses = ['draft', 'review', 'published'];
   const status = allowedStatuses.includes(payload?.status) ? payload.status : 'draft';
   const articles = readList(ARTICLES_FILE);
+  //检查文章URL标识是否重复
   if (articles.some((article) => article.slug === slug)) throw new Error('This article URL slug already exists');
   const now = new Date().toISOString();
   const article = {
@@ -548,10 +611,12 @@ function handleAdminArticleCreate(payload, ws) {
   return article;
 }
 
+//删除管理员指定的文章记录
 function handleAdminArticleDelete(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
   const articles = readList(ARTICLES_FILE);
+  //查找需要删除的文章索引
   const index = articles.findIndex((article) => article.id === payload?.id);
   if (index === -1) throw new Error('Article record not found');
   const [removed] = articles.splice(index, 1);
@@ -559,12 +624,15 @@ function handleAdminArticleDelete(payload, ws) {
   return removed;
 }
 
+//校验管理员权限并返回FAQ内容记录
 function handleAdminFaqsList(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
+  //按更新时间倒序排列FAQ记录
   return readList(FAQS_FILE).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 }
 
+//校验FAQ内容并创建管理员FAQ记录
 function handleAdminFaqCreate(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
@@ -583,10 +651,12 @@ function handleAdminFaqCreate(payload, ws) {
   return faq;
 }
 
+//删除管理员指定的FAQ记录
 function handleAdminFaqDelete(payload, ws) {
   checkAuth(ws);
   checkAdmin(ws);
   const faqs = readList(FAQS_FILE);
+  //查找需要删除的FAQ索引
   const index = faqs.findIndex((faq) => faq.id === payload?.id);
   if (index === -1) throw new Error('FAQ record not found');
   const [removed] = faqs.splice(index, 1);
@@ -596,13 +666,18 @@ function handleAdminFaqDelete(payload, ws) {
 
 // ─── IM (Instant Messaging) ───────────────────────
 
+//返回可提供即时沟通的销售管理员列表
 function handleGetSales() {
   const users = readUsers();
+  //筛选拥有管理员角色的销售账号
   return users
+    //逐项判断用户是否拥有管理员角色
     .filter(u => u.role === 'admin')
+    //将销售账号转换为前端安全字段
     .map(u => ({ id: u.id, username: u.username, name: u.name, role: u.role }));
 }
 
+//返回当前用户参与的即时通信房间列表
 function handleGetIMRooms(payload, ws) {
   checkAuth(ws);
   const userId = ws.userId;
@@ -612,7 +687,9 @@ function handleGetIMRooms(payload, ws) {
   for (const roomId of Object.keys(imRooms)) {
     const room = imRooms[roomId];
     if (room.members.includes(userId)) {
+      //查找即时通信房间中的另一位成员
       const otherId = room.members.find(id => id !== userId);
+      //根据成员ID查找用户信息
       const otherUser = allUsers.find(u => u.id === otherId);
       rooms.push({
         roomId: room.roomId,
@@ -626,10 +703,12 @@ function handleGetIMRooms(payload, ws) {
   }
 
   // Sort by most recent
+  //按最近更新时间倒序排列通信房间
   rooms.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
   return rooms;
 }
 
+//返回指定即时通信房间的最近消息
 function handleGetIMMessages(payload, ws) {
   checkAuth(ws);
   const { roomId } = payload || {};
@@ -639,6 +718,7 @@ function handleGetIMMessages(payload, ws) {
   return (imMessages[roomId] || []).slice(-100); // Last 100 messages
 }
 
+//创建即时通信房间或发送聊天消息
 function handleIMSend(payload, ws) {
   checkAuth(ws);
   let { roomId, toUserId, content } = payload || {};
@@ -647,6 +727,7 @@ function handleIMSend(payload, ws) {
   // Create room if toUserId provided and roomId doesn't exist
   if (!roomId && toUserId) {
     const allUsers = readUsers();
+    //根据接收者ID查找目标用户
     const targetUser = allUsers.find(u => u.id === toUserId);
     if (!targetUser) throw new Error('Recipient not found');
 
@@ -673,6 +754,7 @@ function handleIMSend(payload, ws) {
 
   // Forward to all room members EXCEPT sender
   const pushMsg = { type: 'im.message', success: true, data: msg };
+  //将新消息推送给房间内除发送者外的成员
   imRooms[roomId].members.forEach(memberId => {
     if (memberId !== ws.userId) {
       sendToUser(memberId, pushMsg);
@@ -715,11 +797,14 @@ const handlers = {
 };
 
 // ─── Create WS Server ────────────────────────────
+//创建WebSocket服务并注册认证心跳和消息处理
 function createWSServer(server) {
   const wss = new WebSocketServer({ server, path: '/ws' });
 
   // Heartbeat interval
+  //定时检查并清理失去响应的WebSocket连接
   const heartbeat = setInterval(() => {
+    //遍历WebSocket客户端并执行心跳检查
     wss.clients.forEach(ws => {
       if (ws.__alive === false) return ws.terminate();
       ws.__alive = false;
@@ -727,9 +812,11 @@ function createWSServer(server) {
     });
   }, 30000);
 
+  //在WebSocket服务关闭时清理心跳定时器
   wss.on('close', () => clearInterval(heartbeat));
 
-    wss.on('connection', (ws, req) => {
+  //处理新的WebSocket连接并解析身份令牌
+  wss.on('connection', (ws, req) => {
     ws.__alive = true;
     ws.user = null;
     ws.userId = null;
@@ -746,12 +833,15 @@ function createWSServer(server) {
       }
     } catch (e) { /* invalid/expired token, continue unauthenticated */ }
 
+    //在客户端响应心跳时更新连接存活状态
     ws.on('pong', () => { ws.__alive = true; });
 
+    //在连接关闭时移除用户在线客户端记录
     ws.on('close', () => {
       if (ws.userId) removeClient(ws.userId, ws);
     });
 
+    //解析WebSocket消息并路由到对应业务处理器
     ws.on('message', async (raw) => {
       let msg;
       try {
