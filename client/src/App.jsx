@@ -11,23 +11,33 @@ import Admin from './pages/Admin';
 import Login from './pages/Login';
 import NewsBlog from './pages/NewsBlog';
 import FAQ from './pages/FAQ';
+import ProductDetail from './pages/ProductDetail';
+import ServicePage from './pages/ServicePage';
+import ArticleDetail from './pages/ArticleDetail';
+import Contact from './pages/Contact';
 import SupportWidget from './components/SupportWidget';
+import SEOManager from './components/SEOManager';
+import NotFound from './pages/NotFound';
 import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
 
-function App() {
+export function AppContent({ initialProducts = [] }) {
   return (
-    <BrowserRouter>
       <AuthProvider>
-        <StoreProvider>
+        <StoreProvider initialProducts={initialProducts}>
           <div className="min-h-screen flex flex-col">
+            <SEOManager />
             <Header />
             <main className="flex-1">
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/products" element={<Products />} />
+                <Route path="/products/:slug" element={<ProductDetail />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/news-blog/" element={<NewsBlog />} />
+                <Route path="/news-blog/:slug" element={<ArticleDetail />} />
+                <Route path="/services/:slug" element={<ServicePage />} />
                 <Route path="/faq" element={<FAQ />} />
+                <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route
                   path="/quote"
@@ -46,6 +56,8 @@ function App() {
                     </RequireAdmin>
                   } 
                 />
+                <Route path="/404" element={<NotFound />} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             <Footer />
@@ -55,6 +67,13 @@ function App() {
           </div>
         </StoreProvider>
       </AuthProvider>
+  );
+}
+
+function App({ initialProducts = [] }) {
+  return (
+    <BrowserRouter>
+      <AppContent initialProducts={initialProducts} />
     </BrowserRouter>
   );
 }

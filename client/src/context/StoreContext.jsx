@@ -36,8 +36,12 @@ function reducer(state, action) {
   }
 }
 
-export function StoreProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+export function StoreProvider({ children, initialProducts = [] }) {
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
+    products: initialProducts,
+    loading: initialProducts.length === 0,
+  });
   const { user } = useAuth();
 
   // 加载商品列表

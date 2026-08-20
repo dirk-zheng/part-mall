@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Github, Mail, Phone } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -36,8 +36,11 @@ export default function Footer() {
               <Link to="/faq" className="text-dark-500 hover:text-primary transition-colors text-sm">
                 Buyer FAQ
               </Link>
-              <Link to="/quote" className="text-dark-500 hover:text-primary transition-colors text-sm">
-                Build Mixed Load
+              <Link to="/services/quality-control" className="text-dark-500 hover:text-primary transition-colors text-sm">
+                Pre-shipment QC
+              </Link>
+              <Link to="/contact" className="text-dark-500 hover:text-primary transition-colors text-sm">
+                Request a Quote
               </Link>
             </div>
           </div>
@@ -53,10 +56,8 @@ export default function Footer() {
                 <Mail size={16} />
                 info@driveline-global.com
               </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-dark-500 hover:text-primary transition-colors text-sm">
-                <Github size={16} />
-                GitHub
-              </a>
+              <Link to="/services/mixed-container-orders" className="text-dark-500 hover:text-primary transition-colors text-sm">Mixed-container orders</Link>
+              <Link to="/services/export-documents" className="text-dark-500 hover:text-primary transition-colors text-sm">Export documents</Link>
             </div>
           </div>
         </div>

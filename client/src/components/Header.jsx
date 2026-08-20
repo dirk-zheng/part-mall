@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Layers3, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp } from 'lucide-react';
+import { Layers3, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp, Send } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -31,6 +31,7 @@ export default function Header() {
     { path: '/news-blog/', label: 'Insights', icon: BookOpen },
     { path: '/faq', label: 'FAQ', icon: CircleHelp },
     { path: '/about', label: 'About Us', icon: Info },
+    { path: '/contact', label: 'Get a Quote', icon: Send },
   ];
 
   const isActive = (path) => {

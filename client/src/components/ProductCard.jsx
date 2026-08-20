@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ClipboardList, Check, CircleDot, Disc3, Circle, Package, Wrench } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { categoryNames } from '../data/products';
+import { Link } from 'react-router-dom';
+import { productSlug } from '../data/seoContent';
 
 const categoryIcons = {
   'forged-wheel': Disc3,
@@ -69,14 +71,13 @@ export default function ProductCard({ product }) {
       </div>
 
       <div className="p-4">
-        <h3 className="font-heading font-medium text-lg mb-2 line-clamp-1 text-dark-900 group-hover:text-primary transition-colors">
-          {product.name}
-        </h3>
+        <h3 className="font-heading font-medium text-lg mb-2 line-clamp-1 text-dark-900 group-hover:text-primary transition-colors"><Link to={`/products/${productSlug(product)}`}>{product.name}</Link></h3>
         
         <p className="text-dark-500 text-sm mb-3 line-clamp-2 h-10">
           {product.description}
         </p>
 
+        <Link to={`/products/${productSlug(product)}`} className="inline-block text-sm font-semibold text-primary mb-4">View specifications and order details</Link>
         <div className="flex items-center justify-between">
           <div className="flex flex-col pr-3">
             <span className="text-sm font-semibold text-dark-800">Volume-based quotation</span>

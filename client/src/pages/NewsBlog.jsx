@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight, BookOpen, CalendarDays, CheckCircle2, Clock3,
   Lightbulb, Ruler, Search, Settings2, ShoppingBag, Tag
 } from 'lucide-react';
+import { articleCards } from '../data/seoContent';
 
 const categories = [
   { id: 'all', label: 'All insights', icon: BookOpen },
@@ -86,11 +87,6 @@ export default function NewsBlog() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    document.title = 'Wheel Technical Guides & Buying Insights | Driveline Wheels';
-    return () => { document.title = 'Driveline Wheels'; };
-  }, []);
-
   const filteredArticles = useMemo(() => {
     const search = query.trim().toLowerCase();
     return articles.filter((article) => {
@@ -100,7 +96,7 @@ export default function NewsBlog() {
     });
   }, [activeCategory, query]);
 
-  const featured = articles.find((article) => article.featured);
+  const featured = articles.find((article) => article.id === 2);
 
   return (
     <div className="min-h-screen pt-16 bg-slate-50">
@@ -137,9 +133,7 @@ export default function NewsBlog() {
               <span className="flex items-center gap-1.5"><CalendarDays size={15} />{featured.date}</span>
               <span className="flex items-center gap-1.5"><Clock3 size={15} />{featured.readTime}</span>
             </div>
-            <button type="button" className="inline-flex items-center gap-2 text-primary font-semibold self-start hover:gap-3 transition-all">
-              Read the guide <ArrowRight size={18} />
-            </button>
+            <Link to="/news-blog/wheel-fitment-pcd-offset-center-bore" className="inline-flex items-center gap-2 text-primary font-semibold self-start hover:gap-3 transition-all">Read a fitment guide <ArrowRight size={18} /></Link>
           </div>
         </section>
 
@@ -196,9 +190,7 @@ export default function NewsBlog() {
                       </div>
                       <h3 className="font-heading text-xl font-semibold text-slate-900 leading-snug mb-3 group-hover:text-primary transition-colors">{article.title}</h3>
                       <p className="text-sm text-slate-500 leading-relaxed mb-5">{article.summary}</p>
-                      <button type="button" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-800 group-hover:text-primary transition-colors">
-                        Read article <ArrowRight size={16} />
-                      </button>
+                      {articleCards[article.id] ? <Link to={`/news-blog/${articleCards[article.id]}`} className="inline-flex items-center gap-2 text-sm font-semibold text-slate-800 group-hover:text-primary transition-colors">Read article <ArrowRight size={16} /></Link> : <span className="text-sm text-slate-400">Guide in preparation</span>}
                     </div>
                   </article>
                 );

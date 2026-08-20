@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { categoryNames } from '../data/products';
+import { productSlug } from '../data/seoContent';
 
 const CategoryIcons = {
   'forged-wheel': Disc3,
@@ -233,7 +234,7 @@ export default function HomePage() {
               return (
                 <Link
                   key={product.id}
-                  to="/products"
+                  to={`/products/${productSlug(product)}`}
                   className="group bg-white rounded-2xl overflow-hidden border border-slate-200 hover:border-primary/30 hover:shadow-xl transition-all duration-300"
                 >
                   <div className="relative aspect-[4/3] overflow-hidden">
@@ -325,10 +326,10 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              to="/quote"
+              to="/contact"
               className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-semibold hover:opacity-90 transition-all shadow-lg shadow-blue-500/25"
             >
-              Build Mixed Load
+              Request a Quote
             </Link>
             <Link
               to="/about"
