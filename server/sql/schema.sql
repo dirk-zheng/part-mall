@@ -88,3 +88,21 @@ CREATE TABLE IF NOT EXISTS `support_messages` (
   `support_message_data` JSON NOT NULL,
   PRIMARY KEY (`support_message_id`)
 ) ENGINE=InnoDB;
+
+-- 机器人与人工共用的客服会话
+-- conversation_data: customerId, customerName, status(bot_active|waiting_human|human_active|resolved|closed),
+--                    assignedTo, assignedName, priority, botEnabled, lastMessageAt, createdAt, updatedAt, resolvedAt
+CREATE TABLE IF NOT EXISTS `support_conversations` (
+  `support_conversation_id` VARCHAR(191) NOT NULL,
+  `support_conversation_data` JSON NOT NULL,
+  PRIMARY KEY (`support_conversation_id`)
+) ENGINE=InnoDB;
+
+-- 统一客服消息；机器人、客户、销售员、管理员与系统消息位于同一时间线
+-- message_data: conversationId, senderType(customer|bot|seller|admin|system), senderId,
+--               senderName, content, internalNote, createdAt, readAt
+CREATE TABLE IF NOT EXISTS `support_conversation_messages` (
+  `support_conversation_message_id` VARCHAR(191) NOT NULL,
+  `support_conversation_message_data` JSON NOT NULL,
+  PRIMARY KEY (`support_conversation_message_id`)
+) ENGINE=InnoDB;

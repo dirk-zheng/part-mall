@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Layers3, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp } from 'lucide-react';
+import { Layers3, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, Grid3X3, Info, BookOpen, CircleHelp, Headphones } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
 
@@ -12,7 +12,7 @@ export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { state } = useStore();
-  const { user, logout, isAdmin } = useAuth();
+  const { user, logout, isAdmin, isSeller } = useAuth();
 
   const mixedLoadCount = state.mixedLoad.reduce((sum, item) => {
                                                   //汇总列表数据
@@ -170,6 +170,16 @@ export default function Header() {
                       </div>
 
                       <div className="py-2">
+                        {(isAdmin() || isSeller()) && (
+                          <Link
+                            to="/support/inbox"
+                            onClick={() => setUserMenuOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2 text-dark-600 hover:bg-primary/5 hover:text-primary transition-colors"
+                          >
+                            <Headphones size={18} />
+                            <span>Conversation Inbox</span>
+                          </Link>
+                        )}
                         {isAdmin() && (
                           <Link
                             to="/admin"
@@ -243,6 +253,11 @@ export default function Header() {
             })}
             {user ? (
               <>
+                {(isAdmin() || isSeller()) && (
+                  <Link to="/support/inbox" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-lg text-dark-600 hover:bg-primary/5">
+                    <Headphones size={20} /><span>Conversation Inbox</span>
+                  </Link>
+                )}
                 <Link
                   to="/quote"
                   onClick={() => {

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import wsClient from '../api/ws';
 import FloatingSupport from './FloatingSupport';
@@ -37,7 +38,8 @@ export default function SupportWidget() {
 
     if (!isStaff) return;
 
-    const unsub = wsClient.on('im.message', (data) => {
+    const unsubMessage = wsClient.on('support.message.created', (data) => {
+      if (data.senderType !== 'customer') return;
                                               //处理回调函数逻辑
 
       if (!isOpenRef.current) {
@@ -52,7 +54,11 @@ export default function SupportWidget() {
       }
     });
 
-    return unsub;
+    const unsubQueue = wsClient.on('support.conversation.updated', (data) => {
+      if (data.status === 'waiting_human' && !isOpenRef.current) setShowDot(true);
+    });
+
+    return () => { unsubMessage(); unsubQueue(); };
   }, [isStaff]);
 
   const handleToggle = useCallback(() => {
@@ -80,6 +86,15 @@ export default function SupportWidget() {
   }, []);
 
   const unreadCount = unreadSenders.size;
+
+  if (isStaff) {
+    return (
+      <Link to="/support/inbox" className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-primary to-secondary text-white shadow-lg shadow-primary/30 transition-transform hover:scale-110" title="Customer conversation inbox" aria-label="Customer conversation inbox">
+        {showDot && <span className="absolute -right-1 -top-1 flex min-h-[20px] min-w-[20px] items-center justify-center rounded-full border-[3px] border-white bg-red-500 px-1 text-[10px] font-bold text-white">{unreadCount > 99 ? '99+' : unreadCount || ''}</span>}
+        <MessageCircle size={26} />
+      </Link>
+    );
+  }
 
   return (
     <>

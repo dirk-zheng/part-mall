@@ -125,7 +125,31 @@ export const supportAPI = {
     {
             //处理回调函数逻辑
             return wsClient.send('support.faq');
-          },
+         },
+
+  getConversation: (conversationId) =>
+    wsClient.send('support.conversation.get', conversationId ? { conversationId } : {}),
+
+  sendMessage: (content, conversationId) =>
+    wsClient.send('support.message.send', { content, conversationId }),
+
+  requestHuman: () =>
+    wsClient.send('support.handoff.request'),
+
+  getQueue: () =>
+    wsClient.send('support.queue.list'),
+
+  claimConversation: (conversationId) =>
+    wsClient.send('support.conversation.claim', { conversationId }),
+
+  transferConversation: (conversationId, toUserId) =>
+    wsClient.send('support.conversation.transfer', { conversationId, toUserId }),
+
+  resolveConversation: (conversationId) =>
+    wsClient.send('support.conversation.resolve', { conversationId }),
+
+  getStaff: () =>
+    wsClient.send('support.staff.list'),
 };
 
 // ─── IM API ───────────────────────────────────────

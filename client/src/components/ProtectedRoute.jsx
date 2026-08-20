@@ -55,3 +55,15 @@ export function RequireAdmin({ children }) {
 
   return children;
 }
+
+export function RequireStaff({ children }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) {
+    return <div className="min-h-screen flex items-center justify-center bg-slate-50"><Loader2 size={48} className="text-primary animate-spin" /></div>;
+  }
+  if (!user) return <Navigate to="/login" state={{ from: location }} replace />;
+  if (!['seller', 'salesperson', 'admin'].includes(user.role)) return <Navigate to="/" replace />;
+  return children;
+}

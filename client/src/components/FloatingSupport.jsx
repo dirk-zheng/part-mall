@@ -1,695 +1,156 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-import {
-  Send, User, Sparkles, Clock, ShoppingBag, Truck, RefreshCw,
-  CreditCard, X, MessageCircle, ArrowLeft, Users, UserPlus, MessageSquare
-} from 'lucide-react';
-import { useStore } from '../context/StoreContext';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Bot, Clock, Headphones, Loader2, LogIn, Send, ShieldCheck, UserRound, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { supportAPI, wsClient } from '../api';
 import { useAuth } from '../context/AuthContext';
-import { supportAPI, imAPI, wsClient } from '../api';
 
-// ─── Quick Questions for AI Tab ──────────────────
 const quickQuestions = [
-  { icon: ShoppingBag, text: 'Fitment', message: 'Which fitments do you keep for my local market?' },
-  { icon: CreditCard, text: 'On-site QC', message: 'How do you randomly inspect finished wheels?' },
-  { icon: RefreshCw, text: 'Mixed Load', message: 'Can I start with a mixed-container trial order?' },
-  { icon: Truck, text: 'Documents', message: 'Which test reports can you provide for customs clearance?' },
+  'Which fitments do you keep for my market?',
+  'How does your random-carton QC work?',
+  'Can I start with a mixed-container trial?',
+  'Which test reports can you provide?',
 ];
 
-//执行formatTime函数逻辑
-function formatTime(date) {
-  return new Date(date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+const statusCopy = {
+  bot_active: { label: 'AI assistant', tone: 'bg-emerald-100 text-emerald-700' },
+  waiting_human: { label: 'Waiting for sales', tone: 'bg-amber-100 text-amber-700' },
+  human_active: { label: 'Sales connected', tone: 'bg-blue-100 text-blue-700' },
+  resolved: { label: 'Resolved', tone: 'bg-slate-100 text-slate-600' },
+};
+
+function mergeMessages(current, incoming = []) {
+  const byId = new Map(current.map((message) => [message.id, message]));
+  incoming.forEach((message) => message?.id && byId.set(message.id, message));
+  return [...byId.values()].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 }
 
-// ─── AI Chat View ────────────────────────────────
-//渲染:渲染AIChatView组件或页面内容
-function AIChatView({ state, dispatch, onClose }) {
-  const [inputValue, setInputValue] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef(null);
-  const inputRef = useRef(null);
+function formatTime(value) {
+  return new Date(value).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+}
 
-  const welcomeSent = useRef(false);
-  useEffect(() => {
-              //执行组件副作用逻辑
-
-    if (state.chatHistory.length === 0 && !welcomeSent.current) {
-      welcomeSent.current = true;
-      setTimeout(() => {
-                   //处理延时任务
-
-        dispatch({
-          type: 'ADD_MESSAGE',
-          payload: {
-            id: 'welcome',
-            sender: 'ai',
-            content: 'Welcome to Driveline Wheels. Tell us your market, popular vehicle models and target wheel styles. We can help with fitment selection, mixed-load trials, on-site QC and export documents.',
-            timestamp: new Date()
-          }
-        });
-      }, 500);
-    }
-  }, [state.chatHistory]);
-
-  useEffect(() => {
-              //执行组件副作用逻辑
-
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [state.chatHistory]);
-
-  const handleSend = async () => {
-                       //处理回调函数逻辑
-
-    if (!inputValue.trim()) return;
-    const userMsg = {
-      id: Date.now().toString(),
-      sender: 'user',
-      content: inputValue.trim(),
-      timestamp: new Date()
-    };
-    dispatch({ type: 'ADD_MESSAGE', payload: userMsg });
-    setInputValue('');
-    setIsTyping(true);
-    try {
-      const data = await supportAPI.chat(inputValue.trim());
-      dispatch({
-        type: 'ADD_MESSAGE',
-        payload: {
-          id: (Date.now() + 1).toString(),
-          sender: 'ai',
-          content: data.aiReply,
-          timestamp: new Date()
-        }
-      });
-    } catch {
-      dispatch({
-        type: 'ADD_MESSAGE',
-        payload: {
-          id: (Date.now() + 1).toString(),
-          sender: 'ai',
-          content: 'Sorry, our support system is temporarily unavailable. Please try again later.',
-          timestamp: new Date()
-        }
-      });
-    } finally {
-      setIsTyping(false);
-    }
-  };
-
-  const handleQuickQuestion = (message) => {
-                                //处理回调函数逻辑
-
-    setInputValue(message);
-    inputRef.current?.focus();
-  };
-
-  const handleKeyDown = (e) => {
-                          //处理回调函数逻辑
-
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
+function MessageBubble({ message, customerId }) {
+  if (message.senderType === 'system') {
+    return <div className="flex justify-center"><p className="max-w-[90%] rounded-full bg-slate-100 px-3 py-1.5 text-center text-xs text-slate-500">{message.content}</p></div>;
+  }
+  const isCustomer = message.senderType === 'customer' || message.senderId === customerId;
+  const isBot = message.senderType === 'bot';
   return (
-    <>
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-white to-blue-50/30">
-        {state.chatHistory.map((msg, index) => {
-          //渲染:渲染列表内容
-          return (
-<div key={msg.id} className={`flex gap-3 animate-slide-up ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
-            style={{ animationDelay: `${index * 50}ms` }}>
-            {msg.sender === 'user' ? (
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-accent to-primary">
-                <User size={16} className="text-white" />
-              </div>
-            ) : (
-              <div className="flex-shrink-0 relative w-8 h-8">
-                <img src="/bot-avatar.png" alt="Miss Lin"
-                  className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-primary/20" />
-                <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
-              </div>
-            )}
-            <div className={`max-w-[80%] ${msg.sender === 'user' ? 'text-right' : ''}`}>
-              <div className={`inline-block px-3 py-2 rounded-xl ${
-                msg.sender === 'user'
-                  ? 'bg-primary text-white rounded-tr-sm shadow-lg shadow-primary/20'
-                  : 'bg-white border border-dark-200 rounded-tl-sm shadow-sm'
-              }`}>
-                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-              </div>
-              <div className={`flex items-center gap-1 mt-1 text-xs text-dark-400 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
-                <Clock size={10} />{formatTime(msg.timestamp)}
-              </div>
-            </div>
-          </div>
-          );
-        })}
-        {isTyping && (
-          <div className="flex gap-3 animate-slide-up">
-            <div className="flex-shrink-0 relative w-8 h-8">
-              <img src="/bot-avatar.png" alt="Miss Lin"
-                className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-primary/20" />
-              <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
-            </div>
-            <div className="bg-white border border-dark-200 px-3 py-2 rounded-xl rounded-tl-sm shadow-sm">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
+    <div className={`flex gap-2 ${isCustomer ? 'flex-row-reverse' : ''}`}>
+      <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl text-white ${isCustomer ? 'bg-primary' : isBot ? 'bg-slate-800' : 'bg-emerald-600'}`}>
+        {isBot ? <Bot size={16} /> : isCustomer ? <UserRound size={16} /> : <Headphones size={16} />}
       </div>
-
-      {/* Quick Questions */}
-      <div className="px-3 py-2 border-t border-dark-100 bg-dark-50/50">
-        <div className="flex flex-wrap gap-1.5">
-          {quickQuestions.map((q, i) => {
-                                //渲染:渲染列表内容
-
-            const Icon = q.icon;
-            return (
-              <button key={i} onClick={() => {
-                                         //处理页面交互事件
-                                         return handleQuickQuestion(q.message);
-                                       }}
-                className="flex items-center gap-1 px-2.5 py-1 bg-white rounded-lg text-xs text-dark-600 hover:bg-primary/5 hover:text-primary border border-dark-200 transition-colors">
-                <Icon size={12} />{q.text}
-              </button>
-            );
-          })}
-        </div>
+      <div className={`max-w-[78%] ${isCustomer ? 'text-right' : ''}`}>
+        {!isCustomer && <p className="mb-1 text-xs font-medium text-slate-500">{message.senderName}</p>}
+        <div className={`inline-block rounded-2xl px-3 py-2 text-left text-sm whitespace-pre-wrap ${isCustomer ? 'rounded-tr-sm bg-primary text-white' : 'rounded-tl-sm border border-slate-200 bg-white text-slate-700 shadow-sm'}`}>{message.content}</div>
+        <p className={`mt-1 flex items-center gap-1 text-[10px] text-slate-400 ${isCustomer ? 'justify-end' : ''}`}><Clock size={9} />{formatTime(message.createdAt)}</p>
       </div>
-
-      {/* Input */}
-      <div className="p-3 border-t border-dark-200">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <input ref={inputRef} type="text" value={inputValue}
-              onChange={(e) => {
-                          //处理页面交互事件
-                          return setInputValue(e.target.value);
-                        }} onKeyDown={handleKeyDown}
-              placeholder="Type your question..."
-              className="w-full px-3 py-2.5 pr-10 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all text-sm" />
-            <Sparkles className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/50" size={14} />
-          </div>
-          <button onClick={handleSend} disabled={!inputValue.trim()}
-            className="px-4 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20 btn-glow flex items-center gap-2">
-            <Send size={16} />
-          </button>
-        </div>
-      </div>
-    </>
+    </div>
   );
 }
 
-// ─── IM Chat View ────────────────────────────────
-//渲染:渲染IMChatView组件或页面内容
-function IMChatView({ room, messages: initialMessages, onBack }) {
-  const [inputValue, setInputValue] = useState('');
-  const [messages, setMessages] = useState(initialMessages || []);
-  const [sending, setSending] = useState(false);
-  const messagesEndRef = useRef(null);
-  const { user } = useAuth();
-
-  // Listen for real-time incoming messages
-  useEffect(() => {
-              //执行组件副作用逻辑
-
-    const unsub = wsClient.on('im.message', (data) => {
-                                              //处理回调函数逻辑
-
-      if (data.roomId === room.roomId) {
-        setMessages(prev => {
-                      //处理回调函数逻辑
-                      return [...prev, data];
-                    });
-      }
-    });
-    return unsub;
-  }, [room.roomId]);
-
-  useEffect(() => {
-              //执行组件副作用逻辑
-
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  const handleSend = async () => {
-                       //处理回调函数逻辑
-
-    if (!inputValue.trim() || sending) return;
-    const content = inputValue.trim();
-    setInputValue('');
-    setSending(true);
-    try {
-      await imAPI.sendMessage(content, room.roomId);
-    } catch (err) {
-      // Failed to send, add error indicator
-      setMessages(prev => {
-                    //处理回调函数逻辑
-                    return [...prev, {
-        id: `err-${Date.now()}`,
-        roomId: room.roomId,
-        senderId: user.id,
-        senderName: user.name,
-        content,
-        timestamp: new Date().toISOString(),
-        failed: true
-      }];
-                  });
-    } finally {
-      setSending(false);
-    }
-  };
-
-  const handleKeyDown = (e) => {
-                          //处理回调函数逻辑
-
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
-  return (
-    <>
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gradient-to-b from-white to-blue-50/30">
-        {messages.length === 0 && (
-          <div className="text-center py-12 text-dark-400">
-            <MessageSquare size={32} className="mx-auto mb-2 text-dark-300" />
-            <p className="text-sm">No messages yet. Say hello!</p>
-          </div>
-        )}
-        {messages.map((msg) => {
-                        //渲染:渲染列表内容
-
-          const isMe = msg.senderId === user.id;
-          return (
-            <div key={msg.id} className={`flex gap-2 ${isMe ? 'flex-row-reverse' : ''}`}>
-              <div className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-xs font-medium text-white ${
-                isMe ? 'bg-accent' : 'bg-primary'
-              }`}>
-                {(msg.senderName || '?')[0].toUpperCase()}
-              </div>
-              <div className={`max-w-[75%] ${isMe ? 'text-right' : ''}`}>
-                {!isMe && <p className="text-xs text-dark-500 mb-0.5 ml-1">{msg.senderName}</p>}
-                <div className={`inline-block px-3 py-2 rounded-xl text-sm whitespace-pre-wrap ${
-                  isMe
-                    ? 'bg-primary text-white rounded-tr-sm'
-                    : 'bg-white border border-dark-200 rounded-tl-sm shadow-sm'
-                } ${msg.failed ? 'opacity-50' : ''}`}>
-                  {msg.content}
-                  {msg.failed && <span className="text-red-400 text-xs ml-2">Failed</span>}
-                </div>
-                <div className={`flex items-center gap-1 mt-0.5 text-xs text-dark-400 ${isMe ? 'justify-end' : ''}`}>
-                  <Clock size={10} />{formatTime(msg.timestamp)}
-                  {isMe && !msg.failed && (
-                    <svg className="w-3 h-3 text-primary/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="p-3 border-t border-dark-200">
-        <div className="flex gap-2">
-          <input type="text" value={inputValue} onChange={(e) => {
-                                                            //处理页面交互事件
-                                                            return setInputValue(e.target.value);
-                                                          }}
-            onKeyDown={handleKeyDown} disabled={sending}
-            placeholder="Type a message..."
-            className="flex-1 px-3 py-2.5 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all text-sm" />
-          <button onClick={handleSend} disabled={!inputValue.trim() || sending}
-            className="px-4 py-2.5 bg-primary text-white rounded-xl font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-primary/20">
-            <Send size={16} />
-          </button>
-        </div>
-      </div>
-    </>
-  );
-}
-
-// ─── Sales Picker ────────────────────────────────
-//渲染:渲染SalesPicker组件或页面内容
-function SalesPicker({ onSelect, onBack }) {
-  const [sales, setSales] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-              //执行组件副作用逻辑
-
-    imAPI.getSales()
-      .then(data => {
-              //处理异步请求成功结果
-              return setSales(data);
-            })
-      .catch(err => {
-               //处理异步请求异常
-               return setError(err.message);
-             })
-      .finally(() => {
-                 //处理异步请求结束状态
-                 return setLoading(false);
-               });
-  }, []);
-
-  return (
-    <>
-      <div className="flex-1 overflow-y-auto p-4">
-        <h3 className="font-heading font-bold text-dark-900 mb-4 flex items-center gap-2">
-          <Users size={18} className="text-primary" />
-          Select a Sales Representative
-        </h3>
-        {loading && <p className="text-dark-400 text-sm text-center py-8">Loading...</p>}
-        {error && <p className="text-red-500 text-sm text-center py-8">{error}</p>}
-        {!loading && sales.length === 0 && (
-          <p className="text-dark-400 text-sm text-center py-8">No sales staff online right now.</p>
-        )}
-        <div className="space-y-2">
-          {sales.map(s => {
-            //渲染:渲染列表内容
-            return (
-<button key={s.id} onClick={() => {
-                                          //处理页面交互事件
-                                          return onSelect(s);
-                                        }}
-              className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 border border-dark-100 hover:border-primary/30 transition-colors text-left">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
-                {(s.name || s.username)[0].toUpperCase()}
-              </div>
-              <div>
-                <p className="font-medium text-dark-900 text-sm">{s.name || s.username}</p>
-                <p className="text-xs text-dark-400">Sales Representative</p>
-              </div>
-            </button>
-            );
-          })}
-        </div>
-      </div>
-    </>
-  );
-}
-
-// ─── Room List ───────────────────────────────────
-//渲染:渲染RoomList组件或页面内容
-function RoomList({ onSelectRoom, onNewChat }) {
-  const [rooms, setRooms] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const { user } = useAuth();
-  const isStaff = user?.role === 'admin' || ['seller', 'salesperson'].includes(user?.role);
-
-  const loadRooms = useCallback(async () => {
-                                  //创建并缓存回调函数
-
-    try {
-      const data = await imAPI.getRooms();
-      setRooms(data);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-              //执行组件副作用逻辑
-               loadRooms(); }, [loadRooms]);
-
-  // Refresh rooms when a new message arrives
-  useEffect(() => {
-              //执行组件副作用逻辑
-
-    const unsub = wsClient.on('im.message', () => {
-                                              //处理回调函数逻辑
-
-      loadRooms();
-    });
-    return unsub;
-  }, [loadRooms]);
-
-  return (
-    <>
-      <div className="flex-1 overflow-y-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-dark-100">
-          <h3 className="font-heading font-bold text-dark-900 flex items-center gap-2">
-            <MessageCircle size={18} className="text-primary" />
-            Messages
-          </h3>
-          {!isStaff && (
-            <button onClick={onNewChat}
-              className="flex items-center gap-1 px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs font-medium hover:bg-primary/20 transition-colors">
-              <UserPlus size={14} />New
-            </button>
-          )}
-        </div>
-
-        {loading && <p className="text-dark-400 text-sm text-center py-12">Loading...</p>}
-        {error && <p className="text-red-500 text-sm text-center py-8">{error}</p>}
-        {!loading && rooms.length === 0 && (
-          <div className="text-center py-12 px-4">
-            <MessageSquare size={32} className="mx-auto mb-3 text-dark-300" />
-            <p className="text-dark-500 text-sm mb-3">No conversations yet</p>
-            {!isStaff && (
-              <button onClick={onNewChat}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
-                <UserPlus size={16} />Contact Sales
-              </button>
-            )}
-          </div>
-        )}
-        {!loading && rooms.map(room => {
-          //渲染:渲染列表内容
-          return (
-<button key={room.roomId} onClick={() => {
-                                               //处理页面交互事件
-                                               return onSelectRoom(room);
-                                             }}
-            className="w-full flex items-center gap-3 px-4 py-3 hover:bg-primary/5 border-b border-dark-50 transition-colors text-left">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
-              {(room.otherUser?.name || '?')[0].toUpperCase()}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between">
-                <p className="font-medium text-dark-900 text-sm truncate">
-                  {room.otherUser?.name || room.otherUser?.username || 'Unknown'}
-                </p>
-                <span className="text-xs text-dark-400 flex-shrink-0 ml-2">
-                  {formatTime(room.updatedAt)}
-                </span>
-              </div>
-              <p className="text-xs text-dark-400 truncate mt-0.5">
-                {['admin', 'seller', 'salesperson'].includes(room.otherUser?.role) ? 'Seller' : 'Customer'}
-              </p>
-              <p className="text-xs text-dark-400 truncate mt-0.5">{room.lastMessage || 'Start a conversation'}</p>
-            </div>
-          </button>
-          );
-        })}
-      </div>
-    </>
-  );
-}
-
-// ─── Main Component ──────────────────────────────
-//渲染:渲染FloatingSupport组件或页面内容
 export default function FloatingSupport({ isOpen, onClose }) {
-  const { state, dispatch } = useStore();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState('ai'); // 'ai' | 'im'
-  const [imView, setImView] = useState('rooms');   // 'rooms' | 'chat' | 'sales'
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [chatMessages, setChatMessages] = useState([]);
-  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [conversation, setConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const endRef = useRef(null);
 
-  // Reset view when panel opens
+  const applyResult = useCallback((result) => {
+    if (result?.conversation) setConversation(result.conversation);
+    if (result?.messages) setMessages((current) => mergeMessages(current, result.messages));
+  }, []);
+
   useEffect(() => {
-              //执行组件副作用逻辑
+    if (!isOpen || !user?.token) return;
+    setLoading(true);
+    setError('');
+    supportAPI.getConversation().then((result) => {
+      setConversation(result.conversation);
+      setMessages(result.messages || []);
+    }).catch((requestError) => setError(requestError.message)).finally(() => setLoading(false));
+  }, [isOpen, user?.id, user?.token]);
 
-    if (isOpen) {
-      setImView('rooms');
-      setSelectedRoom(null);
-    }
-  }, [isOpen]);
+  useEffect(() => {
+    const offMessage = wsClient.on('support.message.created', (message) => {
+      if (!conversation || message.conversationId === conversation.id) setMessages((current) => mergeMessages(current, [message]));
+    });
+    const offConversation = wsClient.on('support.conversation.updated', (updated) => {
+      if (!conversation || updated.id === conversation.id) setConversation(updated);
+    });
+    return () => { offMessage(); offConversation(); };
+  }, [conversation?.id]);
 
-  const handleSelectRoom = async (room) => {
-                             //处理回调函数逻辑
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, sending]);
 
-    setSelectedRoom(room);
-    setImView('chat');
-    setLoadingMessages(true);
-    try {
-      const msgs = await imAPI.getMessages(room.roomId);
-      setChatMessages(msgs);
-    } catch {
-      setChatMessages([]);
-    } finally {
-      setLoadingMessages(false);
-    }
+  const sendMessage = async () => {
+    const content = input.trim();
+    if (!content || sending) return;
+    setInput('');
+    setSending(true);
+    setError('');
+    try { applyResult(await supportAPI.sendMessage(content, conversation?.id)); }
+    catch (requestError) { setInput(content); setError(requestError.message); }
+    finally { setSending(false); }
   };
 
-  const handleSelectSales = async (salesUser) => {
-                              //处理回调函数逻辑
-
-    // Create a new room or navigate to it
-    try {
-      // Send a greeting message to create the room
-      await imAPI.sendMessage('Hi, I need some help!', '', salesUser.id);
-      setImView('rooms');
-    } catch (err) {
-      alert('Failed to start conversation: ' + err.message);
-    }
-  };
-
-  const handleBackToRooms = () => {
-                              //处理回调函数逻辑
-
-    setImView('rooms');
-    setSelectedRoom(null);
-    setChatMessages([]);
-  };
-
-  // Get header content based on view
-  const getHeaderContent = () => {
-                             //渲染:渲染页面内容
-
-    if (activeTab === 'im' && imView === 'chat' && selectedRoom) {
-      return (
-        <>
-          <button onClick={handleBackToRooms} className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
-            <ArrowLeft size={18} className="text-white" />
-          </button>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-sm">
-              {(selectedRoom.otherUser?.name || '?')[0].toUpperCase()}
-            </div>
-            <div>
-              <h3 className="font-heading font-bold text-white text-sm">{selectedRoom.otherUser?.name || 'Unknown'}</h3>
-              <p className="text-xs text-white/80">Online</p>
-            </div>
-          </div>
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
-            <X size={18} className="text-white" />
-          </button>
-        </>
-      );
-    }
-
-    if (activeTab === 'im' && imView === 'sales') {
-      return (
-        <>
-          <button onClick={() => {
-                             //处理页面交互事件
-                             return setImView('rooms');
-                           }} className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
-            <ArrowLeft size={18} className="text-white" />
-          </button>
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-              <Users size={20} className="text-white" />
-            </div>
-            <div>
-              <h3 className="font-heading font-bold text-white text-sm">New Conversation</h3>
-              <p className="text-xs text-white/80">Choose a sales rep</p>
-            </div>
-          </div>
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
-            <X size={18} className="text-white" />
-          </button>
-        </>
-      );
-    }
-
-    // Default header with tabs
-    return (
-      <>
-        <div className="flex items-center gap-3">
-          {activeTab === 'ai' ? (
-            <div className="relative w-10 h-10">
-              <img src="/bot-avatar.png" alt="Miss Lin"
-                className="w-10 h-10 rounded-xl object-cover" />
-              <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-500 rounded-full border-[3px] border-white" />
-            </div>
-          ) : (
-            <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-              <MessageCircle size={22} className="text-white" />
-            </div>
-          )}
-          <div>
-            <h3 className="font-heading font-bold text-white">
-              {activeTab === 'ai' ? 'Miss Lin' : 'Messages'}
-            </h3>
-            <p className="text-xs text-white/80">Online Support</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1">
-          {user?.token && (
-            <button onClick={() => {
-                               //处理页面交互事件
-                               return setActiveTab(activeTab === 'ai' ? 'im' : 'ai');
-                             }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                activeTab === 'ai' ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-white/20 text-white hover:bg-white/30'
-              }`}>
-              {activeTab === 'ai' ? 'Messages' : 'AI'}
-            </button>
-          )}
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors ml-1">
-            <X size={18} className="text-white" />
-          </button>
-        </div>
-      </>
-    );
+  const requestHuman = async () => {
+    setSending(true);
+    setError('');
+    try { applyResult(await supportAPI.requestHuman()); }
+    catch (requestError) { setError(requestError.message); }
+    finally { setSending(false); }
   };
 
   if (!isOpen) return null;
+  const status = statusCopy[conversation?.status] || statusCopy.bot_active;
+  const humanActive = conversation?.status === 'human_active';
+  const waiting = conversation?.status === 'waiting_human';
 
   return (
-    <div className="fixed bottom-24 right-6 w-96 h-[500px] max-h-[70vh] bg-white rounded-2xl border border-dark-200 shadow-2xl flex flex-col overflow-hidden animate-slide-up z-50">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-primary to-secondary">
-        {getHeaderContent()}
-      </div>
+    <section className="fixed bottom-24 right-3 z-50 flex h-[570px] max-h-[76vh] w-[calc(100vw-1.5rem)] max-w-[400px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl sm:right-6" aria-label="Driveline customer support">
+      <header className="flex items-center justify-between bg-gradient-to-r from-primary to-secondary px-4 py-3 text-white">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20">{humanActive ? <Headphones size={21} /> : <Bot size={21} />}</div>
+          <div><h2 className="text-sm font-bold">{humanActive ? conversation.assignedName : 'Miss Lin'}</h2><p className="text-xs text-white/80">{humanActive ? 'Sales Representative' : waiting ? 'Connecting you with sales' : 'AI Assistant · Driveline Wheels'}</p></div>
+        </div>
+        <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/15 hover:bg-white/25" aria-label="Close support chat"><X size={18} /></button>
+      </header>
 
-      {/* Content */}
-      {activeTab === 'ai' ? (
-        <AIChatView state={state} dispatch={dispatch} onClose={onClose} />
-      ) : imView === 'chat' && selectedRoom ? (
-        loadingMessages ? (
-          <div className="flex-1 flex items-center justify-center">
-            <p className="text-dark-400 text-sm">Loading messages...</p>
-          </div>
-        ) : (
-          <IMChatView room={selectedRoom} messages={chatMessages} onBack={handleBackToRooms} />
-        )
-      ) : imView === 'sales' ? (
-        <SalesPicker onSelect={handleSelectSales} onBack={() => {
-                                                            //处理页面交互事件
-                                                            return setImView('rooms');
-                                                          }} />
+      {!user ? (
+        <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary"><LogIn size={26} /></div>
+          <h3 className="font-heading text-lg font-bold text-slate-900">Sign in to start a conversation</h3>
+          <p className="mt-2 text-sm leading-6 text-slate-500">Your requirements and conversation history will stay connected to your distributor account.</p>
+          <Link to="/login" onClick={onClose} className="mt-5 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-white">Sign In / Register</Link>
+        </div>
+      ) : loading ? (
+        <div className="flex flex-1 items-center justify-center text-slate-400"><Loader2 className="animate-spin" size={28} /></div>
       ) : (
-        <RoomList onSelectRoom={handleSelectRoom} onNewChat={() => {
-                                                               //处理页面交互事件
-                                                               return setImView('sales');
-                                                             }} />
+        <>
+          <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50 px-4 py-2">
+            <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${status.tone}`}>{status.label}</span>
+            {!humanActive && !waiting && <button type="button" onClick={requestHuman} disabled={sending} className="flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline disabled:opacity-50"><Headphones size={14} />Talk to Sales</button>}
+            {waiting && <span className="text-xs text-amber-700">A representative will join here</span>}
+          </div>
+          <div className="flex-1 space-y-3 overflow-y-auto bg-gradient-to-b from-white to-blue-50/30 p-4">
+            {messages.map((message) => <MessageBubble key={message.id} message={message} customerId={user.id} />)}
+            {sending && <div className="flex items-center gap-2 text-xs text-slate-400"><Loader2 size={13} className="animate-spin" />Sending…</div>}
+            <div ref={endRef} />
+          </div>
+          {!humanActive && !waiting && messages.length <= 3 && <div className="flex gap-2 overflow-x-auto border-t border-slate-100 px-3 py-2">{quickQuestions.map((question) => <button key={question} type="button" onClick={() => setInput(question)} className="shrink-0 rounded-full border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:border-primary hover:text-primary">{question}</button>)}</div>}
+          {error && <p role="alert" className="border-t border-red-100 bg-red-50 px-4 py-2 text-xs text-red-600">{error}</p>}
+          <div className="border-t border-slate-200 p-3">
+            <div className="flex gap-2">
+              <input value={input} onChange={(event) => setInput(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); } }} disabled={sending} maxLength={3000} placeholder={waiting ? 'Add more details for the sales team…' : 'Type your message…'} className="min-w-0 flex-1 rounded-xl border border-slate-200 px-3 py-2.5 text-sm focus:border-primary focus:ring-2 focus:ring-primary/10" />
+              <button type="button" onClick={sendMessage} disabled={!input.trim() || sending} className="flex h-10 w-11 items-center justify-center rounded-xl bg-primary text-white disabled:opacity-40" aria-label="Send message"><Send size={17} /></button>
+            </div>
+            <p className="mt-2 flex items-center justify-center gap-1 text-[10px] text-slate-400"><ShieldCheck size={11} />Human representatives are clearly identified when they join.</p>
+          </div>
+        </>
       )}
-    </div>
+    </section>
   );
 }

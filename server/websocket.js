@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const { JWT_SECRET, generateToken } = require('./middleware/auth');
 const { notifyRobotChat, notifyQuoteInquiry } = require('./services/emailNotifications');
+const supportConversations = require('./services/supportConversations');
 
 // ─── Data Paths ──────────────────────────────────
 const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
@@ -563,6 +564,218 @@ function handleSupportChat(payload, ws) {
   };
 }
 
+function isStaff(user) {
+  return Boolean(user && ['seller', 'salesperson', 'admin'].includes(user.role));
+}
+
+function checkStaff(ws) {
+  if (!isStaff(ws.user)) throw new Error('Access denied. Sales staff only.');
+}
+
+function supportStaffUsers() {
+  return readUsers().filter(isStaff);
+}
+
+function pushSupportEvent(conversation, type, data) {
+  const recipients = new Set([conversation.customerId]);
+  supportStaffUsers().forEach((staff) => {
+    if (staff.role === 'admin' || staff.id === conversation.assignedTo || conversation.status === 'waiting_human') {
+      recipients.add(staff.id);
+    }
+  });
+  recipients.forEach((userId) => sendToUser(userId, { type, success: true, data }));
+}
+
+function pushSupportUpdate(conversation, messages = []) {
+  pushSupportEvent(conversation, 'support.conversation.updated', conversation);
+  messages.filter(Boolean).forEach((message) => pushSupportEvent(conversation, 'support.message.created', message));
+}
+
+function requireConversationCustomer(conversation, ws) {
+  if (conversation.customerId !== ws.userId) throw new Error('Access denied');
+}
+
+function requireAssignedStaff(conversation, ws) {
+  checkStaff(ws);
+  if (ws.user.role !== 'admin' && conversation.assignedTo !== ws.userId) {
+    throw new Error('Claim this conversation before replying');
+  }
+}
+
+function shouldRequestHuman(message) {
+  return /(human|person|sales|salesperson|representative|agent|人工|销售|业务员|管理员|whatsapp|quotation|formal quote)/i.test(message);
+}
+
+function handleSupportConversationGet(payload, ws) {
+  checkAuth(ws);
+  if (isStaff(ws.user)) {
+    if (!payload?.conversationId) throw new Error('A conversation ID is required');
+    const result = supportConversations.getConversation(payload.conversationId);
+    if (ws.user.role !== 'admin' && result.conversation.status !== 'waiting_human' && result.conversation.assignedTo !== ws.userId) {
+      throw new Error('Access denied');
+    }
+    return result;
+  }
+  return supportConversations.getCustomerConversation(ws.user);
+}
+
+function handleSupportMessageSend(payload, ws) {
+  checkAuth(ws);
+  const content = String(payload?.content || '').trim();
+  if (!content) throw new Error('Message cannot be empty');
+  if (content.length > 3000) throw new Error('Message must be 3000 characters or fewer');
+
+  let conversationId = payload?.conversationId;
+  if (!isStaff(ws.user)) conversationId = supportConversations.getCustomerConversation(ws.user).conversation.id;
+  if (!conversationId) throw new Error('Conversation ID is required');
+
+  const current = supportConversations.getConversation(conversationId).conversation;
+  if (isStaff(ws.user)) requireAssignedStaff(current, ws);
+  else requireConversationCustomer(current, ws);
+
+  const createdMessages = [];
+  const updated = supportConversations.updateConversation(conversationId, ({ conversation, appendMessage }) => {
+    if (conversation.status === 'closed') throw new Error('Conversation is closed');
+    if (!isStaff(ws.user) && conversation.status === 'resolved') {
+      conversation.status = 'bot_active';
+      conversation.botEnabled = true;
+      conversation.assignedTo = null;
+      conversation.assignedName = null;
+      conversation.claimedBy = null;
+      conversation.resolvedAt = null;
+    }
+
+    const message = appendMessage({
+      senderType: isStaff(ws.user) ? (ws.user.role === 'admin' ? 'admin' : 'seller') : 'customer',
+      senderId: ws.userId,
+      senderName: ws.user.name || ws.user.username,
+      content,
+    });
+    createdMessages.push(message);
+
+    if (!isStaff(ws.user) && conversation.status === 'bot_active') {
+      if (shouldRequestHuman(content)) {
+        conversation.status = 'waiting_human';
+        conversation.botEnabled = false;
+        conversation.priority = 'high';
+        createdMessages.push(appendMessage({
+          senderType: 'system', senderId: 'system', senderName: 'Driveline Support',
+          content: 'Your request has been added to our sales queue. A team member will join this conversation shortly.',
+        }));
+      } else {
+        const result = getAIResponse(content);
+        createdMessages.push(appendMessage({
+          senderType: 'bot', senderId: 'bot', senderName: 'Miss Lin · AI Assistant', content: result.reply,
+        }));
+        void notifyRobotChat({ user: ws.user, message: content, matchedKeyword: result.matchedKeyword, timestamp: message.createdAt });
+      }
+    }
+  });
+
+  pushSupportUpdate(updated.conversation, createdMessages);
+  return { conversation: updated.conversation, messages: createdMessages };
+}
+
+function handleSupportHandoffRequest(payload, ws) {
+  checkAuth(ws);
+  if (isStaff(ws.user)) throw new Error('Only customers can request a sales representative');
+  const current = supportConversations.getCustomerConversation(ws.user).conversation;
+  const createdMessages = [];
+  const updated = supportConversations.updateConversation(current.id, ({ conversation, appendMessage }) => {
+    if (conversation.status === 'human_active' || conversation.status === 'waiting_human') return;
+    conversation.status = 'waiting_human';
+    conversation.botEnabled = false;
+    conversation.priority = 'high';
+    conversation.assignedTo = null;
+    conversation.assignedName = null;
+    conversation.claimedBy = null;
+    conversation.resolvedAt = null;
+    createdMessages.push(appendMessage({
+      senderType: 'system', senderId: 'system', senderName: 'Driveline Support',
+      content: 'A sales representative has been requested. Please keep this window open; your conversation history will be shared with the team.',
+    }));
+  });
+  pushSupportUpdate(updated.conversation, createdMessages);
+  return { conversation: updated.conversation, messages: createdMessages };
+}
+
+function handleSupportQueueList(payload, ws) {
+  checkAuth(ws);
+  checkStaff(ws);
+  const all = supportConversations.listConversations();
+  if (ws.user.role === 'admin') return all.filter((item) => item.status !== 'closed');
+  return all.filter((item) => item.status === 'waiting_human' || item.assignedTo === ws.userId);
+}
+
+function handleSupportClaim(payload, ws) {
+  checkAuth(ws);
+  checkStaff(ws);
+  const current = supportConversations.getConversation(payload?.conversationId).conversation;
+  if (current.assignedTo && current.assignedTo !== ws.userId && ws.user.role !== 'admin') {
+    throw new Error(`Conversation is already assigned to ${current.assignedName || 'another representative'}`);
+  }
+  const createdMessages = [];
+  const updated = supportConversations.updateConversation(current.id, ({ conversation, appendMessage }) => {
+    conversation.status = 'human_active';
+    conversation.botEnabled = false;
+    conversation.assignedTo = ws.userId;
+    conversation.assignedName = ws.user.name || ws.user.username;
+    conversation.claimedBy = ws.userId;
+    conversation.resolvedAt = null;
+    createdMessages.push(appendMessage({
+      senderType: 'system', senderId: 'system', senderName: 'Driveline Support',
+      content: `${conversation.assignedName} has joined the conversation as your ${ws.user.role === 'admin' ? 'support administrator' : 'sales representative'}.`,
+    }));
+  });
+  pushSupportUpdate(updated.conversation, createdMessages);
+  return { conversation: updated.conversation, messages: createdMessages };
+}
+
+function handleSupportTransfer(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  const target = readUsers().find((user) => user.id === payload?.toUserId && isStaff(user));
+  if (!target) throw new Error('Sales or administrator account not found');
+  const createdMessages = [];
+  const updated = supportConversations.updateConversation(payload?.conversationId, ({ conversation, appendMessage }) => {
+    conversation.status = 'human_active';
+    conversation.botEnabled = false;
+    conversation.assignedTo = target.id;
+    conversation.assignedName = target.name || target.username;
+    conversation.claimedBy = ws.userId;
+    createdMessages.push(appendMessage({
+      senderType: 'system', senderId: 'system', senderName: 'Driveline Support',
+      content: `This conversation has been transferred to ${conversation.assignedName}.`,
+    }));
+  });
+  pushSupportUpdate(updated.conversation, createdMessages);
+  return { conversation: updated.conversation, messages: createdMessages };
+}
+
+function handleSupportResolve(payload, ws) {
+  checkAuth(ws);
+  const current = supportConversations.getConversation(payload?.conversationId).conversation;
+  requireAssignedStaff(current, ws);
+  const createdMessages = [];
+  const updated = supportConversations.updateConversation(current.id, ({ conversation, appendMessage }) => {
+    conversation.status = 'resolved';
+    conversation.botEnabled = false;
+    conversation.resolvedAt = new Date().toISOString();
+    createdMessages.push(appendMessage({
+      senderType: 'system', senderId: 'system', senderName: 'Driveline Support',
+      content: 'This conversation has been marked as resolved. Send another message whenever you need further assistance.',
+    }));
+  });
+  pushSupportUpdate(updated.conversation, createdMessages);
+  return { conversation: updated.conversation, messages: createdMessages };
+}
+
+function handleSupportStaffList(payload, ws) {
+  checkAuth(ws);
+  checkAdmin(ws);
+  return supportStaffUsers().map((user) => ({ id: user.id, name: user.name || user.username, role: user.role }));
+}
+
 //返回WebSocket客服常见问题列表
 function handleSupportFAQ() {
   return [
@@ -835,6 +1048,14 @@ const handlers = {
   'quote.submit':       { fn: handleQuoteSubmit,     auth: true  },
   'support.chat':       { fn: handleSupportChat,   auth: true  },
   'support.faq':        { fn: handleSupportFAQ,    auth: false },
+  'support.conversation.get': { fn: handleSupportConversationGet, auth: true },
+  'support.message.send': { fn: handleSupportMessageSend, auth: true },
+  'support.handoff.request': { fn: handleSupportHandoffRequest, auth: true },
+  'support.queue.list': { fn: handleSupportQueueList, auth: true },
+  'support.conversation.claim': { fn: handleSupportClaim, auth: true },
+  'support.conversation.transfer': { fn: handleSupportTransfer, auth: true },
+  'support.conversation.resolve': { fn: handleSupportResolve, auth: true },
+  'support.staff.list': { fn: handleSupportStaffList, auth: true },
   'admin.users':        { fn: handleAdminUsers, auth: true },
   'admin.users.update-role': { fn: handleAdminUpdateUserRole, auth: true },
   'admin.articles.list':{ fn: handleAdminArticlesList, auth: true },

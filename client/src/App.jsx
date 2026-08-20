@@ -23,7 +23,8 @@ import AdminToolRail from './components/AdminToolRail';
 import AdminUsers from './pages/AdminUsers';
 import AdminArticles from './pages/AdminArticles';
 import AdminFaqs from './pages/AdminFaqs';
-import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
+import SupportInbox from './pages/SupportInbox';
+import { RequireAuth, RequireAdmin, RequireStaff } from './components/ProtectedRoute';
 
 function QuoteLinkInterceptor({ children }) {
   const { openQuote } = useQuoteModal();
@@ -87,6 +88,7 @@ export function AppContent({ initialProducts = [] }) {
                 <Route path="/admin/roles" element={<RequireAdmin><AdminUsers manageRoles /></RequireAdmin>} />
                 <Route path="/admin/articles" element={<RequireAdmin><AdminArticles /></RequireAdmin>} />
                 <Route path="/admin/faqs" element={<RequireAdmin><AdminFaqs /></RequireAdmin>} />
+                <Route path="/support/inbox" element={<RequireStaff><SupportInbox /></RequireStaff>} />
                 <Route path="/404" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

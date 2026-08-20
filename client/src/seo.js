@@ -19,6 +19,7 @@ const privatePages = {
   '/admin/roles': ['Member Roles | Driveline Wheels Admin', 'Private admin workspace for assigning seller roles.'],
   '/admin/articles': ['Article Upload | Driveline Wheels Admin', 'Private news-blog article upload workspace.'],
   '/admin/faqs': ['FAQ Editor | Driveline Wheels Admin', 'Private FAQ writing workspace.'],
+  '/support/inbox': ['Customer Conversation Inbox | Driveline Wheels', 'Private customer support workspace for sales staff and administrators.'],
 };
 
 //seo:处理normalizeSeoPath相关逻辑
