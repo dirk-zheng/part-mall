@@ -3,14 +3,14 @@
     {
       "id": "1",
       "username": "admin",
-      "password": "$2a$10$0aGCcO/8ZNlgGCRhZfwa8OwlgyF9qTjbrs/jR26cFK.deOPMaCl6e",
+      "password": "$2a$10$TJJOd9.aXMf4hjsBGUPCOOnkd6Vg2PXAtkRiz4u8aCY3Ruxs12/Ba",
       "role": "admin",
       "name": "Admin"
     },
     {
       "id": "2",
       "username": "user",
-      "password": "$2a$10$BD8X66lgr2Fet2fA3CX/r.lT9uLmpAN3HpCcmaYrm5gJ7d6bzpe8y",
+      "password": "$2a$10$OMlugObm5qDWqQsByQsqZO/SytBs3UrFBL6LOPfxiki4f7RRBCmMa",
       "role": "user",
       "name": "Demo User"
     }

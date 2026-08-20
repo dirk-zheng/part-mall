@@ -213,7 +213,7 @@ HomePage
 - Name: 注册时必填
 - 提交时显示 loading 状态，按钮禁用
 
-**演示账号提示**：页面底部展示两组演示账号。
+**账号安全**：页面不展示公开演示账号。首个管理员通过部署环境变量和手动seed初始化。
 
 ### 4.5 商品管理页 (Admin)
 
@@ -349,7 +349,7 @@ About
 - `routes/products.js`: 商品 CRUD + 搜索/筛选/排序/分页
 - `routes/cart.js`: 购物车增删改查
 - `routes/support.js`: AI 客服（关键词匹配）+ FAQ
-- `seed.js`: 初始化脚本（生成密码哈希 + 预设用户和商品数据）
+- `seed.js`: 首次管理员初始化脚本；已有用户时安全跳过，不会覆盖账号
 
 **认证流程**：
 1. 注册/登录 → `bcryptjs` 哈希/验证密码 → `jsonwebtoken` 签发 token
@@ -366,8 +366,10 @@ About
 |------|--------|------|
 | `HOST` | `0.0.0.0` | 服务器监听 IP |
 | `PORT` | `3001` | 服务器监听端口 |
-| `JWT_SECRET` | `digital-mall-secret-key-2024` | JWT 签名密钥 |
+| `JWT_SECRET` | 无 | 生产环境必填，至少32字符的唯一强随机值；开发环境缺失时使用临时随机值 |
 | `NODE_ENV` | `development` | 运行环境 |
+| `ADMIN_USERNAME` | 无 | 仅首次手动执行seed时使用 |
+| `ADMIN_PASSWORD` | 无 | 首次管理员密码，至少12字符 |
 
 ### API 代理
 

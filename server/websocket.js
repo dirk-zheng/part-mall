@@ -555,7 +555,7 @@ function handleSupportFAQ() {
   ];
 }
 
-// ─── Administrator workspace ────────────────────
+// ─── Admin workspace ────────────────────────────
 //校验管理员权限并返回脱敏用户列表
 function handleAdminUsers(payload, ws) {
   checkAuth(ws);

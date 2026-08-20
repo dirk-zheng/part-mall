@@ -1,4 +1,5 @@
-◇ injected env (3) from .env // tip: ⌘ override existing { override: true }
+◇ injected env (3) from .env // tip: ◈ encrypted .env [www.dotenvx.com]
+JWT_SECRET is missing or weak; using an ephemeral development secret. Existing sessions will expire after restart.
   WebSocket server: ws://localhost:3001/ws
 ╔══════════════════════════════════════════╗
 ║     Driveline Wheels                     ║
@@ -7,8 +8,4 @@
 ║   WS:     ws://localhost:3001/ws                    ║
 ║   Mode:   development                  ║
 ╚══════════════════════════════════════════╝
-[2026-08-19T12:58:48.828Z] GET /api/health
-[2026-08-20T01:31:08.301Z] POST /api/quotes/public
-[2026-08-20T01:31:10.441Z] GET /api/health
-[2026-08-20T01:50:39.029Z] POST /api/auth/login
-[2026-08-20T01:50:57.372Z] POST /api/auth/login
+[2026-08-20T08:06:45.009Z] GET /api/health

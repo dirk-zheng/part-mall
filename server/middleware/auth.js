@@ -1,6 +1,28 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'digital-mall-secret-key-2024';
+const knownWeakSecrets = new Set([
+  'digital-mall-secret-key-2024',
+  'your-secret-key',
+  'your-secret-key-here',
+  'change-me',
+]);
+
+function resolveJwtSecret() {
+  const configured = String(process.env.JWT_SECRET || '').trim();
+  const isStrong = configured.length >= 32 && !knownWeakSecrets.has(configured.toLowerCase());
+
+  if (isStrong) return configured;
+
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET must be set to a unique random value of at least 32 characters in production.');
+  }
+
+  console.warn('JWT_SECRET is missing or weak; using an ephemeral development secret. Existing sessions will expire after restart.');
+  return crypto.randomBytes(48).toString('hex');
+}
+
+const JWT_SECRET = resolveJwtSecret();
 
 // Generate JWT Token
 //生成用户身份认证JWT令牌

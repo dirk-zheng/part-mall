@@ -58,12 +58,9 @@
 - 三个关键现场：永宁产业带 / 工厂成品仓 / 黄埔港出货路线
 - 核心优势：随机抽箱 QC / 热销车型选型库 / 拼柜到整柜 / 测试报告配套
 
-## 演示账号
+## 首次管理员初始化
 
-| 角色 | 用户名 | 密码 |
-|------|--------|------|
-| 管理员 | admin | admin |
-| 普通用户 | user | user123 |
+项目不提供公开演示账号。首次部署时，在 `server/.env` 中临时配置 `ADMIN_USERNAME` 和不少于12字符的 `ADMIN_PASSWORD`，然后手动运行 `npm run seed`。已有任何用户数据时，seed会安全跳过，不会覆盖账号。
 
 ## 技术栈
 
@@ -120,7 +117,7 @@ part-mall/
 │
 ├── server/                          # 后端项目 (Node.js + Express)
 │   ├── index.js                     # 服务入口
-│   ├── seed.js                      # 数据初始化（生成用户密码哈希）
+│   ├── seed.js                      # 首次管理员初始化（不会覆盖已有用户）
 │   ├── .env                         # 环境变量配置（不提交 git）
 │   ├── .env.example                 # 环境变量模板
 │   ├── package.json
@@ -133,7 +130,7 @@ part-mall/
 │   │   └── support.js               # 客服路由
 │   └── data/
 │       ├── products.json            # 商品数据（12 条初始数据）
-│       ├── users.json               # 用户数据（admin + user）
+│       ├── users.json               # 用户数据（首次seed前为空）
 │       └── quotes.json              # RFQ 询盘记录
 │
 ├── package.json                     # 根启动脚本
@@ -162,13 +159,26 @@ cd server && npm install
 # server/.env
 HOST=0.0.0.0      # 监听 IP，默认 0.0.0.0
 PORT=3001         # 监听端口，默认 3001
-JWT_SECRET=your-secret-key  # JWT 签名密钥
+NODE_ENV=development
+JWT_SECRET=       # 生产环境必须设置至少32字符的唯一强随机值
+ADMIN_USERNAME=   # 仅首次 npm run seed 使用
+ADMIN_PASSWORD=   # 至少12字符，仅首次 npm run seed 使用
+ADMIN_NAME=Admin
 ```
+
+首次初始化管理员：
+
+```bash
+cd server
+npm run seed
+```
+
+初始化成功后建议从 `.env` 删除 `ADMIN_PASSWORD`。再次执行seed只会报告已有用户并退出，不会重置密码或删除注册用户。
 
 ### 3. 启动服务
 
 ```bash
-# 终端 1 — 启动后端（端口 3001，首次自动初始化数据）
+# 终端 1 — 启动后端（端口 3001，不会自动执行seed）
 cd server && npm run dev
 
 # 终端 2 — 启动前端（端口 5173）
@@ -202,13 +212,13 @@ cd client && npm run build
 **登录请求示例**：
 ```json
 // POST /api/auth/login
-{ "username": "admin", "password": "admin" }
+{ "username": "<your-admin-username>", "password": "<your-password>" }
 
 // Response
 {
   "code": 200,
   "data": {
-    "user": { "id": "...", "username": "admin", "role": "admin", "name": "管理员" },
+    "user": { "id": "...", "username": "<your-admin-username>", "role": "admin", "name": "Admin" },
     "token": "eyJhbGciOiJIUzI1NiIs..."
   }
 }

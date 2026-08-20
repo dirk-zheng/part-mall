@@ -18,7 +18,7 @@ export default function AdminToolRail() {
   if (!isAdmin()) return null;
 
   return (
-    <aside className="fixed left-3 top-20 z-40" aria-label="Administrator tools">
+    <aside className="fixed left-3 top-20 z-40" aria-label="Admin tools">
       <div className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-xl shadow-slate-900/10 backdrop-blur">
         <button
           type="button"
@@ -31,7 +31,7 @@ export default function AdminToolRail() {
                    }}
           className="group flex h-11 items-center rounded-xl bg-slate-900 text-white transition-colors hover:bg-slate-800"
           aria-expanded={expanded}
-          title={expanded ? 'Collapse administrator tools' : 'Expand administrator tools'}
+          title={expanded ? 'Collapse admin tools' : 'Expand admin tools'}
         >
           <span className="flex w-11 shrink-0 items-center justify-center">{expanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}</span>
           {expanded && <span className="whitespace-nowrap pr-4 text-sm font-semibold">Admin tools</span>}
@@ -53,7 +53,7 @@ export default function AdminToolRail() {
         })}
 
         {expanded && (
-          <button type="button" disabled title="Reserved for a future administrator tool" className="flex h-11 cursor-not-allowed items-center rounded-xl text-slate-300">
+          <button type="button" disabled title="Reserved for a future admin tool" className="flex h-11 cursor-not-allowed items-center rounded-xl text-slate-300">
             <span className="flex w-11 shrink-0 items-center justify-center"><Construction size={20} /></span>
             <span className="whitespace-nowrap pr-4 text-sm font-medium">Coming soon</span>
           </button>
