@@ -145,7 +145,7 @@ export default function Login() {
               {/* Username */}
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-dark-700">
-                  Username
+                  Username or email
                 </label>
                 <div className="relative">
                   <input
@@ -155,7 +155,7 @@ export default function Login() {
                                 //处理页面交互事件
                                 return setUsername(e.target.value);
                               }}
-                    placeholder="Enter username"
+                    placeholder="Enter username or email"
                     required
                     className="w-full px-4 py-3 pl-11 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-white"
                   />

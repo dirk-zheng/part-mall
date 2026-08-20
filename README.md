@@ -278,7 +278,7 @@ interface Product {
 // 用户
 interface User {
   id: string;           // UUID
-  username: string;     // 唯一
+  username: string;     // 唯一；询价后创建的账号使用规范化邮箱
   password: string;     // bcrypt 哈希
   role: 'admin' | 'user';
   name: string;

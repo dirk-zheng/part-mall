@@ -7,6 +7,7 @@ const { generateToken, authenticateToken, requireAdmin } = require('../middlewar
 
 const router = express.Router();
 const USERS_FILE = path.join(__dirname, '..', 'data', 'users.json');
+const QUOTES_FILE = path.join(__dirname, '..', 'data', 'quotes.json');
 
 //读取用户数据列表
 function readUsers() {
@@ -31,7 +32,8 @@ router.post('/login', async (req, res) => {
 
     const users = readUsers();
     //根据用户名查找登录用户
-    const user = users.find(u => u.username === username);
+    const loginName = String(username).trim().toLowerCase();
+    const user = users.find(u => String(u.username).toLowerCase() === loginName);
 
     if (!user) {
       return res.status(401).json({ code: 401, message: 'Invalid username or password' });
@@ -62,7 +64,7 @@ router.post('/login', async (req, res) => {
 //处理新用户注册并生成登录令牌
 router.post('/register', async (req, res) => {
   try {
-    const { username, password, name } = req.body;
+    const { username, password, name, quoteReference } = req.body;
 
     if (!username || !password) {
       return res.status(400).json({ code: 400, message: 'Username and password are required' });
@@ -73,23 +75,35 @@ router.post('/register', async (req, res) => {
     }
 
     const users = readUsers();
+    const normalizedUsername = String(username).trim();
+    const accountUsername = normalizedUsername.includes('@') ? normalizedUsername.toLowerCase() : normalizedUsername;
     
     //检查注册用户名是否已经存在
-    if (users.some(u => u.username === username)) {
-      return res.status(409).json({ code: 409, message: 'Username already exists' });
+    if (users.some(u => String(u.username).toLowerCase() === accountUsername.toLowerCase())) {
+      return res.status(409).json({ code: 409, message: 'An account already uses this email or username' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = {
       id: uuidv4(),
-      username,
+      username: accountUsername,
       password: hashedPassword,
       role: 'user',
-      name: name || username
+      name: name || accountUsername
     };
 
     users.push(newUser);
     writeUsers(users);
+
+    if (quoteReference && accountUsername.includes('@') && fs.existsSync(QUOTES_FILE)) {
+      const quotes = JSON.parse(fs.readFileSync(QUOTES_FILE, 'utf-8'));
+      const quote = quotes.find((item) => item.reference === quoteReference && item.customer?.email?.toLowerCase() === accountUsername);
+      if (quote) {
+        quote.userId = newUser.id;
+        quote.accountLinkedAt = new Date().toISOString();
+        fs.writeFileSync(QUOTES_FILE, JSON.stringify(quotes, null, 2), 'utf-8');
+      }
+    }
 
     const token = generateToken(newUser);
     const { password: _, ...safeUser } = newUser;

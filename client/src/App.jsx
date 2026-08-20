@@ -46,8 +46,8 @@ function QuoteLinkInterceptor({ children }) {
 //渲染:渲染AppContent组件或页面内容
 export function AppContent({ initialProducts = [] }) {
   return (
-    <QuoteModalProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <QuoteModalProvider>
         <StoreProvider initialProducts={initialProducts}>
           <QuoteLinkInterceptor>
           <div className="min-h-screen flex flex-col">
@@ -97,8 +97,8 @@ export function AppContent({ initialProducts = [] }) {
           </div>
           </QuoteLinkInterceptor>
         </StoreProvider>
-      </AuthProvider>
-    </QuoteModalProvider>
+      </QuoteModalProvider>
+    </AuthProvider>
   );
 }
 

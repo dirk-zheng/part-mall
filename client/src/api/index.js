@@ -15,10 +15,10 @@ export const authAPI = {
            return wsClient.send('auth.login', { username, password });
          },
 
-  register: (username, password, name) =>
+  register: (username, password, name, quoteReference = '') =>
     {
               //处理回调函数逻辑
-              return wsClient.send('auth.register', { username, password, name });
+              return wsClient.send('auth.register', { username, password, name, quoteReference });
             },
 
   getMe: () =>

@@ -229,7 +229,8 @@ async function handleLogin(payload, ws) {
 
   const users = readUsers();
   //根据用户名查找登录用户
-  const user = users.find(u => u.username === username);
+  const loginName = String(username).trim().toLowerCase();
+  const user = users.find(u => String(u.username).toLowerCase() === loginName);
   if (!user) throw new Error('Invalid username or password');
 
   const match = await bcrypt.compare(password, user.password);
@@ -248,24 +249,36 @@ async function handleLogin(payload, ws) {
 
 //处理WebSocket用户注册并更新连接身份
 async function handleRegister(payload, ws) {
-  const { username, password, name } = payload || {};
+  const { username, password, name, quoteReference } = payload || {};
   if (!username || !password) throw new Error('Username and password are required');
   if (password.length < 4) throw new Error('Password must be at least 4 characters');
 
   const users = readUsers();
+  const normalizedUsername = String(username).trim();
+  const accountUsername = normalizedUsername.includes('@') ? normalizedUsername.toLowerCase() : normalizedUsername;
   //检查注册用户名是否已经存在
-  if (users.some(u => u.username === username)) throw new Error('Username already exists');
+  if (users.some(u => String(u.username).toLowerCase() === accountUsername.toLowerCase())) throw new Error('An account already uses this email or username');
 
   const hashed = await bcrypt.hash(password, 10);
   const newUser = {
     id: uuidv4(),
-    username,
+    username: accountUsername,
     password: hashed,
     role: 'user',
-    name: name || username
+    name: name || accountUsername
   };
   users.push(newUser);
   writeUsers(users);
+
+  if (quoteReference && accountUsername.includes('@')) {
+    const quotes = readQuotes();
+    const quote = quotes.find((item) => item.reference === quoteReference && item.customer?.email?.toLowerCase() === accountUsername);
+    if (quote) {
+      quote.userId = newUser.id;
+      quote.accountLinkedAt = new Date().toISOString();
+      writeQuotes(quotes);
+    }
+  }
 
   const token = generateToken(newUser);
   const { password: _, ...safeUser } = newUser;

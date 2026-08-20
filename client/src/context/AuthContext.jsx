@@ -54,10 +54,10 @@ export function AuthProvider({ children }) {
   };
 
   // 注册函数
-  const register = async (username, password, name) => {
+  const register = async (username, password, name, quoteReference = '') => {
                      //处理回调函数逻辑
 
-    const res = await authAPI.register(username, password, name);
+    const res = await authAPI.register(username, password, name, quoteReference);
     const userData = { ...res.user, token: res.token };
     setUser(userData);
     localStorage.setItem('mall_user', JSON.stringify(userData));
