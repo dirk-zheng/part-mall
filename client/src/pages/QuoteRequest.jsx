@@ -23,6 +23,7 @@ const initialForm = {
   notes: '',
 };
 
+//渲染:渲染QuoteRequest组件或页面内容
 export default function QuoteRequest() {
   const {
     state,
@@ -36,22 +37,40 @@ export default function QuoteRequest() {
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(null);
 
-  const totalUnits = state.mixedLoad.reduce((sum, item) => sum + item.quantity, 0);
+  const totalUnits = state.mixedLoad.reduce((sum, item) => {
+                                              //汇总列表数据
+                                              return sum + item.quantity;
+                                            }, 0);
 
   const updateField = (field, value) => {
-    setForm(current => ({ ...current, [field]: value }));
+                        //处理回调函数逻辑
+
+    setForm(current => {
+                //处理回调函数逻辑
+                return { ...current, [field]: value };
+              });
   };
 
   const toggleReport = (reportId) => {
-    setForm(current => ({
+                         //处理回调函数逻辑
+
+    setForm(current => {
+              //处理回调函数逻辑
+      return {
       ...current,
       reportRequirements: current.reportRequirements.includes(reportId)
-        ? current.reportRequirements.filter(id => id !== reportId)
+        ? current.reportRequirements.filter(id => {
+                                              //筛选符合条件的数据
+                                              return id !== reportId;
+                                            })
         : [...current.reportRequirements, reportId],
-    }));
+      };
+    });
   };
 
   const handleQuantityChange = async (productId, quantity) => {
+                                 //处理回调函数逻辑
+
     if (quantity < 1) return;
     try {
       await updateQuantity(productId, quantity);
@@ -61,6 +80,8 @@ export default function QuoteRequest() {
   };
 
   const handleClear = async () => {
+                        //处理回调函数逻辑
+
     if (!window.confirm('Clear every program from this mixed load?')) return;
     try {
       await clearMixedLoad();
@@ -70,6 +91,8 @@ export default function QuoteRequest() {
   };
 
   const handleSubmit = async (event) => {
+                         //处理回调函数逻辑
+
     event.preventDefault();
     setError('');
     setSubmitting(true);
@@ -106,7 +129,10 @@ export default function QuoteRequest() {
             </Link>
             <button
               type="button"
-              onClick={() => setSubmitted(null)}
+              onClick={() => {
+                         //处理页面交互事件
+                         return setSubmitted(null);
+                       }}
               className="px-6 py-3 rounded-xl border border-dark-200 text-dark-700 font-semibold hover:border-primary/40 hover:text-primary transition-colors"
             >
               Start Another RFQ
@@ -165,32 +191,46 @@ export default function QuoteRequest() {
               <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-primary/10 text-primary">{totalUnits} requested units</span>
             </div>
             <div className="space-y-4">
-              {state.mixedLoad.map(item => (
-                <article key={item.product.id} className="flex gap-4 p-3 rounded-2xl bg-slate-50 border border-slate-200">
-                  <img src={item.product.image} alt={item.product.name} className="w-20 h-20 rounded-xl object-cover" onError={event => { event.currentTarget.src = '/no-image.png'; }} />
+              {state.mixedLoad.map(item => {
+                //渲染:渲染列表内容
+                return (
+                  <article key={item.product.id} className="flex gap-4 p-3 rounded-2xl bg-slate-50 border border-slate-200">
+                  <img src={item.product.image} alt={item.product.name} className="w-20 h-20 rounded-xl object-cover" onError={event => {
+                                                                                                                                 //处理页面交互事件
+                                                                                                                                  event.currentTarget.src = '/no-image.png'; }} />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
                         <h3 className="font-semibold text-dark-900 leading-snug">{item.product.name}</h3>
                         <p className="text-xs text-dark-500 line-clamp-2 mt-1">{item.product.description}</p>
                       </div>
-                      <button type="button" onClick={() => removeFromMixedLoad(item.product.id)} className="p-1.5 text-dark-400 hover:text-red-500 rounded-lg hover:bg-red-50" aria-label={`Remove ${item.product.name}`}>
+                      <button type="button" onClick={() => {
+                                                       //处理页面交互事件
+                                                       return removeFromMixedLoad(item.product.id);
+                                                     }} className="p-1.5 text-dark-400 hover:text-red-500 rounded-lg hover:bg-red-50" aria-label={`Remove ${item.product.name}`}>
                         <Trash2 size={16} />
                       </button>
                     </div>
                     <div className="flex items-center gap-2 mt-3">
                       <span className="text-xs text-dark-500 mr-1">Qty</span>
-                      <button type="button" onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)} disabled={item.quantity <= 1} className="w-7 h-7 rounded-lg bg-white border border-dark-200 flex items-center justify-center disabled:opacity-40">
+                      <button type="button" onClick={() => {
+                                                       //处理页面交互事件
+                                                       return handleQuantityChange(item.product.id, item.quantity - 1);
+                                                     }} disabled={item.quantity <= 1} className="w-7 h-7 rounded-lg bg-white border border-dark-200 flex items-center justify-center disabled:opacity-40">
                         <Minus size={14} />
                       </button>
                       <span className="w-8 text-center font-mono text-sm font-semibold">{item.quantity}</span>
-                      <button type="button" onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)} className="w-7 h-7 rounded-lg bg-white border border-dark-200 flex items-center justify-center">
+                      <button type="button" onClick={() => {
+                                                       //处理页面交互事件
+                                                       return handleQuantityChange(item.product.id, item.quantity + 1);
+                                                     }} className="w-7 h-7 rounded-lg bg-white border border-dark-200 flex items-center justify-center">
                         <Plus size={14} />
                       </button>
                     </div>
                   </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
             <Link to="/products" className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
               <Plus size={16} /> Add more wheel programs
@@ -209,27 +249,42 @@ export default function QuoteRequest() {
             <div className="grid md:grid-cols-2 gap-5">
               <label className="space-y-2">
                 <span className="block text-sm font-semibold text-dark-700">Target market <span className="text-red-500">*</span></span>
-                <input required value={form.market} onChange={event => updateField('market', event.target.value)} placeholder="e.g. Thailand, Saudi Arabia" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                <input required value={form.market} onChange={event => {
+                                                                //处理页面交互事件
+                                                                return updateField('market', event.target.value);
+                                                              }} placeholder="e.g. Thailand, Saudi Arabia" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10" />
               </label>
               <label className="space-y-2">
                 <span className="block text-sm font-semibold text-dark-700">Estimated quantity <span className="text-red-500">*</span></span>
-                <input required min="1" type="number" value={form.estimatedQuantity} onChange={event => updateField('estimatedQuantity', event.target.value)} placeholder="Total wheels or sets" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10" />
+                <input required min="1" type="number" value={form.estimatedQuantity} onChange={event => {
+                                                                                                 //处理页面交互事件
+                                                                                                 return updateField('estimatedQuantity', event.target.value);
+                                                                                               }} placeholder="Total wheels or sets" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10" />
               </label>
             </div>
 
             <label className="space-y-2 block">
               <span className="block text-sm font-semibold text-dark-700">Vehicle models <span className="text-red-500">*</span></span>
-              <textarea required rows="3" value={form.vehicleModels} onChange={event => updateField('vehicleModels', event.target.value)} placeholder="Make, model, year and market version — e.g. Toyota Hilux 2022, GCC" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
+              <textarea required rows="3" value={form.vehicleModels} onChange={event => {
+                                                                                 //处理页面交互事件
+                                                                                 return updateField('vehicleModels', event.target.value);
+                                                                               }} placeholder="Make, model, year and market version — e.g. Toyota Hilux 2022, GCC" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
             </label>
 
             <label className="space-y-2 block">
               <span className="block text-sm font-semibold text-dark-700">Wheel specifications <span className="text-red-500">*</span></span>
-              <textarea required rows="3" value={form.specifications} onChange={event => updateField('specifications', event.target.value)} placeholder="Diameter, width, PCD, offset, center bore, load rating, finish and packing" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
+              <textarea required rows="3" value={form.specifications} onChange={event => {
+                                                                                  //处理页面交互事件
+                                                                                  return updateField('specifications', event.target.value);
+                                                                                }} placeholder="Diameter, width, PCD, offset, center bore, load rating, finish and packing" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
             </label>
 
             <label className="space-y-2 block">
               <span className="flex items-center gap-2 text-sm font-semibold text-dark-700"><Truck size={16} /> Container plan <span className="text-red-500">*</span></span>
-              <select required value={form.containerType} onChange={event => updateField('containerType', event.target.value)} className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 bg-white">
+              <select required value={form.containerType} onChange={event => {
+                                                                      //处理页面交互事件
+                                                                      return updateField('containerType', event.target.value);
+                                                                    }} className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 bg-white">
                 <option value="mixed-lcl">Mixed-container / LCL trial</option>
                 <option value="20gp">20GP full container</option>
                 <option value="40hq">40HQ full container</option>
@@ -240,18 +295,27 @@ export default function QuoteRequest() {
             <fieldset className="space-y-3">
               <legend className="flex items-center gap-2 text-sm font-semibold text-dark-700"><FileCheck2 size={16} /> Report and clearance requirements</legend>
               <div className="grid sm:grid-cols-2 gap-3">
-                {reportOptions.map(option => (
-                  <label key={option.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${form.reportRequirements.includes(option.id) ? 'border-primary bg-primary/5' : 'border-dark-200 hover:border-primary/30'}`}>
-                    <input type="checkbox" checked={form.reportRequirements.includes(option.id)} onChange={() => toggleReport(option.id)} className="w-4 h-4 accent-primary" />
+                {reportOptions.map(option => {
+                  //渲染:渲染列表内容
+                  return (
+<label key={option.id} className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${form.reportRequirements.includes(option.id) ? 'border-primary bg-primary/5' : 'border-dark-200 hover:border-primary/30'}`}>
+                    <input type="checkbox" checked={form.reportRequirements.includes(option.id)} onChange={() => {
+                                                                                                             //处理页面交互事件
+                                                                                                             return toggleReport(option.id);
+                                                                                                           }} className="w-4 h-4 accent-primary" />
                     <span className="text-sm text-dark-700">{option.label}</span>
                   </label>
-                ))}
+                  );
+                })}
               </div>
             </fieldset>
 
             <label className="space-y-2 block">
               <span className="block text-sm font-semibold text-dark-700">Additional requirements</span>
-              <textarea rows="3" value={form.notes} onChange={event => updateField('notes', event.target.value)} placeholder="Destination port, certification standard, packaging, logo or other instructions" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
+              <textarea rows="3" value={form.notes} onChange={event => {
+                                                                //处理页面交互事件
+                                                                return updateField('notes', event.target.value);
+                                                              }} placeholder="Destination port, certification standard, packaging, logo or other instructions" className="w-full px-4 py-3 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 resize-y" />
             </label>
 
             <div className="rounded-2xl bg-blue-50 border border-blue-100 p-4 flex gap-3 text-sm text-blue-800">

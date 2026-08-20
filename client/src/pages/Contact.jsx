@@ -8,19 +8,30 @@ const initialForm = {
   loadingPlan: 'undecided', destinationPort: '', message: '', website: '',
 };
 
+//渲染:渲染Contact组件或页面内容
 export default function Contact() {
   const [searchParams] = useSearchParams();
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState({ sending: false, error: '', reference: '' });
 
   useEffect(() => {
+              //执行组件副作用逻辑
+
     const product = searchParams.get('product');
-    if (product) setForm((current) => ({ ...current, specifications: product }));
+    if (product) setForm((current) => {
+              //处理回调函数逻辑
+      return { ...current, specifications: product };
+    });
   }, [searchParams]);
 
-  const update = (event) => setForm({ ...form, [event.target.name]: event.target.value });
+  const update = (event) => {
+                   //处理回调函数逻辑
+                   return setForm({ ...form, [event.target.name]: event.target.value });
+                 };
 
   const submit = async (event) => {
+                   //处理回调函数逻辑
+
     event.preventDefault();
     setStatus({ sending: true, error: '', reference: '' });
     try {
@@ -75,12 +86,15 @@ export default function Contact() {
               ['whatsapp', 'WhatsApp', 'text', false], ['vehicleModels', 'Target vehicles', 'text', false],
               ['specifications', 'Wheel specifications or product', 'text', false], ['estimatedQuantity', 'Estimated quantity', 'number', false],
               ['destinationPort', 'Destination port', 'text', false],
-            ].map(([name, label, type, required]) => (
-              <label key={name} className="block">
+            ].map(([name, label, type, required]) => {
+              //渲染:渲染列表内容
+              return (
+                <label key={name} className="block">
                 <span className="block text-sm font-semibold text-slate-700 mb-2">{label}</span>
                 <input name={name} type={type} required={required} min={type === 'number' ? '1' : undefined} value={form[name]} onChange={update} className="w-full rounded-xl border-slate-300" />
-              </label>
-            ))}
+                </label>
+              );
+            })}
             <label className="block">
               <span className="block text-sm font-semibold text-slate-700 mb-2">Loading plan</span>
               <select name="loadingPlan" value={form.loadingPlan} onChange={update} className="w-full rounded-xl border-slate-300">

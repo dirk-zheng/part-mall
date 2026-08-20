@@ -24,6 +24,7 @@ import AdminArticles from './pages/AdminArticles';
 import AdminFaqs from './pages/AdminFaqs';
 import { RequireAuth, RequireAdmin } from './components/ProtectedRoute';
 
+//渲染:渲染AppContent组件或页面内容
 export function AppContent({ initialProducts = [] }) {
   return (
       <AuthProvider>
@@ -53,13 +54,13 @@ export function AppContent({ initialProducts = [] }) {
                   }
                 />
                 <Route path="/cart" element={<Navigate to="/quote" replace />} />
-                <Route 
-                  path="/admin" 
+                <Route
+                  path="/admin"
                   element={
                     <RequireAdmin>
                       <Admin />
                     </RequireAdmin>
-                  } 
+                  }
                 />
                 <Route path="/admin/users" element={<RequireAdmin><AdminUsers /></RequireAdmin>} />
                 <Route path="/admin/articles" element={<RequireAdmin><AdminArticles /></RequireAdmin>} />
@@ -78,6 +79,7 @@ export function AppContent({ initialProducts = [] }) {
   );
 }
 
+//渲染:渲染App组件或页面内容
 function App({ initialProducts = [] }) {
   return (
     <BrowserRouter>

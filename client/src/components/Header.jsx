@@ -4,6 +4,7 @@ import { Layers3, User, Menu, X, Package, LogOut, Settings, ChevronDown, Home, G
 import { useStore } from '../context/StoreContext';
 import { useAuth } from '../context/AuthContext';
 
+//渲染:渲染Header组件或页面内容
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -12,17 +13,26 @@ export default function Header() {
   const navigate = useNavigate();
   const { state } = useStore();
   const { user, logout, isAdmin } = useAuth();
-  
-  const mixedLoadCount = state.mixedLoad.reduce((sum, item) => sum + item.quantity, 0);
+
+  const mixedLoadCount = state.mixedLoad.reduce((sum, item) => {
+                                                  //汇总列表数据
+                                                  return sum + item.quantity;
+                                                }, 0);
 
   useEffect(() => {
+              //执行组件副作用逻辑
+
+    //执行handleClickOutside函数逻辑
     function handleClickOutside(event) {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setUserMenuOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    return () => {
+             //处理回调函数逻辑
+             return document.removeEventListener('mousedown', handleClickOutside);
+           };
   }, []);
 
   const navItems = [
@@ -35,11 +45,15 @@ export default function Header() {
   ];
 
   const isActive = (path) => {
+                     //处理回调函数逻辑
+
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
   const handleLogout = () => {
+                         //处理回调函数逻辑
+
     logout();
     setUserMenuOpen(false);
     navigate('/');
@@ -59,8 +73,10 @@ export default function Header() {
           </Link>
 
           <nav className="hidden md:flex items-center gap-1">
-            {navItems.map(({ path, label, icon: Icon }) => (
-              <Link
+            {navItems.map(({ path, label, icon: Icon }) => {
+              //渲染:渲染列表内容
+              return (
+<Link
                 key={path}
                 to={path}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200 ${
@@ -72,7 +88,8 @@ export default function Header() {
                 <Icon size={18} />
                 <span>{label}</span>
               </Link>
-            ))}
+              );
+            })}
             {user && (
               <>
                 <Link
@@ -122,7 +139,10 @@ export default function Header() {
               {user ? (
                 <>
                   <button
-                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    onClick={() => {
+                               //处理页面交互事件
+                               return setUserMenuOpen(!userMenuOpen);
+                             }}
                     className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-primary/5 transition-colors"
                   >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -140,8 +160,8 @@ export default function Header() {
                         <p className="font-medium text-dark-900">{user.name}</p>
                         <p className="text-sm text-dark-500">@{user.username}</p>
                         <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium ${
-                          user.role === 'admin' 
-                            ? 'bg-purple-100 text-purple-700' 
+                          user.role === 'admin'
+                            ? 'bg-purple-100 text-purple-700'
                             : 'bg-blue-100 text-blue-700'
                         }`}>
                           {user.role === 'admin' ? 'Admin' : 'User'}
@@ -152,7 +172,10 @@ export default function Header() {
                         {isAdmin() && (
                           <Link
                             to="/admin"
-                            onClick={() => setUserMenuOpen(false)}
+                            onClick={() => {
+                                       //处理页面交互事件
+                                       return setUserMenuOpen(false);
+                                     }}
                             className="flex items-center gap-3 px-4 py-2 text-dark-600 hover:bg-primary/5 hover:text-primary transition-colors"
                           >
                             <Settings size={18} />
@@ -182,7 +205,10 @@ export default function Header() {
             </div>
 
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => {
+                         //处理页面交互事件
+                         return setMobileMenuOpen(!mobileMenuOpen);
+                       }}
               className="md:hidden p-2 rounded-lg hover:bg-primary/5 transition-colors text-dark-600"
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -193,11 +219,16 @@ export default function Header() {
         {/* Mobile Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-primary/10 animate-fade-in">
-            {navItems.map(({ path, label, icon: Icon }) => (
-              <Link
+            {navItems.map(({ path, label, icon: Icon }) => {
+              //渲染:渲染列表内容
+              return (
+<Link
                 key={path}
                 to={path}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                           //处理页面交互事件
+                           return setMobileMenuOpen(false);
+                         }}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                   isActive(path)
                     ? 'bg-primary/10 text-primary font-medium'
@@ -207,12 +238,16 @@ export default function Header() {
                 <Icon size={20} />
                 <span>{label}</span>
               </Link>
-            ))}
+              );
+            })}
             {user ? (
               <>
                 <Link
                   to="/quote"
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={() => {
+                             //处理页面交互事件
+                             return setMobileMenuOpen(false);
+                           }}
                   className="flex items-center gap-3 px-4 py-3 rounded-lg text-dark-600 hover:bg-primary/5"
                 >
                   <Layers3 size={20} />
@@ -226,7 +261,10 @@ export default function Header() {
                 {isAdmin() && (
                   <Link
                     to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                               //处理页面交互事件
+                               return setMobileMenuOpen(false);
+                             }}
                     className="flex items-center gap-3 px-4 py-3 rounded-lg text-dark-600 hover:bg-primary/5"
                   >
                     <Package size={20} />
@@ -234,7 +272,9 @@ export default function Header() {
                   </Link>
                 )}
                 <button
-                  onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+                  onClick={() => {
+                             //处理页面交互事件
+                              handleLogout(); setMobileMenuOpen(false); }}
                   className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50"
                 >
                   <LogOut size={20} />
@@ -244,7 +284,10 @@ export default function Header() {
             ) : (
               <Link
                 to="/login"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                           //处理页面交互事件
+                           return setMobileMenuOpen(false);
+                         }}
                 className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-medium"
               >
                 <User size={20} />

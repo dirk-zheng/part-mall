@@ -15,11 +15,13 @@ const quickQuestions = [
   { icon: Truck, text: 'Documents', message: 'Which test reports can you provide for customs clearance?' },
 ];
 
+//执行formatTime函数逻辑
 function formatTime(date) {
   return new Date(date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
 // ─── AI Chat View ────────────────────────────────
+//渲染:渲染AIChatView组件或页面内容
 function AIChatView({ state, dispatch, onClose }) {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -28,9 +30,13 @@ function AIChatView({ state, dispatch, onClose }) {
 
   const welcomeSent = useRef(false);
   useEffect(() => {
+              //执行组件副作用逻辑
+
     if (state.chatHistory.length === 0 && !welcomeSent.current) {
       welcomeSent.current = true;
       setTimeout(() => {
+                   //处理延时任务
+
         dispatch({
           type: 'ADD_MESSAGE',
           payload: {
@@ -45,10 +51,14 @@ function AIChatView({ state, dispatch, onClose }) {
   }, [state.chatHistory]);
 
   useEffect(() => {
+              //执行组件副作用逻辑
+
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [state.chatHistory]);
 
   const handleSend = async () => {
+                       //处理回调函数逻辑
+
     if (!inputValue.trim()) return;
     const userMsg = {
       id: Date.now().toString(),
@@ -86,11 +96,15 @@ function AIChatView({ state, dispatch, onClose }) {
   };
 
   const handleQuickQuestion = (message) => {
+                                //处理回调函数逻辑
+
     setInputValue(message);
     inputRef.current?.focus();
   };
 
   const handleKeyDown = (e) => {
+                          //处理回调函数逻辑
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -101,8 +115,10 @@ function AIChatView({ state, dispatch, onClose }) {
     <>
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-white to-blue-50/30">
-        {state.chatHistory.map((msg, index) => (
-          <div key={msg.id} className={`flex gap-3 animate-slide-up ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
+        {state.chatHistory.map((msg, index) => {
+          //渲染:渲染列表内容
+          return (
+<div key={msg.id} className={`flex gap-3 animate-slide-up ${msg.sender === 'user' ? 'flex-row-reverse' : ''}`}
             style={{ animationDelay: `${index * 50}ms` }}>
             {msg.sender === 'user' ? (
               <div className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-accent to-primary">
@@ -128,7 +144,8 @@ function AIChatView({ state, dispatch, onClose }) {
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
         {isTyping && (
           <div className="flex gap-3 animate-slide-up">
             <div className="flex-shrink-0 relative w-8 h-8">
@@ -152,9 +169,14 @@ function AIChatView({ state, dispatch, onClose }) {
       <div className="px-3 py-2 border-t border-dark-100 bg-dark-50/50">
         <div className="flex flex-wrap gap-1.5">
           {quickQuestions.map((q, i) => {
+                                //渲染:渲染列表内容
+
             const Icon = q.icon;
             return (
-              <button key={i} onClick={() => handleQuickQuestion(q.message)}
+              <button key={i} onClick={() => {
+                                         //处理页面交互事件
+                                         return handleQuickQuestion(q.message);
+                                       }}
                 className="flex items-center gap-1 px-2.5 py-1 bg-white rounded-lg text-xs text-dark-600 hover:bg-primary/5 hover:text-primary border border-dark-200 transition-colors">
                 <Icon size={12} />{q.text}
               </button>
@@ -168,7 +190,10 @@ function AIChatView({ state, dispatch, onClose }) {
         <div className="flex gap-2">
           <div className="relative flex-1">
             <input ref={inputRef} type="text" value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)} onKeyDown={handleKeyDown}
+              onChange={(e) => {
+                          //处理页面交互事件
+                          return setInputValue(e.target.value);
+                        }} onKeyDown={handleKeyDown}
               placeholder="Type your question..."
               className="w-full px-3 py-2.5 pr-10 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all text-sm" />
             <Sparkles className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/50" size={14} />
@@ -184,6 +209,7 @@ function AIChatView({ state, dispatch, onClose }) {
 }
 
 // ─── IM Chat View ────────────────────────────────
+//渲染:渲染IMChatView组件或页面内容
 function IMChatView({ room, messages: initialMessages, onBack }) {
   const [inputValue, setInputValue] = useState('');
   const [messages, setMessages] = useState(initialMessages || []);
@@ -193,19 +219,30 @@ function IMChatView({ room, messages: initialMessages, onBack }) {
 
   // Listen for real-time incoming messages
   useEffect(() => {
+              //执行组件副作用逻辑
+
     const unsub = wsClient.on('im.message', (data) => {
+                                              //处理回调函数逻辑
+
       if (data.roomId === room.roomId) {
-        setMessages(prev => [...prev, data]);
+        setMessages(prev => {
+                      //处理回调函数逻辑
+                      return [...prev, data];
+                    });
       }
     });
     return unsub;
   }, [room.roomId]);
 
   useEffect(() => {
+              //执行组件副作用逻辑
+
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   const handleSend = async () => {
+                       //处理回调函数逻辑
+
     if (!inputValue.trim() || sending) return;
     const content = inputValue.trim();
     setInputValue('');
@@ -214,7 +251,9 @@ function IMChatView({ room, messages: initialMessages, onBack }) {
       await imAPI.sendMessage(content, room.roomId);
     } catch (err) {
       // Failed to send, add error indicator
-      setMessages(prev => [...prev, {
+      setMessages(prev => {
+                    //处理回调函数逻辑
+                    return [...prev, {
         id: `err-${Date.now()}`,
         roomId: room.roomId,
         senderId: user.id,
@@ -222,13 +261,16 @@ function IMChatView({ room, messages: initialMessages, onBack }) {
         content,
         timestamp: new Date().toISOString(),
         failed: true
-      }]);
+      }];
+                  });
     } finally {
       setSending(false);
     }
   };
 
   const handleKeyDown = (e) => {
+                          //处理回调函数逻辑
+
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -245,6 +287,8 @@ function IMChatView({ room, messages: initialMessages, onBack }) {
           </div>
         )}
         {messages.map((msg) => {
+                        //渲染:渲染列表内容
+
           const isMe = msg.senderId === user.id;
           return (
             <div key={msg.id} className={`flex gap-2 ${isMe ? 'flex-row-reverse' : ''}`}>
@@ -280,7 +324,10 @@ function IMChatView({ room, messages: initialMessages, onBack }) {
 
       <div className="p-3 border-t border-dark-200">
         <div className="flex gap-2">
-          <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)}
+          <input type="text" value={inputValue} onChange={(e) => {
+                                                            //处理页面交互事件
+                                                            return setInputValue(e.target.value);
+                                                          }}
             onKeyDown={handleKeyDown} disabled={sending}
             placeholder="Type a message..."
             className="flex-1 px-3 py-2.5 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all text-sm" />
@@ -295,16 +342,28 @@ function IMChatView({ room, messages: initialMessages, onBack }) {
 }
 
 // ─── Sales Picker ────────────────────────────────
+//渲染:渲染SalesPicker组件或页面内容
 function SalesPicker({ onSelect, onBack }) {
   const [sales, setSales] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
+              //执行组件副作用逻辑
+
     imAPI.getSales()
-      .then(data => setSales(data))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
+      .then(data => {
+              //处理异步请求成功结果
+              return setSales(data);
+            })
+      .catch(err => {
+               //处理异步请求异常
+               return setError(err.message);
+             })
+      .finally(() => {
+                 //处理异步请求结束状态
+                 return setLoading(false);
+               });
   }, []);
 
   return (
@@ -320,8 +379,13 @@ function SalesPicker({ onSelect, onBack }) {
           <p className="text-dark-400 text-sm text-center py-8">No sales staff online right now.</p>
         )}
         <div className="space-y-2">
-          {sales.map(s => (
-            <button key={s.id} onClick={() => onSelect(s)}
+          {sales.map(s => {
+            //渲染:渲染列表内容
+            return (
+<button key={s.id} onClick={() => {
+                                          //处理页面交互事件
+                                          return onSelect(s);
+                                        }}
               className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-primary/5 border border-dark-100 hover:border-primary/30 transition-colors text-left">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
                 {(s.name || s.username)[0].toUpperCase()}
@@ -331,7 +395,8 @@ function SalesPicker({ onSelect, onBack }) {
                 <p className="text-xs text-dark-400">Sales Representative</p>
               </div>
             </button>
-          ))}
+            );
+          })}
         </div>
       </div>
     </>
@@ -339,6 +404,7 @@ function SalesPicker({ onSelect, onBack }) {
 }
 
 // ─── Room List ───────────────────────────────────
+//渲染:渲染RoomList组件或页面内容
 function RoomList({ onSelectRoom, onNewChat }) {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -346,6 +412,8 @@ function RoomList({ onSelectRoom, onNewChat }) {
   const { user } = useAuth();
 
   const loadRooms = useCallback(async () => {
+                                  //创建并缓存回调函数
+
     try {
       const data = await imAPI.getRooms();
       setRooms(data);
@@ -356,11 +424,17 @@ function RoomList({ onSelectRoom, onNewChat }) {
     }
   }, []);
 
-  useEffect(() => { loadRooms(); }, [loadRooms]);
+  useEffect(() => {
+              //执行组件副作用逻辑
+               loadRooms(); }, [loadRooms]);
 
   // Refresh rooms when a new message arrives
   useEffect(() => {
+              //执行组件副作用逻辑
+
     const unsub = wsClient.on('im.message', () => {
+                                              //处理回调函数逻辑
+
       loadRooms();
     });
     return unsub;
@@ -397,8 +471,13 @@ function RoomList({ onSelectRoom, onNewChat }) {
             )}
           </div>
         )}
-        {!loading && rooms.map(room => (
-          <button key={room.roomId} onClick={() => onSelectRoom(room)}
+        {!loading && rooms.map(room => {
+          //渲染:渲染列表内容
+          return (
+<button key={room.roomId} onClick={() => {
+                                               //处理页面交互事件
+                                               return onSelectRoom(room);
+                                             }}
             className="w-full flex items-center gap-3 px-4 py-3 hover:bg-primary/5 border-b border-dark-50 transition-colors text-left">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
               {(room.otherUser?.name || '?')[0].toUpperCase()}
@@ -418,13 +497,15 @@ function RoomList({ onSelectRoom, onNewChat }) {
               <p className="text-xs text-dark-400 truncate mt-0.5">{room.lastMessage || 'Start a conversation'}</p>
             </div>
           </button>
-        ))}
+          );
+        })}
       </div>
     </>
   );
 }
 
 // ─── Main Component ──────────────────────────────
+//渲染:渲染FloatingSupport组件或页面内容
 export default function FloatingSupport({ isOpen, onClose }) {
   const { state, dispatch } = useStore();
   const { user } = useAuth();
@@ -436,6 +517,8 @@ export default function FloatingSupport({ isOpen, onClose }) {
 
   // Reset view when panel opens
   useEffect(() => {
+              //执行组件副作用逻辑
+
     if (isOpen) {
       setImView('rooms');
       setSelectedRoom(null);
@@ -443,6 +526,8 @@ export default function FloatingSupport({ isOpen, onClose }) {
   }, [isOpen]);
 
   const handleSelectRoom = async (room) => {
+                             //处理回调函数逻辑
+
     setSelectedRoom(room);
     setImView('chat');
     setLoadingMessages(true);
@@ -457,6 +542,8 @@ export default function FloatingSupport({ isOpen, onClose }) {
   };
 
   const handleSelectSales = async (salesUser) => {
+                              //处理回调函数逻辑
+
     // Create a new room or navigate to it
     try {
       // Send a greeting message to create the room
@@ -468,6 +555,8 @@ export default function FloatingSupport({ isOpen, onClose }) {
   };
 
   const handleBackToRooms = () => {
+                              //处理回调函数逻辑
+
     setImView('rooms');
     setSelectedRoom(null);
     setChatMessages([]);
@@ -475,6 +564,8 @@ export default function FloatingSupport({ isOpen, onClose }) {
 
   // Get header content based on view
   const getHeaderContent = () => {
+                             //渲染:渲染页面内容
+
     if (activeTab === 'im' && imView === 'chat' && selectedRoom) {
       return (
         <>
@@ -501,7 +592,10 @@ export default function FloatingSupport({ isOpen, onClose }) {
     if (activeTab === 'im' && imView === 'sales') {
       return (
         <>
-          <button onClick={() => setImView('rooms')} className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+          <button onClick={() => {
+                             //处理页面交互事件
+                             return setImView('rooms');
+                           }} className="w-8 h-8 rounded-lg bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
             <ArrowLeft size={18} className="text-white" />
           </button>
           <div className="flex items-center gap-3">
@@ -545,7 +639,10 @@ export default function FloatingSupport({ isOpen, onClose }) {
         </div>
         <div className="flex items-center gap-1">
           {user?.token && (
-            <button onClick={() => setActiveTab(activeTab === 'ai' ? 'im' : 'ai')}
+            <button onClick={() => {
+                               //处理页面交互事件
+                               return setActiveTab(activeTab === 'ai' ? 'im' : 'ai');
+                             }}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 activeTab === 'ai' ? 'bg-white/20 text-white hover:bg-white/30' : 'bg-white/20 text-white hover:bg-white/30'
               }`}>
@@ -582,9 +679,15 @@ export default function FloatingSupport({ isOpen, onClose }) {
           <IMChatView room={selectedRoom} messages={chatMessages} onBack={handleBackToRooms} />
         )
       ) : imView === 'sales' ? (
-        <SalesPicker onSelect={handleSelectSales} onBack={() => setImView('rooms')} />
+        <SalesPicker onSelect={handleSelectSales} onBack={() => {
+                                                            //处理页面交互事件
+                                                            return setImView('rooms');
+                                                          }} />
       ) : (
-        <RoomList onSelectRoom={handleSelectRoom} onNewChat={() => setImView('sales')} />
+        <RoomList onSelectRoom={handleSelectRoom} onNewChat={() => {
+                                                               //处理页面交互事件
+                                                               return setImView('sales');
+                                                             }} />
       )}
     </div>
   );

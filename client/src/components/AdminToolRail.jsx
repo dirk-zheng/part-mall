@@ -9,6 +9,7 @@ const tools = [
   { path: '/admin/faqs', label: 'Write FAQ', icon: CircleHelp },
 ];
 
+//渲染:渲染AdminToolRail组件或页面内容
 export default function AdminToolRail() {
   const { isAdmin } = useAuth();
   const { pathname } = useLocation();
@@ -21,7 +22,13 @@ export default function AdminToolRail() {
       <div className="flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-xl shadow-slate-900/10 backdrop-blur">
         <button
           type="button"
-          onClick={() => setExpanded((value) => !value)}
+          onClick={() => {
+                     //处理页面交互事件
+                     return setExpanded((value) => {
+                                       //处理页面交互事件
+                                       return !value;
+                                     });
+                   }}
           className="group flex h-11 items-center rounded-xl bg-slate-900 text-white transition-colors hover:bg-slate-800"
           aria-expanded={expanded}
           title={expanded ? 'Collapse administrator tools' : 'Expand administrator tools'}
@@ -30,8 +37,10 @@ export default function AdminToolRail() {
           {expanded && <span className="whitespace-nowrap pr-4 text-sm font-semibold">Admin tools</span>}
         </button>
 
-        {expanded && tools.map(({ path, label, icon: Icon }) => (
-          <Link
+        {expanded && tools.map(({ path, label, icon: Icon }) => {
+          //渲染:渲染列表内容
+          return (
+<Link
             key={path}
             to={path}
             title={label}
@@ -40,7 +49,8 @@ export default function AdminToolRail() {
             <span className="flex w-11 shrink-0 items-center justify-center"><Icon size={20} /></span>
             <span className="whitespace-nowrap pr-4 text-sm font-medium">{label}</span>
           </Link>
-        ))}
+          );
+        })}
 
         {expanded && (
           <button type="button" disabled title="Reserved for a future administrator tool" className="flex h-11 cursor-not-allowed items-center rounded-xl text-slate-300">

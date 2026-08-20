@@ -3,10 +3,14 @@ import { ArrowLeft, ArrowRight, CheckCircle2, PackageCheck, Ruler, ShieldCheck }
 import { useStore } from '../context/StoreContext';
 import { productSlug } from '../data/seoContent';
 
+//渲染:渲染ProductDetail组件或页面内容
 export default function ProductDetail() {
   const { slug } = useParams();
   const { state } = useStore();
-  const product = state.products.find((item) => productSlug(item) === slug);
+  const product = state.products.find((item) => {
+                                        //查找符合条件的数据
+                                        return productSlug(item) === slug;
+                                      });
 
   if (!product && state.loading) {
     return <div className="min-h-screen pt-28 text-center text-slate-500">Loading wheel program…</div>;
@@ -41,13 +45,16 @@ export default function ProductDetail() {
                 [ShieldCheck, 'Order-level QC', 'Inspection scope and sampling are agreed against the confirmed order.'],
                 [PackageCheck, 'Export packing', 'Finish protection, accessories, carton marks and loading requirements reviewed.'],
                 [CheckCircle2, 'Documents by requirement', 'Available reports are confirmed for the exact model and destination market.'],
-              ].map(([Icon, title, text]) => (
-                <div key={title} className="bg-white border border-slate-200 rounded-2xl p-5">
+              ].map(([Icon, title, text]) => {
+                //渲染:渲染列表内容
+                return (
+<div key={title} className="bg-white border border-slate-200 rounded-2xl p-5">
                   <Icon size={22} className="text-primary mb-3" />
                   <h2 className="font-semibold text-slate-900 mb-1">{title}</h2>
                   <p className="text-sm text-slate-500 leading-relaxed">{text}</p>
                 </div>
-              ))}
+                );
+              })}
             </div>
             <Link to={`/contact?product=${encodeURIComponent(product.name)}`} className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-white font-semibold hover:opacity-90">
               Request fitment and volume quote <ArrowRight size={18} />

@@ -11,6 +11,7 @@ const initialState = {
   loading: true,
 };
 
+//执行reducer函数逻辑
 function reducer(state, action) {
   switch (action.type) {
     case 'SET_PRODUCTS':
@@ -36,6 +37,7 @@ function reducer(state, action) {
   }
 }
 
+//渲染:渲染StoreProvider组件或页面内容
 export function StoreProvider({ children, initialProducts = [] }) {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -46,6 +48,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
 
   // 加载商品列表
   const loadProducts = useCallback(async () => {
+                                     //创建并缓存回调函数
+
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       const data = await productAPI.getList({ pageSize: 100 });
@@ -58,6 +62,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
 
   // 加载混装清单
   const loadMixedLoad = useCallback(async () => {
+                                      //创建并缓存回调函数
+
     try {
       const data = await mixedLoadAPI.getList();
       dispatch({ type: 'SET_MIXED_LOAD', payload: data.items });
@@ -68,11 +74,15 @@ export function StoreProvider({ children, initialProducts = [] }) {
 
   // 首次加载商品
   useEffect(() => {
+              //执行组件副作用逻辑
+
     loadProducts();
   }, [loadProducts]);
 
   // 用户变化时加载/清空混装清单
   useEffect(() => {
+              //执行组件副作用逻辑
+
     if (user?.token) {
       loadMixedLoad();
     } else {
@@ -83,6 +93,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   // ─── 混装清单与询盘操作 ────────────────────
 
   const addToMixedLoad = async (product) => {
+                           //处理回调函数逻辑
+
     try {
       await mixedLoadAPI.add(product.id, 1);
       await loadMixedLoad();
@@ -93,6 +105,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   };
 
   const removeFromMixedLoad = async (productId) => {
+                                //处理回调函数逻辑
+
     try {
       await mixedLoadAPI.remove(productId);
       await loadMixedLoad();
@@ -103,6 +117,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   };
 
   const updateQuantity = async (productId, quantity) => {
+                           //处理回调函数逻辑
+
     try {
       await mixedLoadAPI.updateQuantity(productId, quantity);
       await loadMixedLoad();
@@ -113,6 +129,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   };
 
   const clearMixedLoad = async () => {
+                           //处理回调函数逻辑
+
     try {
       await mixedLoadAPI.clear();
       dispatch({ type: 'SET_MIXED_LOAD', payload: [] });
@@ -123,6 +141,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   };
 
   const submitQuote = async (request) => {
+                        //处理回调函数逻辑
+
     const result = await quoteAPI.submit(request);
     dispatch({ type: 'SET_MIXED_LOAD', payload: [] });
     return result;
@@ -131,6 +151,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   // ─── 商品管理操作 ──────────────────────────
 
   const addProduct = async (productData) => {
+                       //处理回调函数逻辑
+
     try {
       await productAPI.create(productData);
       await loadProducts();
@@ -141,6 +163,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   };
 
   const updateProduct = async (id, productData) => {
+                          //处理回调函数逻辑
+
     try {
       await productAPI.update(id, productData);
       await loadProducts();
@@ -151,6 +175,8 @@ export function StoreProvider({ children, initialProducts = [] }) {
   };
 
   const deleteProduct = async (productId) => {
+                          //处理回调函数逻辑
+
     try {
       await productAPI.delete(productId);
       await loadProducts();
@@ -183,6 +209,7 @@ export function StoreProvider({ children, initialProducts = [] }) {
   );
 }
 
+//执行useStore函数逻辑
 export function useStore() {
   const context = useContext(StoreContext);
   if (!context) {

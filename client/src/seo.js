@@ -20,25 +20,38 @@ const privatePages = {
   '/admin/faqs': ['FAQ Editor | Driveline Wheels Admin', 'Private FAQ writing workspace.'],
 };
 
+//seo:处理normalizeSeoPath相关逻辑
 export function normalizeSeoPath(pathname = '/') {
   if (pathname === '/news-blog' || pathname === '/news-blog/') return '/news-blog/';
   if (pathname.length > 1 && pathname.endsWith('/')) return pathname.slice(0, -1);
   return pathname;
 }
 
+//seo:处理buildPublicSeoPaths相关逻辑
 export function buildPublicSeoPaths(products = []) {
   return [
     ...Object.keys(basePages),
-    ...products.map((product) => `/products/${productSlug(product)}`),
-    ...Object.keys(servicePages).map((slug) => `/services/${slug}`),
-    ...Object.keys(articlePages).map((slug) => `/news-blog/${slug}`),
+    ...products.map((product) => {
+                      //seo:处理SEO相关回调
+                      return `/products/${productSlug(product)}`;
+                    }),
+    ...Object.keys(servicePages).map((slug) => {
+                                       //seo:处理SEO相关回调
+                                       return `/services/${slug}`;
+                                     }),
+    ...Object.keys(articlePages).map((slug) => {
+                                       //seo:处理SEO相关回调
+                                       return `/news-blog/${slug}`;
+                                     }),
   ];
 }
 
+//seo:处理buildPrerenderPaths相关逻辑
 export function buildPrerenderPaths(products = []) {
   return [...buildPublicSeoPaths(products), ...Object.keys(privatePages), '/404'];
 }
 
+//seo:处理getSeoForPath相关逻辑
 export function getSeoForPath(pathname = '/', products = []) {
   const path = normalizeSeoPath(pathname);
   const defaults = { path, canonical: path, image: '/wheels/hero-wheel.png', type: 'website', noindex: false };
@@ -47,7 +60,10 @@ export function getSeoForPath(pathname = '/', products = []) {
 
   const productMatch = path.match(/^\/products\/(.+)$/);
   if (productMatch) {
-    const product = products.find((item) => productSlug(item) === productMatch[1]);
+    const product = products.find((item) => {
+                                    //seo:处理SEO相关回调
+                                    return productSlug(item) === productMatch[1];
+                                  });
     if (product) return { ...defaults, title: `${product.name} Wholesale | Driveline Wheels`, description: `${product.description}. Confirm fitment, finish, MOQ, packing, QC and available documents before ordering.`, image: product.image, schemaType: 'product', product };
   }
   const serviceMatch = path.match(/^\/services\/(.+)$/);
@@ -63,6 +79,7 @@ export function getSeoForPath(pathname = '/', products = []) {
   return { ...defaults, title: 'Page Not Found | Driveline Wheels', description: 'The requested Driveline Wheels page could not be found.', canonical: null, noindex: true };
 }
 
+//seo:处理getStructuredData相关逻辑
 export function getStructuredData(seo, siteUrl = defaultSiteUrl) {
   const root = siteUrl.replace(/\/$/, '');
   const url = seo.canonical ? `${root}${seo.canonical}` : root;

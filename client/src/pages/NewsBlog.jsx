@@ -81,22 +81,33 @@ const articles = [
   },
 ];
 
-const categoryById = Object.fromEntries(categories.map((category) => [category.id, category]));
+const categoryById = Object.fromEntries(categories.map((category) => {
+                                                         //渲染:渲染列表内容
+                                                         return [category.id, category];
+                                                       }));
 
+//渲染:渲染NewsBlog组件或页面内容
 export default function NewsBlog() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [query, setQuery] = useState('');
 
   const filteredArticles = useMemo(() => {
+                                     //计算并缓存派生数据
+
     const search = query.trim().toLowerCase();
     return articles.filter((article) => {
+                             //筛选符合条件的数据
+
       const inCategory = activeCategory === 'all' || article.category === activeCategory;
       const matchesSearch = !search || `${article.title} ${article.summary}`.toLowerCase().includes(search);
       return inCategory && matchesSearch;
     });
   }, [activeCategory, query]);
 
-  const featured = articles.find((article) => article.id === 2);
+  const featured = articles.find((article) => {
+                                   //查找符合条件的数据
+                                   return article.id === 2;
+                                 });
 
   return (
     <div className="min-h-screen pt-16 bg-slate-50">
@@ -148,7 +159,10 @@ export default function NewsBlog() {
               <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
               <input
                 value={query}
-                onChange={(event) => setQuery(event.target.value)}
+                onChange={(event) => {
+                            //处理页面交互事件
+                            return setQuery(event.target.value);
+                          }}
                 placeholder="Search the knowledge center"
                 className="w-full rounded-xl py-3 pl-11 pr-4 text-sm"
               />
@@ -156,11 +170,16 @@ export default function NewsBlog() {
           </div>
 
           <div className="flex gap-2 overflow-x-auto pb-3 mb-7" aria-label="Article categories">
-            {categories.map(({ id, label, icon: Icon }) => (
-              <button
+            {categories.map(({ id, label, icon: Icon }) => {
+              //渲染:渲染列表内容
+              return (
+<button
                 key={id}
                 type="button"
-                onClick={() => setActiveCategory(id)}
+                onClick={() => {
+                           //处理页面交互事件
+                           return setActiveCategory(id);
+                         }}
                 className={`shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
                   activeCategory === id
                     ? 'bg-slate-900 border-slate-900 text-white'
@@ -169,12 +188,15 @@ export default function NewsBlog() {
               >
                 <Icon size={16} />{label}
               </button>
-            ))}
+              );
+            })}
           </div>
 
           {filteredArticles.length > 0 ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredArticles.map((article) => {
+                                      //渲染:渲染列表内容
+
                 const category = categoryById[article.category];
                 return (
                   <article key={article.id} className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-200/70 transition-all duration-300">

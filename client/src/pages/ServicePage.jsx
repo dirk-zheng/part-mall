@@ -3,6 +3,7 @@ import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { servicePages } from '../data/seoContent';
 import NotFound from './NotFound';
 
+//渲染:渲染ServicePage组件或页面内容
 export default function ServicePage() {
   const { slug } = useParams();
   const service = servicePages[slug];
@@ -22,12 +23,15 @@ export default function ServicePage() {
       </header>
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="space-y-6">
-          {service.sections.map(([title, body], index) => (
-            <section key={title} className="bg-white rounded-2xl border border-slate-200 p-7 md:p-9 flex gap-5">
+          {service.sections.map(([title, body], index) => {
+            //渲染:渲染列表内容
+            return (
+<section key={title} className="bg-white rounded-2xl border border-slate-200 p-7 md:p-9 flex gap-5">
               <CheckCircle2 className="text-primary shrink-0 mt-1" size={24} />
               <div><p className="text-sm font-semibold text-primary mb-2">0{index + 1}</p><h2 className="font-heading text-2xl font-bold text-slate-900 mb-3">{title}</h2><p className="text-slate-600 leading-relaxed">{body}</p></div>
             </section>
-          ))}
+            );
+          })}
         </div>
         <section className="mt-12 rounded-3xl bg-gradient-to-r from-orange-600 to-amber-500 text-white p-8 md:p-10 flex flex-col md:flex-row gap-6 md:items-center justify-between">
           <div><h2 className="font-heading text-3xl font-bold mb-2">Discuss your order requirements</h2><p className="text-orange-50">No account is needed. Send the market, vehicle, quantity and destination details directly.</p></div>

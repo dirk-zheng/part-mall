@@ -12,14 +12,21 @@ const mode = process.env.NODE_ENV || 'production';
 const env = loadEnv(mode, clientRoot, '');
 const siteUrl = (process.env.SITE_URL || env.VITE_SITE_URL || 'https://www.driveline-global.com').replace(/\/$/, '');
 
-const escapeHtml = (value) => String(value)
+const escapeHtml = (value) => {
+                     //seo:处理SEO相关回调
+                     return String(value)
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
   .replaceAll('>', '&gt;')
   .replaceAll('"', '&quot;');
+                   };
 
-const absoluteUrl = (value) => `${siteUrl}${value === '/' ? '/' : value}`;
+const absoluteUrl = (value) => {
+                      //seo:处理SEO相关回调
+                      return `${siteUrl}${value === '/' ? '/' : value}`;
+                    };
 
+//seo:处理buildSeoTags相关逻辑
 function buildSeoTags(seo, structuredData) {
   const canonicalUrl = seo.canonical ? absoluteUrl(seo.canonical) : null;
   const imageUrl = absoluteUrl(seo.image);
@@ -39,6 +46,7 @@ function buildSeoTags(seo, structuredData) {
   ].filter(Boolean).join('\n    ');
 }
 
+//seo:处理outputFileForRoute相关逻辑
 function outputFileForRoute(route) {
   if (route === '/') return path.join(distDir, 'index.html');
   return path.join(distDir, route.replace(/^\//, '').replace(/\/$/, ''), 'index.html');
@@ -83,7 +91,10 @@ try {
   const sitemap = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    ...publicSeoPaths.map(route => `  <url><loc>${escapeHtml(absoluteUrl(route))}</loc></url>`),
+    ...publicSeoPaths.map(route => {
+                            //seo:处理SEO相关回调
+                            return `  <url><loc>${escapeHtml(absoluteUrl(route))}</loc></url>`;
+                          }),
     '</urlset>',
     '',
   ].join('\n');

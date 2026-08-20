@@ -3,6 +3,7 @@ import { ArrowRight, CalendarDays, Clock3 } from 'lucide-react';
 import { articlePages } from '../data/seoContent';
 import NotFound from './NotFound';
 
+//渲染:渲染ArticleDetail组件或页面内容
 export default function ArticleDetail() {
   const { slug } = useParams();
   const article = articlePages[slug];
@@ -22,7 +23,10 @@ export default function ArticleDetail() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <img src={article.image} alt={article.title} className="w-full aspect-[16/9] object-cover rounded-3xl border border-slate-200 mb-12" width="960" height="540" />
           <div className="space-y-10">
-            {article.sections.map(([title, body]) => <section key={title}><h2 className="font-heading text-3xl font-bold text-slate-900 mb-4">{title}</h2><p className="text-lg text-slate-600 leading-8">{body}</p></section>)}
+            {article.sections.map(([title, body]) => {
+                                    //渲染:渲染列表内容
+                                    return <section key={title}><h2 className="font-heading text-3xl font-bold text-slate-900 mb-4">{title}</h2><p className="text-lg text-slate-600 leading-8">{body}</p></section>;
+                                  })}
           </div>
           <aside className="mt-14 bg-white border border-slate-200 rounded-3xl p-8">
             <h2 className="font-heading text-2xl font-bold text-slate-900 mb-3">Need help with a live wheel order?</h2>

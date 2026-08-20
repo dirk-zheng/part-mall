@@ -3,15 +3,20 @@ import { useLocation } from 'react-router-dom';
 import { defaultSiteUrl, getSeoForPath, getStructuredData } from '../seo';
 import { useStore } from '../context/StoreContext';
 
+//seo:处理upsertMeta相关逻辑
 function upsertMeta(selector, attributes) {
   let element = document.head.querySelector(selector);
   if (!element) {
     element = document.createElement('meta');
     document.head.appendChild(element);
   }
-  Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
+  Object.entries(attributes).forEach(([name, value]) => {
+                                       //seo:处理SEO相关回调
+                                       return element.setAttribute(name, value);
+                                     });
 }
 
+//seo:处理upsertCanonical相关逻辑
 function upsertCanonical(url) {
   let element = document.head.querySelector('link[rel="canonical"]');
   if (!url) {
@@ -26,11 +31,14 @@ function upsertCanonical(url) {
   element.setAttribute('href', url);
 }
 
+//seo:处理SEOManager相关逻辑
 export default function SEOManager() {
   const { pathname } = useLocation();
   const { state } = useStore();
 
   useEffect(() => {
+              //seo:处理SEO相关回调
+
     const seo = getSeoForPath(pathname, state.products);
     const siteUrl = (import.meta.env.VITE_SITE_URL || defaultSiteUrl).replace(/\/$/, '');
     const canonicalUrl = seo.canonical ? `${siteUrl}${seo.canonical === '/' ? '/' : seo.canonical}` : null;

@@ -1,6 +1,7 @@
 import { ArrowLeft, SearchX } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+//渲染:渲染NotFound组件或页面内容
 export default function NotFound() {
   return (
     <div className="min-h-screen pt-20 flex items-center justify-center bg-gradient-to-b from-white to-slate-100 px-4">

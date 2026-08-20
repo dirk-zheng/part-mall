@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { 
-  ArrowRight, Shield, Zap, Users, Search, Award, ChevronRight, 
+import {
+  ArrowRight, Shield, Zap, Users, Search, Award, ChevronRight,
   CircleDot, Car, Disc3, Circle, Wrench, Package, Cog, Truck
 } from 'lucide-react';
 import { useStore } from '../context/StoreContext';
@@ -72,6 +72,7 @@ const services = [
   },
 ];
 
+//渲染:渲染HomePage组件或页面内容
 export default function HomePage() {
   const { state } = useStore();
 
@@ -82,25 +83,25 @@ export default function HomePage() {
         <img src="/wheels/hero-wheel.png" alt="Performance wheel and tire" className="absolute inset-0 w-full h-full object-cover object-center md:object-right" />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-black/20" />
         <div className="absolute inset-0 cyber-grid opacity-20" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-36">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 backdrop-blur-sm mb-8">
               <Car size={16} className="text-blue-400" />
               <span className="text-sm text-orange-200">Guangzhou Yongning · Wheel Trading · On-site QC</span>
             </div>
-            
+
             <h1 className="font-heading text-5xl md:text-7xl font-bold mb-6 leading-tight">
               Wheel trading,<br />
               <span className="bg-gradient-to-r from-orange-400 to-amber-300 bg-clip-text text-transparent">
                 done carefully.
               </span>
             </h1>
-            
+
             <p className="text-lg md:text-xl text-blue-100/80 mb-10 leading-relaxed max-w-2xl">
               Driveline Wheels is rooted in Guangzhou's Yongning wheel industry cluster. We work hard, stay practical, and take care of every order from fitment selection to on-site QC and export documents.
             </p>
-            
+
             <div className="flex flex-wrap gap-4">
               <Link
                 to="/products"
@@ -118,11 +119,13 @@ export default function HomePage() {
               </Link>
             </div>
           </div>
-          
+
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20">
-            {stats.map((stat) => (
-              <div 
+            {stats.map((stat) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={stat.label}
                 className="text-center p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all"
               >
@@ -131,10 +134,11 @@ export default function HomePage() {
                 </div>
                 <div className="text-sm text-blue-200/70 mt-2">{stat.label}</div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
-        
+
         {/* Wave Divider */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -154,10 +158,12 @@ export default function HomePage() {
               Practical support for wheel distributors and modification shops
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {services.map((service) => (
-              <div 
+            {services.map((service) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={service.title}
                 className="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
               >
@@ -171,7 +177,8 @@ export default function HomePage() {
                   {service.desc}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -187,10 +194,12 @@ export default function HomePage() {
               Close to production, careful with quality, flexible with orders
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature) => (
-              <div 
+            {features.map((feature) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={feature.title}
                 className="group bg-white rounded-2xl p-8 border border-slate-200 hover:border-primary/30 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
               >
@@ -204,7 +213,8 @@ export default function HomePage() {
                   {feature.description}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -219,7 +229,7 @@ export default function HomePage() {
               </h2>
               <p className="text-slate-500 text-lg">Practical styles and fitments for local aftermarket demand</p>
             </div>
-            <Link 
+            <Link
               to="/products"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white hover:opacity-90 transition-all font-medium"
             >
@@ -227,9 +237,11 @@ export default function HomePage() {
               <ArrowRight size={18} />
             </Link>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {state.products.slice(0, 8).map((product) => {
+                                              //渲染:渲染列表内容
+
               const Icon = CategoryIcons[product.category] || Cog;
               return (
                 <Link
@@ -243,6 +255,8 @@ export default function HomePage() {
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       onError={(e) => {
+                                 //处理页面交互事件
+
                         e.target.src = '/no-image.png';
                       }}
                     />
@@ -281,13 +295,15 @@ export default function HomePage() {
               A clear, practical process from market fitment to shipment
             </p>
           </div>
-          
+
           <div className="relative">
             <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-blue-400/50 via-purple-400/50 to-transparent" />
-            
+
             <div className="space-y-8 md:space-y-12">
-              {milestones.map((milestone, index) => (
-                <div 
+              {milestones.map((milestone, index) => {
+                //渲染:渲染列表内容
+                return (
+<div
                   key={milestone.year}
                   className={`flex flex-col md:flex-row items-center gap-4 md:gap-8 ${
                     index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
@@ -302,14 +318,15 @@ export default function HomePage() {
                       <p className="text-blue-100/60 text-sm">{milestone.desc}</p>
                     </div>
                   </div>
-                  
+
                   <div className="hidden md:flex w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 border-4 border-slate-900 shrink-0 items-center justify-center">
                     <div className="w-2 h-2 rounded-full bg-white" />
                   </div>
-                  
+
                   <div className="flex-1 hidden md:block" />
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

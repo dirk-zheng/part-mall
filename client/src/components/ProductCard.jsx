@@ -21,17 +21,23 @@ const categoryColors = {
   accessory: 'bg-emerald-100 text-emerald-700 border-emerald-200',
 };
 
+//渲染:渲染ProductCard组件或页面内容
 export default function ProductCard({ product }) {
   const { addToMixedLoad } = useStore();
   const [isAdded, setIsAdded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const handleRequestQuote = async (e) => {
+                               //处理回调函数逻辑
+
     e.preventDefault();
     try {
       await addToMixedLoad(product);
       setIsAdded(true);
-      setTimeout(() => setIsAdded(false), 2000);
+      setTimeout(() => {
+                   //处理延时任务
+                   return setIsAdded(false);
+                 }, 2000);
     } catch (err) {
       alert(err.message || 'Sign in to add this program to your mixed-load request');
     }
@@ -44,8 +50,14 @@ export default function ProductCard({ product }) {
       className={`group relative bg-white rounded-2xl overflow-hidden border border-dark-200 transition-all duration-300 card-hover ${
         isHovered ? 'border-primary/30' : ''
       }`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={() => {
+                      //处理页面交互事件
+                      return setIsHovered(true);
+                    }}
+      onMouseLeave={() => {
+                      //处理页面交互事件
+                      return setIsHovered(false);
+                    }}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <img
@@ -55,11 +67,13 @@ export default function ProductCard({ product }) {
             isHovered ? 'scale-110' : ''
           }`}
           onError={(e) => {
+                     //处理页面交互事件
+
             e.target.src = '/no-image.png';
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-        
+
         <div className={`absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full border ${categoryColors[product.category]}`}>
           <CategoryIcon size={12} />
           <span className="text-xs font-medium">{categoryNames[product.category]}</span>
@@ -72,7 +86,7 @@ export default function ProductCard({ product }) {
 
       <div className="p-4">
         <h3 className="font-heading font-medium text-lg mb-2 line-clamp-1 text-dark-900 group-hover:text-primary transition-colors"><Link to={`/products/${productSlug(product)}`}>{product.name}</Link></h3>
-        
+
         <p className="text-dark-500 text-sm mb-3 line-clamp-2 h-10">
           {product.description}
         </p>

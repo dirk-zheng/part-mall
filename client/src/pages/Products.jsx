@@ -13,6 +13,7 @@ const categoryIcons = {
   accessory: Wrench,
 };
 
+//渲染:渲染Products组件或页面内容
 export default function Products() {
   const { state } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,24 +21,38 @@ export default function Products() {
   const [sortOrder, setSortOrder] = useState('default');
 
   const filteredProducts = useMemo(() => {
+                                     //计算并缓存派生数据
+
     let result = [...state.products];
 
     if (selectedCategory !== 'all') {
-      result = result.filter(p => p.category === selectedCategory);
+      result = result.filter(p => {
+                               //筛选符合条件的数据
+                               return p.category === selectedCategory;
+                             });
     }
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       result = result.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.description.toLowerCase().includes(query)
+        {
+                               //筛选符合条件的数据
+                               return p.name.toLowerCase().includes(query) ||
+        p.description.toLowerCase().includes(query);
+                             }
       );
     }
 
     if (sortOrder === 'name-asc') {
-      result.sort((a, b) => a.name.localeCompare(b.name));
+      result.sort((a, b) => {
+                    //排列列表数据
+                    return a.name.localeCompare(b.name);
+                  });
     } else if (sortOrder === 'name-desc') {
-      result.sort((a, b) => b.name.localeCompare(a.name));
+      result.sort((a, b) => {
+                    //排列列表数据
+                    return b.name.localeCompare(a.name);
+                  });
     }
 
     return result;
@@ -48,7 +63,7 @@ export default function Products() {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-white to-blue-50">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(0,102,255,0.08),transparent_50%),radial-gradient(circle_at_70%_50%,rgba(99,102,241,0.08),transparent_50%)]" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h1 className="font-heading text-4xl md:text-5xl font-bold mb-4 text-dark-900">
             Wheel selections for <span className="text-primary">your market</span>
@@ -68,7 +83,10 @@ export default function Products() {
               type="text"
               placeholder="Search by product, size or specification..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => {
+                          //处理页面交互事件
+                          return setSearchQuery(e.target.value);
+                        }}
               className="w-full pl-12 pr-4 py-3 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all"
             />
           </div>
@@ -77,7 +95,10 @@ export default function Products() {
             <ArrowUpDown size={18} className="text-dark-400" />
             <select
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
+              onChange={(e) => {
+                          //处理页面交互事件
+                          return setSortOrder(e.target.value);
+                        }}
               className="px-4 py-3 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all cursor-pointer"
             >
               <option value="default">Default</option>
@@ -90,11 +111,16 @@ export default function Products() {
         {/* Category Filter */}
         <div className="flex flex-wrap gap-2 mb-8">
           {categories.map(({ id, name, icon }) => {
+                            //渲染:渲染列表内容
+
             const Icon = categoryIcons[id] || Grid3X3;
             return (
               <button
                 key={id}
-                onClick={() => setSelectedCategory(id)}
+                onClick={() => {
+                           //处理页面交互事件
+                           return setSelectedCategory(id);
+                         }}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl transition-all duration-200 ${
                   selectedCategory === id
                     ? 'bg-primary text-white shadow-lg shadow-primary/20'
@@ -111,15 +137,18 @@ export default function Products() {
         {/* Products Grid */}
         {filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredProducts.map((product, index) => (
-              <div
+            {filteredProducts.map((product, index) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={product.id}
                 className="animate-slide-up"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 <ProductCard product={product} />
               </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-16">

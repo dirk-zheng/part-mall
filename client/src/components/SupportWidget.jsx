@@ -6,6 +6,7 @@ import FloatingSupport from './FloatingSupport';
 
 const CLICKED_KEY = 'part_mall_support_clicked';
 
+//渲染:渲染SupportWidget组件或页面内容
 export default function SupportWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [showDot, setShowDot] = useState(false);
@@ -20,6 +21,8 @@ export default function SupportWidget() {
 
   // Customer: check localStorage on mount / when user loads
   useEffect(() => {
+              //执行组件副作用逻辑
+
     if (isCustomer && user) {
       const hasClicked = localStorage.getItem(CLICKED_KEY);
       if (!hasClicked) {
@@ -30,12 +33,18 @@ export default function SupportWidget() {
 
   // Sales: listen for incoming IM messages
   useEffect(() => {
+              //执行组件副作用逻辑
+
     if (!isAdmin) return;
 
     const unsub = wsClient.on('im.message', (data) => {
+                                              //处理回调函数逻辑
+
       if (!isOpenRef.current) {
         setShowDot(true);
         setUnreadSenders(prev => {
+                           //处理回调函数逻辑
+
           const next = new Set(prev);
           next.add(data.senderId);
           return next;
@@ -47,6 +56,8 @@ export default function SupportWidget() {
   }, [isAdmin]);
 
   const handleToggle = useCallback(() => {
+                                     //创建并缓存回调函数
+
     const opening = !isOpen;
     setIsOpen(opening);
 
@@ -61,6 +72,8 @@ export default function SupportWidget() {
   }, [isOpen, isCustomer]);
 
   const handleClose = useCallback(() => {
+                                    //创建并缓存回调函数
+
     setIsOpen(false);
     // Don't re-show the customer dot after close (already clicked)
     // Sales dot may re-appear on next incoming message

@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Eye, EyeOff, Lock, User, ArrowRight, Loader2, Sparkles, Shield, Users, Globe } from 'lucide-react';
 
+//渲染:渲染Login组件或页面内容
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [username, setUsername] = useState('');
@@ -11,14 +12,16 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login, register } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   const from = location.state?.from?.pathname || '/';
 
   const handleSubmit = async (e) => {
+                         //处理回调函数逻辑
+
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -63,20 +66,22 @@ export default function Login() {
               <p className="text-dark-500">Practical Wheel Trading</p>
             </div>
           </div>
-          
+
           <h2 className="text-4xl font-heading font-bold text-dark-900 mb-4 leading-tight">
             Welcome to<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
               Driveline Wheels
             </span>
           </h2>
-          
+
           <p className="text-dark-500 mb-8">
             Sign in to review wheel fitments, build a mixed-load trial order and work with our team from selection through shipment.
           </p>
 
           <div className="space-y-4">
             {features.map((feature, index) => {
+                            //渲染:渲染列表内容
+
               const Icon = feature.icon;
               return (
                 <div key={index} className="flex items-center gap-3">
@@ -125,7 +130,10 @@ export default function Login() {
                     <input
                       type="text"
                       value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      onChange={(e) => {
+                                  //处理页面交互事件
+                                  return setName(e.target.value);
+                                }}
                       placeholder="Enter your name"
                       className="w-full px-4 py-3 pl-11 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-white"
                     />
@@ -143,7 +151,10 @@ export default function Login() {
                   <input
                     type="text"
                     value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    onChange={(e) => {
+                                //处理页面交互事件
+                                return setUsername(e.target.value);
+                              }}
                     placeholder="Enter username"
                     required
                     className="w-full px-4 py-3 pl-11 rounded-xl border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all bg-white"
@@ -161,7 +172,10 @@ export default function Login() {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => {
+                                //处理页面交互事件
+                                return setPassword(e.target.value);
+                              }}
                     placeholder="Enter password"
                     required
                     minLength={4}
@@ -170,7 +184,10 @@ export default function Login() {
                   <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-dark-400" />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
+                    onClick={() => {
+                               //处理页面交互事件
+                               return setShowPassword(!showPassword);
+                             }}
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-dark-400 hover:text-dark-600 transition-colors"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -200,6 +217,8 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => {
+                             //处理页面交互事件
+
                     setIsLogin(!isLogin);
                     setError('');
                   }}

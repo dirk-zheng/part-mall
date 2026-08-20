@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Mail, Phone } from 'lucide-react';
 
+//渲染:渲染Footer组件或页面内容
 export default function Footer() {
   return (
     <footer className="bg-white/80 border-t border-dark-200 mt-auto">

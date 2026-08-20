@@ -1,3 +1,4 @@
+//执行slugify函数逻辑
 export function slugify(value = '') {
   return value
     .toLowerCase()
@@ -6,6 +7,7 @@ export function slugify(value = '') {
     .replace(/^-|-$/g, '');
 }
 
+//执行productSlug函数逻辑
 export function productSlug(product) {
   return slugify(product?.name || product?.id || 'wheel-program');
 }

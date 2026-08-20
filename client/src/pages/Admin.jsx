@@ -20,6 +20,7 @@ const initialForm = {
   description: ''
 };
 
+//渲染:渲染Admin组件或页面内容
 export default function Admin() {
   const { state, addProduct, updateProduct, deleteProduct } = useStore();
   const [showModal, setShowModal] = useState(false);
@@ -28,6 +29,8 @@ export default function Admin() {
   const [errors, setErrors] = useState({});
 
   const openAddModal = () => {
+                         //处理回调函数逻辑
+
     setForm(initialForm);
     setEditingProduct(null);
     setErrors({});
@@ -35,6 +38,8 @@ export default function Admin() {
   };
 
   const openEditModal = (product) => {
+                          //处理回调函数逻辑
+
     setForm({
       name: product.name,
       category: product.category,
@@ -49,6 +54,8 @@ export default function Admin() {
   };
 
   const closeModal = () => {
+                       //处理回调函数逻辑
+
     setShowModal(false);
     setEditingProduct(null);
     setForm(initialForm);
@@ -56,6 +63,8 @@ export default function Admin() {
   };
 
   const validateForm = () => {
+                         //处理回调函数逻辑
+
     const newErrors = {};
     if (!form.name.trim() || form.name.length < 2 || form.name.length > 50) {
       newErrors.name = 'Product name must be 2-50 characters';
@@ -77,6 +86,8 @@ export default function Admin() {
   };
 
   const handleSubmit = async (e) => {
+                         //处理回调函数逻辑
+
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -102,6 +113,8 @@ export default function Admin() {
   };
 
   const handleDelete = async (productId) => {
+                         //处理回调函数逻辑
+
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
         await deleteProduct(productId);
@@ -112,11 +125,20 @@ export default function Admin() {
   };
 
   const categoryStats = categories
-    .filter(c => c.id !== 'all')
-    .map(c => ({
+    .filter(c => {
+              //筛选符合条件的数据
+              return c.id !== 'all';
+            })
+    .map(c => {
+      //生成商品分类统计数据
+      return {
       ...c,
-      count: state.products.filter(p => p.category === c.id).length
-    }));
+      count: state.products.filter(p => {
+                                     //筛选符合条件的数据
+                                     return p.category === c.id;
+                                   }).length
+      };
+    });
 
   return (
     <div className="min-h-screen pt-20 pb-12">
@@ -146,6 +168,8 @@ export default function Admin() {
             <div className="text-2xl font-heading font-bold text-dark-900">{state.products.length}</div>
           </div>
           {categoryStats.map(cat => {
+                               //渲染:渲染列表内容
+
             const Icon = categoryIcons[cat.id] || Package;
             return (
               <div key={cat.id} className="bg-white rounded-2xl p-4 border border-dark-200 shadow-sm">
@@ -174,6 +198,8 @@ export default function Admin() {
               </thead>
               <tbody>
                 {state.products.map((product, index) => {
+                                      //渲染:渲染列表内容
+
                   const Icon = categoryIcons[product.category] || Package;
                   return (
                     <tr
@@ -188,6 +214,8 @@ export default function Admin() {
                             alt={product.name}
                             className="w-12 h-12 rounded-lg object-cover"
                             onError={(e) => {
+                                       //处理页面交互事件
+
                               e.target.src = '/no-image.png';
                             }}
                           />
@@ -216,13 +244,19 @@ export default function Admin() {
                       <td className="p-4 text-right">
                         <div className="flex items-center justify-end gap-2">
                           <button
-                            onClick={() => openEditModal(product)}
+                            onClick={() => {
+                                       //处理页面交互事件
+                                       return openEditModal(product);
+                                     }}
                             className="p-2 text-dark-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
                           >
                             <Edit2 size={18} />
                           </button>
                           <button
-                            onClick={() => handleDelete(product.id)}
+                            onClick={() => {
+                                       //处理页面交互事件
+                                       return handleDelete(product.id);
+                                     }}
                             className="p-2 text-dark-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           >
                             <Trash2 size={18} />
@@ -268,7 +302,10 @@ export default function Admin() {
                 <input
                   type="text"
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) => {
+                              //处理页面交互事件
+                              return setForm({ ...form, name: e.target.value });
+                            }}
                   placeholder="e.g. iPhone 15 Pro Max"
                   className={`w-full px-4 py-3 rounded-xl bg-white border ${errors.name ? 'border-red-500' : 'border-dark-200'} focus:border-primary focus:ring-2 focus:ring-primary/10`}
                 />
@@ -279,12 +316,19 @@ export default function Admin() {
                 <label className="block text-sm font-medium mb-2 text-dark-700">Category</label>
                 <select
                   value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  onChange={(e) => {
+                              //处理页面交互事件
+                              return setForm({ ...form, category: e.target.value });
+                            }}
                   className="w-full px-4 py-3 rounded-xl bg-white border border-dark-200 focus:border-primary focus:ring-2 focus:ring-primary/10 cursor-pointer"
                 >
-                  {categories.filter(c => c.id !== 'all').map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
+                  {categories.filter(c => {
+                                       //筛选符合条件的数据
+                                       return c.id !== 'all';
+                                     }).map(cat => {
+                    //渲染:渲染列表内容
+                    return <option key={cat.id} value={cat.id}>{cat.name}</option>;
+                  })}
                 </select>
               </div>
 
@@ -294,7 +338,10 @@ export default function Admin() {
                   <input
                     type="number"
                     value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
+                    onChange={(e) => {
+                                //处理页面交互事件
+                                return setForm({ ...form, price: e.target.value });
+                              }}
                     placeholder="0.00"
                     step="0.01"
                     min="0"
@@ -307,7 +354,10 @@ export default function Admin() {
                   <input
                     type="number"
                     value={form.stock}
-                    onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                    onChange={(e) => {
+                                //处理页面交互事件
+                                return setForm({ ...form, stock: e.target.value });
+                              }}
                     placeholder="0"
                     min="0"
                     className={`w-full px-4 py-3 rounded-xl bg-white border ${errors.stock ? 'border-red-500' : 'border-dark-200'} focus:border-primary focus:ring-2 focus:ring-primary/10`}
@@ -321,7 +371,10 @@ export default function Admin() {
                 <input
                   type="url"
                   value={form.image}
-                  onChange={(e) => setForm({ ...form, image: e.target.value })}
+                  onChange={(e) => {
+                              //处理页面交互事件
+                              return setForm({ ...form, image: e.target.value });
+                            }}
                   placeholder="https://example.com/image.jpg"
                   className={`w-full px-4 py-3 rounded-xl bg-white border ${errors.image ? 'border-red-500' : 'border-dark-200'} focus:border-primary focus:ring-2 focus:ring-primary/10`}
                 />
@@ -332,6 +385,8 @@ export default function Admin() {
                     alt="Preview"
                     className="mt-2 w-full h-32 object-cover rounded-lg"
                     onError={(e) => {
+                               //处理页面交互事件
+
                       e.target.style.display = 'none';
                     }}
                   />
@@ -342,7 +397,10 @@ export default function Admin() {
                 <label className="block text-sm font-medium mb-2 text-dark-700">Description</label>
                 <textarea
                   value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  onChange={(e) => {
+                              //处理页面交互事件
+                              return setForm({ ...form, description: e.target.value });
+                            }}
                   placeholder="Describe the product..."
                   rows={3}
                   className={`w-full px-4 py-3 rounded-xl bg-white border ${errors.description ? 'border-red-500' : 'border-dark-200'} focus:border-primary focus:ring-2 focus:ring-primary/10 resize-none`}

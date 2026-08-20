@@ -3,12 +3,15 @@ import { authAPI, wsClient } from '../api';
 
 const AuthContext = createContext(null);
 
+//渲染:渲染AuthProvider组件或页面内容
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // 页面加载时检查本地存储的登录状态
   useEffect(() => {
+              //执行组件副作用逻辑
+
     const saved = localStorage.getItem('mall_user');
     if (saved) {
       try {
@@ -17,8 +20,12 @@ export function AuthProvider({ children }) {
           setUser(parsed);
           // 验证 token 是否仍然有效
           authAPI.getMe().then(userData => {
+                                 //处理异步请求成功结果
+
             setUser({ ...userData, token: parsed.token });
           }).catch(() => {
+                     //处理异步请求异常
+
             // token 失效，清除登录状态
             localStorage.removeItem('mall_user');
             wsClient.setToken(null);
@@ -36,6 +43,8 @@ export function AuthProvider({ children }) {
 
   // 登录函数
   const login = async (username, password) => {
+                  //处理回调函数逻辑
+
     const res = await authAPI.login(username, password);
     const userData = { ...res.user, token: res.token };
     setUser(userData);
@@ -46,6 +55,8 @@ export function AuthProvider({ children }) {
 
   // 注册函数
   const register = async (username, password, name) => {
+                     //处理回调函数逻辑
+
     const res = await authAPI.register(username, password, name);
     const userData = { ...res.user, token: res.token };
     setUser(userData);
@@ -56,13 +67,18 @@ export function AuthProvider({ children }) {
 
   // 登出函数
   const logout = () => {
+                   //处理回调函数逻辑
+
     setUser(null);
     localStorage.removeItem('mall_user');
     wsClient.disconnect();
   };
 
   // 检查是否为管理员
-  const isAdmin = () => user?.role === 'admin';
+  const isAdmin = () => {
+                    //处理回调函数逻辑
+                    return user?.role === 'admin';
+                  };
 
   const value = {
     user,
@@ -80,6 +96,7 @@ export function AuthProvider({ children }) {
   );
 }
 
+//执行useAuth函数逻辑
 export function useAuth() {
   const context = useContext(AuthContext);
   if (!context) {

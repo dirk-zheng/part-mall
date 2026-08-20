@@ -8,5 +8,11 @@ export const categories = [
 ];
 
 export const categoryNames = Object.fromEntries(
-  categories.filter(({ id }) => id !== 'all').map(({ id, name }) => [id, name])
+  categories.filter(({ id }) => {
+                      //筛选符合条件的数据
+                      return id !== 'all';
+                    }).map(({ id, name }) => {
+                                                    //渲染:渲染列表内容
+                                                    return [id, name];
+                                                  })
 );

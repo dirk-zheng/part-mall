@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { Loader2 } from 'lucide-react';
 
 // 需要登录才能访问的组件
+//渲染:渲染RequireAuth组件或页面内容
 export function RequireAuth({ children }) {
   const { user, loading } = useAuth();
   const location = useLocation();
@@ -27,6 +28,7 @@ export function RequireAuth({ children }) {
 }
 
 // 需要管理员权限才能访问的组件
+//渲染:渲染RequireAdmin组件或页面内容
 export function RequireAdmin({ children }) {
   const { user, loading } = useAuth();
   const location = useLocation();

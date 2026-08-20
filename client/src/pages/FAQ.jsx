@@ -19,19 +19,28 @@ const faqItems = [
   { category: 'After-sales', question: 'What warranty coverage is included?', answer: 'Coverage depends on the product and confirmed order terms. It applies to verified manufacturing defects, not incorrect fitment, overloading, impact damage, improper installation or normal cosmetic wear. Specific terms are stated in the sales agreement.' },
 ];
 
+//渲染:渲染FAQ组件或页面内容
 export default function FAQ() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [query, setQuery] = useState('');
   const [openQuestion, setOpenQuestion] = useState(faqItems[0].question);
 
   useEffect(() => {
+              //执行组件副作用逻辑
+
     document.title = 'Frequently Asked Wheel Purchasing Questions | Driveline Wheels';
-    return () => { document.title = 'Driveline Wheels'; };
+    return () => {
+             //处理回调函数逻辑
+              document.title = 'Driveline Wheels'; };
   }, []);
 
   const visibleItems = useMemo(() => {
+                                 //计算并缓存派生数据
+
     const search = query.trim().toLowerCase();
     return faqItems.filter((item) => {
+                             //筛选符合条件的数据
+
       const inCategory = activeCategory === 'All' || item.category === activeCategory;
       const matchesSearch = !search || `${item.question} ${item.answer}`.toLowerCase().includes(search);
       return inCategory && matchesSearch;
@@ -56,7 +65,10 @@ export default function FAQ() {
             <Search size={20} className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => {
+                          //处理页面交互事件
+                          return setQuery(event.target.value);
+                        }}
               placeholder="Search MOQ, fitment, inspection, shipping..."
               className="w-full bg-white border-0 rounded-2xl py-4 pl-14 pr-5 text-slate-900 shadow-2xl shadow-black/20"
             />
@@ -66,11 +78,16 @@ export default function FAQ() {
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="flex gap-2 overflow-x-auto pb-3 mb-8" aria-label="FAQ categories">
-          {categories.map((category) => (
-            <button
+          {categories.map((category) => {
+            //渲染:渲染列表内容
+            return (
+<button
               key={category}
               type="button"
-              onClick={() => setActiveCategory(category)}
+              onClick={() => {
+                         //处理页面交互事件
+                         return setActiveCategory(category);
+                       }}
               className={`shrink-0 px-4 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
                 activeCategory === category
                   ? 'bg-slate-900 border-slate-900 text-white'
@@ -79,7 +96,8 @@ export default function FAQ() {
             >
               {category}
             </button>
-          ))}
+            );
+          })}
         </div>
 
         <div className="grid lg:grid-cols-[1fr_20rem] gap-8 items-start">
@@ -89,6 +107,8 @@ export default function FAQ() {
               <span className="text-sm text-slate-400">{visibleItems.length} answers</span>
             </div>
             {visibleItems.length > 0 ? visibleItems.map((item) => {
+                                                          //渲染:渲染列表内容
+
               const isOpen = openQuestion === item.question;
               return (
                 <article key={item.question} className={`bg-white border rounded-2xl overflow-hidden transition-colors ${isOpen ? 'border-primary/30' : 'border-slate-200'}`}>
@@ -96,7 +116,10 @@ export default function FAQ() {
                     <button
                       type="button"
                       aria-expanded={isOpen}
-                      onClick={() => setOpenQuestion(isOpen ? '' : item.question)}
+                      onClick={() => {
+                                 //处理页面交互事件
+                                 return setOpenQuestion(isOpen ? '' : item.question);
+                               }}
                       className="w-full flex items-center gap-4 p-5 md:p-6 text-left"
                     >
                       <span className={`w-9 h-9 shrink-0 rounded-xl flex items-center justify-center ${isOpen ? 'bg-primary text-white' : 'bg-orange-50 text-primary'}`}>
@@ -135,9 +158,12 @@ export default function FAQ() {
             <div className="bg-white border border-slate-200 rounded-2xl p-6">
               <h3 className="font-semibold text-slate-900 mb-4">A faster quotation starts with:</h3>
               <ul className="space-y-3 text-sm text-slate-600">
-                {['Destination market', 'Popular vehicle models', 'Target sizes and finishes', 'Estimated order quantity'].map((item) => (
-                  <li key={item} className="flex gap-2.5"><CheckCircle2 size={17} className="text-primary shrink-0 mt-0.5" />{item}</li>
-                ))}
+                {['Destination market', 'Popular vehicle models', 'Target sizes and finishes', 'Estimated order quantity'].map((item) => {
+                  //渲染:渲染列表内容
+                  return (
+<li key={item} className="flex gap-2.5"><CheckCircle2 size={17} className="text-primary shrink-0 mt-0.5" />{item}</li>
+                  );
+                })}
               </ul>
             </div>
             <Link to="/news-blog/" className="flex items-center justify-between gap-4 bg-orange-50 border border-orange-100 rounded-2xl p-5 text-sm font-semibold text-orange-800 hover:border-orange-300 transition-colors">

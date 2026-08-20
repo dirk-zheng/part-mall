@@ -1,5 +1,5 @@
-import { 
-  ShieldCheck, Truck, PackageCheck, Users, MapPin, 
+import {
+  ShieldCheck, Truck, PackageCheck, Users, MapPin,
   Mail, Phone, Search, Award, Target, Eye
 } from 'lucide-react';
 
@@ -54,6 +54,7 @@ const centers = [
   { name: 'Huangpu Port Export Route', address: 'Huangpu Port, Guangzhou', role: 'Mixed Loads · Full Containers · Clearance Documents', icon: Truck },
 ];
 
+//渲染:渲染About组件或页面内容
 export default function About() {
   return (
     <div className="min-h-screen pt-16">
@@ -62,7 +63,7 @@ export default function About() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,rgba(0,102,255,0.15),transparent_50%),radial-gradient(circle_at_80%_20%,rgba(99,102,241,0.1),transparent_50%)]" />
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/5 rounded-full blur-3xl" />
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
           <span className="inline-block px-4 py-1.5 mb-6 text-xs font-medium tracking-widest uppercase rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/20">
             Rooted in Yongning · Guangzhou, China
@@ -77,7 +78,7 @@ export default function About() {
             Driveline Wheels works from Guangzhou's Yongning wheel industry cluster, helping distributors
             and modification shops select fitments, control quality and move each order reliably.
           </p>
-          
+
           {/* Stats Row */}
           <div className="flex flex-wrap justify-center gap-8 md:gap-16 mt-14">
             {[
@@ -85,14 +86,17 @@ export default function About() {
               { value: 'Random', label: 'Carton Sampling' },
               { value: 'Flexible', label: 'Mixed or Full Container' },
               { value: 'Huangpu', label: 'Nearby Export Port' },
-            ].map((item) => (
-              <div key={item.label} className="text-center">
+            ].map((item) => {
+              //渲染:渲染列表内容
+              return (
+<div key={item.label} className="text-center">
                 <div className="font-heading text-3xl md:text-4xl font-bold bg-gradient-to-b from-white to-blue-200 bg-clip-text text-transparent">
                   {item.value}
                 </div>
                 <div className="text-sm text-blue-300/60 mt-1">{item.label}</div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -158,14 +162,16 @@ export default function About() {
       <section className="py-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {values.map((value) => (
-              <div 
+            {values.map((value) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={value.title}
                 className="relative group bg-white rounded-2xl p-8 border border-slate-100 shadow-sm hover:shadow-xl hover:border-blue-100 transition-all duration-300"
               >
                 {/* Top accent bar */}
                 <div className="absolute top-0 left-8 right-8 h-1 rounded-b bg-gradient-to-r from-blue-500 to-indigo-500 transform origin-top scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
-                
+
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                   <value.icon size={28} className="text-blue-600" />
                 </div>
@@ -176,7 +182,8 @@ export default function About() {
                   {value.description}
                 </p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -195,10 +202,12 @@ export default function About() {
               From Yongning factory access and warehouse QC to convenient loading through Huangpu Port
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {centers.map((center, index) => (
-              <div 
+            {centers.map((center, index) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={center.name}
                 className="relative bg-slate-50 rounded-2xl p-8 border border-slate-100 hover:border-blue-100 hover:shadow-lg transition-all duration-300 group"
               >
@@ -217,7 +226,8 @@ export default function About() {
                   <p className="text-sm text-slate-500 leading-relaxed">{center.address}</p>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Flow Arrow */}
@@ -243,10 +253,12 @@ export default function About() {
               We are wheel traders rooted in Guangzhou Yongning. From on-site QC and vehicle fitment to flexible loading and export documents, the same team follows every order through to shipment.
             </p>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {teamMembers.map((member) => (
-              <div 
+            {teamMembers.map((member) => {
+              //渲染:渲染列表内容
+              return (
+<div
                 key={member.name}
                 className="group relative bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 text-center"
               >
@@ -266,7 +278,8 @@ export default function About() {
                 <p className="text-sm text-blue-600 font-medium mb-3">{member.role}</p>
                 <p className="text-sm text-slate-500 leading-relaxed">{member.bio}</p>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -279,7 +292,7 @@ export default function About() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(0,102,255,0.15),transparent_50%),radial-gradient(circle_at_80%_20%,rgba(99,102,241,0.1),transparent_50%)]" />
             <div className="absolute top-10 right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl" />
             <div className="absolute bottom-10 left-10 w-24 h-24 bg-indigo-500/10 rounded-full blur-2xl" />
-            
+
             <div className="relative">
               <span className="inline-block px-4 py-1.5 mb-6 text-xs font-medium tracking-widest uppercase rounded-full bg-white/10 text-blue-300 border border-white/10">
                 Get in Touch
@@ -291,24 +304,24 @@ export default function About() {
               We welcome distributors and modification shops looking for steady, long-term cooperation.
               Start with a mixed-container trial and let us take care of each order step by step.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-                <a 
-                  href="mailto:info@driveline-global.com" 
+                <a
+                  href="mailto:info@driveline-global.com"
                   className="group flex items-center gap-3 px-6 py-4 rounded-xl bg-white/10 border border-white/10 hover:bg-white hover:text-slate-900 transition-all duration-300"
                 >
                   <Mail size={20} className="text-blue-400 group-hover:text-blue-600 transition-colors" />
                   <span className="font-medium">info@driveline-global.com</span>
                 </a>
-                <a 
-                  href="tel:+86-20-8888-6688" 
+                <a
+                  href="tel:+86-20-8888-6688"
                   className="group flex items-center gap-3 px-6 py-4 rounded-xl bg-white/10 border border-white/10 hover:bg-white hover:text-slate-900 transition-all duration-300"
                 >
                   <Phone size={20} className="text-blue-400 group-hover:text-blue-600 transition-colors" />
                   <span className="font-medium">+86-20-8888-6688</span>
                 </a>
               </div>
-              
+
               <div className="flex items-center justify-center gap-2 text-blue-300/50 text-sm">
                 <MapPin size={14} />
                 <span>Yongning, Zengcheng District, Guangzhou, China</span>

@@ -10,99 +10,183 @@ import wsClient from './ws';
 
 export const authAPI = {
   login: (username, password) =>
-    wsClient.send('auth.login', { username, password }),
+    {
+           //处理回调函数逻辑
+           return wsClient.send('auth.login', { username, password });
+         },
 
   register: (username, password, name) =>
-    wsClient.send('auth.register', { username, password, name }),
+    {
+              //处理回调函数逻辑
+              return wsClient.send('auth.register', { username, password, name });
+            },
 
   getMe: () =>
-    wsClient.send('auth.me'),
+    {
+           //处理回调函数逻辑
+           return wsClient.send('auth.me');
+         },
 };
 
 // ─── 商品 API ─────────────────────────────────────
 
 export const productAPI = {
   getList: (params = {}) =>
-    wsClient.send('products.list', params),
+    {
+             //处理回调函数逻辑
+             return wsClient.send('products.list', params);
+           },
 
   getCategories: () =>
-    wsClient.send('products.categories'),
+    {
+                   //处理回调函数逻辑
+                   return wsClient.send('products.categories');
+                 },
 
   getById: (id) =>
-    wsClient.send('products.get', { id }),
+    {
+             //处理回调函数逻辑
+             return wsClient.send('products.get', { id });
+           },
 
   create: (product) =>
-    wsClient.send('products.create', product),
+    {
+            //处理回调函数逻辑
+            return wsClient.send('products.create', product);
+          },
 
   update: (id, product) =>
-    wsClient.send('products.update', { id, ...product }),
+    {
+            //处理回调函数逻辑
+            return wsClient.send('products.update', { id, ...product });
+          },
 
   delete: (id) =>
-    wsClient.send('products.delete', { id }),
+    {
+            //处理回调函数逻辑
+            return wsClient.send('products.delete', { id });
+          },
 };
 
 // ─── 混装清单 API ────────────────────────────────
 
 export const mixedLoadAPI = {
   getList: () =>
-    wsClient.send('mix.get'),
+    {
+             //处理回调函数逻辑
+             return wsClient.send('mix.get');
+           },
 
   add: (productId, quantity = 1) =>
-    wsClient.send('mix.add', { productId, quantity }),
+    {
+         //处理回调函数逻辑
+         return wsClient.send('mix.add', { productId, quantity });
+       },
 
   updateQuantity: (productId, quantity) =>
-    wsClient.send('mix.update', { productId, quantity }),
+    {
+                    //处理回调函数逻辑
+                    return wsClient.send('mix.update', { productId, quantity });
+                  },
 
   remove: (productId) =>
-    wsClient.send('mix.remove', { productId }),
+    {
+            //处理回调函数逻辑
+            return wsClient.send('mix.remove', { productId });
+          },
 
   clear: () =>
-    wsClient.send('mix.clear'),
+    {
+           //处理回调函数逻辑
+           return wsClient.send('mix.clear');
+         },
 };
 
 // ─── 询盘 API ────────────────────────────────────
 
 export const quoteAPI = {
   submit: (request) =>
-    wsClient.send('quote.submit', request),
+    {
+            //处理回调函数逻辑
+            return wsClient.send('quote.submit', request);
+          },
 };
 
 // ─── 客服 API ─────────────────────────────────────
 
 export const supportAPI = {
   chat: (message) =>
-    wsClient.send('support.chat', { message }),
+    {
+          //处理回调函数逻辑
+          return wsClient.send('support.chat', { message });
+        },
 
   getFAQ: () =>
-    wsClient.send('support.faq'),
+    {
+            //处理回调函数逻辑
+            return wsClient.send('support.faq');
+          },
 };
 
 // ─── IM API ───────────────────────────────────────
 
 export const imAPI = {
   getSales: () =>
-    wsClient.send('im.sales'),
+    {
+              //处理回调函数逻辑
+              return wsClient.send('im.sales');
+            },
 
   getRooms: () =>
-    wsClient.send('im.rooms'),
+    {
+              //处理回调函数逻辑
+              return wsClient.send('im.rooms');
+            },
 
   getMessages: (roomId) =>
-    wsClient.send('im.messages', { roomId }),
+    {
+                 //处理回调函数逻辑
+                 return wsClient.send('im.messages', { roomId });
+               },
 
   sendMessage: (content, roomId, toUserId) =>
-    wsClient.send('im.send', { roomId, toUserId, content }),
+    {
+                 //处理回调函数逻辑
+                 return wsClient.send('im.send', { roomId, toUserId, content });
+               },
 };
 
 // ─── 管理员内容与用户 API ─────────────────────────
 
 export const adminAPI = {
-  getUsers: () => wsClient.send('admin.users'),
-  getArticles: () => wsClient.send('admin.articles.list'),
-  createArticle: (article) => wsClient.send('admin.articles.create', article),
-  deleteArticle: (id) => wsClient.send('admin.articles.delete', { id }),
-  getFaqs: () => wsClient.send('admin.faqs.list'),
-  createFaq: (faq) => wsClient.send('admin.faqs.create', faq),
-  deleteFaq: (id) => wsClient.send('admin.faqs.delete', { id }),
+  getUsers: () => {
+              //处理回调函数逻辑
+              return wsClient.send('admin.users');
+            },
+  getArticles: () => {
+                 //处理回调函数逻辑
+                 return wsClient.send('admin.articles.list');
+               },
+  createArticle: (article) => {
+                   //处理回调函数逻辑
+                   return wsClient.send('admin.articles.create', article);
+                 },
+  deleteArticle: (id) => {
+                   //处理回调函数逻辑
+                   return wsClient.send('admin.articles.delete', { id });
+                 },
+  getFaqs: () => {
+             //处理回调函数逻辑
+             return wsClient.send('admin.faqs.list');
+           },
+  createFaq: (faq) => {
+               //处理回调函数逻辑
+               return wsClient.send('admin.faqs.create', faq);
+             },
+  deleteFaq: (id) => {
+               //处理回调函数逻辑
+               return wsClient.send('admin.faqs.delete', { id });
+             },
 };
 
 export { wsClient };
