@@ -24,20 +24,20 @@ CREATE TABLE IF NOT EXISTS `products` (
   PRIMARY KEY (`product_id`)
 ) ENGINE=InnoDB;
 
--- 用户购物车；建议 cart_id 直接使用 user_id，做到每个用户一条购物车记录
+-- 用户购物车；直接使用 user_id，做到每个用户一条购物车记录
 -- cart_data: userId, items[{ productId, quantity }], updatedAt
 CREATE TABLE IF NOT EXISTS `carts` (
-  `cart_id` VARCHAR(191) NOT NULL,
+  `user_id` VARCHAR(191) NOT NULL,
   `cart_data` JSON NOT NULL,
-  PRIMARY KEY (`cart_id`)
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB;
 
--- 用户混装/混柜清单；建议 mixed_load_id 直接使用 user_id
--- mixed_load_data: userId, items[{ productId, quantity }], updatedAt
+-- 用户混装/混柜清单； 直接使用 user_id
+-- mixed_load_data: items[{ productId, quantity }], updatedAt
 CREATE TABLE IF NOT EXISTS `mixed_loads` (
-  `mixed_load_id` VARCHAR(191) NOT NULL,
+  `user_id` VARCHAR(191) NOT NULL,
   `mixed_load_data` JSON NOT NULL,
-  PRIMARY KEY (`mixed_load_id`)
+  PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB;
 
 -- 公开询价与登录用户询价
