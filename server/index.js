@@ -14,6 +14,7 @@ const cartRoutes = require('./routes/cart');
 const supportRoutes = require('./routes/support');
 const quoteRoutes = require('./routes/quotes');
 const faqRoutes = require('./routes/faqs');
+const articleRoutes = require('./routes/articles');
 
 const app = express();
 
@@ -51,6 +52,8 @@ app.use('/api/support', supportRoutes);   // Customer support
 app.use('/api/quotes', quoteRoutes);      // Public and private quote intake
 //挂载公开FAQ内容接口路由
 app.use('/api/faqs', faqRoutes);          // Published FAQ content
+//挂载公开文章内容接口路由
+app.use('/api/articles', articleRoutes);  // Published news-blog content
 
 // ─── Health Check ────────────────────────────────
 //返回服务健康状态时间和运行时长

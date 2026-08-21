@@ -5,10 +5,10 @@ import { AppContent } from './App';
 import { getSeoForPath, getStructuredData } from './seo';
 
 //渲染:渲染render组件或页面内容
-export function render(pathname, initialProducts = [], initialFaqs = []) {
+export function render(pathname, initialProducts = [], initialFaqs = [], initialArticles = []) {
   return renderToString(
     <StaticRouter location={pathname}>
-      <AppContent initialProducts={initialProducts} initialFaqs={initialFaqs} />
+      <AppContent initialProducts={initialProducts} initialFaqs={initialFaqs} initialArticles={initialArticles} />
     </StaticRouter>
   );
 }

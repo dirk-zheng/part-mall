@@ -1,4 +1,4 @@
-import { articlePages, productSlug, servicePages } from './data/seoContent';
+import { productSlug, servicePages } from './data/seoContent';
 
 export const defaultSiteUrl = 'https://www.driveline-global.com';
 
@@ -30,7 +30,7 @@ export function normalizeSeoPath(pathname = '/') {
 }
 
 //seo:处理buildPublicSeoPaths相关逻辑
-export function buildPublicSeoPaths(products = []) {
+export function buildPublicSeoPaths(products = [], articles = []) {
   return [
     ...Object.keys(basePages),
     ...products.map((product) => {
@@ -41,20 +41,20 @@ export function buildPublicSeoPaths(products = []) {
                                        //seo:处理SEO相关回调
                                        return `/services/${slug}`;
                                      }),
-    ...Object.keys(articlePages).map((slug) => {
-                                       //seo:处理SEO相关回调
-                                       return `/news-blog/${slug}`;
-                                     }),
+    ...articles.map((article) => {
+      //seo:将已发布文章转换为公开页面路径
+      return `/news-blog/${article.slug}`;
+    }),
   ];
 }
 
 //seo:处理buildPrerenderPaths相关逻辑
-export function buildPrerenderPaths(products = []) {
-  return [...buildPublicSeoPaths(products), ...Object.keys(privatePages), '/404'];
+export function buildPrerenderPaths(products = [], articles = []) {
+  return [...buildPublicSeoPaths(products, articles), ...Object.keys(privatePages), '/404'];
 }
 
 //seo:处理getSeoForPath相关逻辑
-export function getSeoForPath(pathname = '/', products = []) {
+export function getSeoForPath(pathname = '/', products = [], articles = []) {
   const path = normalizeSeoPath(pathname);
   const defaults = { path, canonical: path, image: '/wheels/hero-wheel.png', type: 'website', noindex: false };
   if (basePages[path]) return { ...defaults, title: basePages[path][0], description: basePages[path][1], schemaType: path === '/' || path === '/about' ? 'organization' : 'webpage' };
@@ -74,9 +74,12 @@ export function getSeoForPath(pathname = '/', products = []) {
     return { ...defaults, title: `${service.title} | Driveline Wheels`, description: service.intro, image: service.image, schemaType: 'webpage' };
   }
   const articleMatch = path.match(/^\/news-blog\/(.+)$/);
-  if (articleMatch && articlePages[articleMatch[1]]) {
-    const article = articlePages[articleMatch[1]];
-    return { ...defaults, title: `${article.title} | Driveline Wheels`, description: article.description, image: article.image, type: 'article', schemaType: 'article', article };
+  if (articleMatch) {
+    const article = articles.find((item) => {
+      //seo:查找当前URL对应的已发布文章
+      return item.slug === articleMatch[1];
+    });
+    if (article) return { ...defaults, title: `${article.title} | Driveline Wheels`, description: article.summary, image: article.image || '/wheels/hero-wheel.png', type: 'article', schemaType: 'article', article };
   }
   return { ...defaults, title: 'Page Not Found | Driveline Wheels', description: 'The requested Driveline Wheels page could not be found.', canonical: null, noindex: true };
 }
@@ -100,6 +103,6 @@ export function getStructuredData(seo, siteUrl = defaultSiteUrl, faqs = []) {
   };
   if (seo.schemaType === 'organization') return { '@context': 'https://schema.org', ...organization };
   if (seo.schemaType === 'product' && seo.product) return { '@context': 'https://schema.org', '@type': 'Product', name: seo.product.name, description: seo.product.description, image: `${root}${seo.product.image}`, sku: seo.product.id, url, audience: { '@type': 'BusinessAudience', audienceType: 'Wheel distributors and modification shops' } };
-  if (seo.schemaType === 'article' && seo.article) return { '@context': 'https://schema.org', '@type': 'Article', headline: seo.article.title, description: seo.article.description, image: `${root}${seo.article.image}`, datePublished: seo.article.date, dateModified: seo.article.date, mainEntityOfPage: url, author: organization, publisher: organization };
+  if (seo.schemaType === 'article' && seo.article) return { '@context': 'https://schema.org', '@type': 'Article', headline: seo.article.title, description: seo.article.summary, image: `${root}${seo.article.image || '/wheels/hero-wheel.png'}`, datePublished: seo.article.publishedAt || seo.article.createdAt, dateModified: seo.article.updatedAt || seo.article.publishedAt || seo.article.createdAt, mainEntityOfPage: url, author: { '@type': 'Person', name: seo.article.authorName || 'Driveline Wheels Editorial Team' }, publisher: organization };
   return { '@context': 'https://schema.org', '@type': 'WebPage', name: seo.title, description: seo.description, url };
 }

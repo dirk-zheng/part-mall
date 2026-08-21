@@ -9,6 +9,7 @@ const projectRoot = path.resolve(clientRoot, '..');
 const distDir = path.join(clientRoot, 'dist');
 const productsFile = path.join(projectRoot, 'server', 'data', 'products.json');
 const faqsFile = path.join(projectRoot, 'server', 'data', 'faqs.json');
+const articlesFile = path.join(projectRoot, 'server', 'data', 'articles.json');
 const mode = process.env.NODE_ENV || 'production';
 const env = loadEnv(mode, clientRoot, '');
 const siteUrl = (process.env.SITE_URL || env.VITE_SITE_URL || 'https://www.driveline-global.com').replace(/\/$/, '');
@@ -66,6 +67,16 @@ const faqs = JSON.parse(await fs.readFile(faqsFile, 'utf8'))
   });
 const serializedProducts = JSON.stringify(products).replaceAll('<', '\\u003c');
 const serializedFaqs = JSON.stringify(faqs).replaceAll('<', '\\u003c');
+const articles = JSON.parse(await fs.readFile(articlesFile, 'utf8'))
+  .filter((article) => {
+    //seo:仅发布状态的文章进入公开页面
+    return article.status === 'published';
+  })
+  .sort((a, b) => {
+    //seo:按照发布时间倒序排列公开文章
+    return new Date(b.publishedAt || b.createdAt || 0) - new Date(a.publishedAt || a.createdAt || 0);
+  });
+const serializedArticles = JSON.stringify(articles).replaceAll('<', '\\u003c');
 const vite = await createServer({
   root: clientRoot,
   logLevel: 'error',
@@ -77,14 +88,14 @@ const vite = await createServer({
 try {
   const { render, getSeoForPath, getStructuredData } = await vite.ssrLoadModule('/src/entry-server.jsx');
   const { buildPrerenderPaths, buildPublicSeoPaths } = await vite.ssrLoadModule('/src/seo.js');
-  const prerenderPaths = buildPrerenderPaths(products);
-  const publicSeoPaths = buildPublicSeoPaths(products);
+  const prerenderPaths = buildPrerenderPaths(products, articles);
+  const publicSeoPaths = buildPublicSeoPaths(products, articles);
 
   for (const route of prerenderPaths) {
-    const seo = getSeoForPath(route, products);
+    const seo = getSeoForPath(route, products, articles);
     const structuredData = getStructuredData(seo, siteUrl, faqs);
-    const appHtml = render(route, products, faqs);
-    const initialData = `<script>window.__INITIAL_PRODUCTS__=${serializedProducts};window.__INITIAL_FAQS__=${serializedFaqs}</script>`;
+    const appHtml = render(route, products, faqs, articles);
+    const initialData = `<script>window.__INITIAL_PRODUCTS__=${serializedProducts};window.__INITIAL_FAQS__=${serializedFaqs};window.__INITIAL_ARTICLES__=${serializedArticles}</script>`;
     const html = template
       .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(seo.title)}</title>`)
       .replace(/<meta name="description"[^>]*>/i, `<meta name="description" content="${escapeHtml(seo.description)}">`)

@@ -855,6 +855,7 @@ function handleAdminArticleCreate(payload, ws) {
   const summary = String(payload?.summary || '').trim();
   const content = String(payload?.content || '').trim();
   const slug = createSlug(payload?.slug || title);
+  const category = String(payload?.category || 'knowledge').trim().toLowerCase().slice(0, 40);
   if (title.length < 5 || title.length > 160) throw new Error('Article title must be 5-160 characters');
   if (summary.length < 20 || summary.length > 320) throw new Error('Search summary must be 20-320 characters');
   if (content.length < 100) throw new Error('Article content must be at least 100 characters');
@@ -865,10 +866,13 @@ function handleAdminArticleCreate(payload, ws) {
   //检查文章URL标识是否重复
   if (articles.some((article) => article.slug === slug)) throw new Error('This article URL slug already exists');
   const now = new Date().toISOString();
+  const estimatedMinutes = Math.max(1, Math.ceil(content.split(/\s+/).length / 220));
   const article = {
-    id: uuidv4(), title, slug, summary, content,
+    id: uuidv4(), title, slug, summary, content, category,
     image: String(payload?.image || '').trim().slice(0, 500), status,
+    readTime: `${estimatedMinutes} min read`,
     authorId: ws.userId, authorName: ws.user.name || ws.user.username,
+    publishedAt: status === 'published' ? now : null,
     createdAt: now, updatedAt: now,
   };
   articles.push(article);

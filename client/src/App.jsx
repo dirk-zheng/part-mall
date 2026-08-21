@@ -45,14 +45,14 @@ function QuoteLinkInterceptor({ children }) {
 }
 
 //渲染:渲染AppContent组件或页面内容
-export function AppContent({ initialProducts = [], initialFaqs = [] }) {
+export function AppContent({ initialProducts = [], initialFaqs = [], initialArticles = [] }) {
   return (
     <AuthProvider>
       <QuoteModalProvider>
         <StoreProvider initialProducts={initialProducts}>
           <QuoteLinkInterceptor>
           <div className="min-h-screen flex flex-col">
-            <SEOManager faqs={initialFaqs} />
+            <SEOManager faqs={initialFaqs} articles={initialArticles} />
             <Header />
             <AdminToolRail />
             <main className="flex-1">
@@ -61,8 +61,8 @@ export function AppContent({ initialProducts = [], initialFaqs = [] }) {
                 <Route path="/products" element={<Products />} />
                 <Route path="/products/:slug" element={<ProductDetail />} />
                 <Route path="/about" element={<About />} />
-                <Route path="/news-blog/" element={<NewsBlog />} />
-                <Route path="/news-blog/:slug" element={<ArticleDetail />} />
+                <Route path="/news-blog/" element={<NewsBlog initialArticles={initialArticles} />} />
+                <Route path="/news-blog/:slug" element={<ArticleDetail initialArticles={initialArticles} />} />
                 <Route path="/services/:slug" element={<ServicePage />} />
                 <Route path="/faq" element={<FAQ initialFaqs={initialFaqs} />} />
                 <Route path="/contact" element={<Contact />} />
@@ -106,10 +106,10 @@ export function AppContent({ initialProducts = [], initialFaqs = [] }) {
 }
 
 //渲染:渲染App组件或页面内容
-function App({ initialProducts = [], initialFaqs = [] }) {
+function App({ initialProducts = [], initialFaqs = [], initialArticles = [] }) {
   return (
     <BrowserRouter>
-      <AppContent initialProducts={initialProducts} initialFaqs={initialFaqs} />
+      <AppContent initialProducts={initialProducts} initialFaqs={initialFaqs} initialArticles={initialArticles} />
     </BrowserRouter>
   );
 }

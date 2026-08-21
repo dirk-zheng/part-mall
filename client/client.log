@@ -89,3 +89,20 @@
 [2m10:58:36[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mG:/aicode/part-mall/client/src/main.jsx[22m
 [2m10:58:38[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/SEOManager.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
 [2m10:58:38[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/index.css, /@fs/G:/aicode/part-mall/client/src/components/SEOManager.jsx[22m
+[2m11:06:43[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/NewsBlog.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:07:29[22m [31m[1m[vite][22m[39m Pre-transform error: Failed to load url /@fs/G:/aicode/part-mall/client/src/pages/NewsBlog.jsx (resolved id: G:/aicode/part-mall/client/src/pages/NewsBlog.jsx) in G:/aicode/part-mall/client/src/App.jsx. Does the file exist?
+[2m11:07:46[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/NewsBlog.jsx[22m
+[2m11:07:57[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/ArticleDetail.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:08:26[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/ArticleDetail.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:09:10[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/App.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:09:11[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2mG:/aicode/part-mall/client/src/main.jsx[22m
+[2m11:09:12[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/components/SEOManager.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:09:13[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/index.css, /@fs/G:/aicode/part-mall/client/src/components/SEOManager.jsx[22m
+[2m11:09:41[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/ArticleDetail.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:10:08[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/AdminArticles.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:10:58[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/index.css, /@fs/G:/aicode/part-mall/client/src/pages/HomePage.jsx, /@fs/G:/aicode/part-mall/client/src/pages/ProductDetail.jsx, /@fs/G:/aicode/part-mall/client/src/pages/ServicePage.jsx, /@fs/G:/aicode/part-mall/client/src/components/SEOManager.jsx, /src/components/ProductCard.jsx[22m
+[2m11:11:14[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/NewsBlog.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:11:15[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/@fs/G:/aicode/part-mall/client/src/pages/ArticleDetail.jsx, /@fs/G:/aicode/part-mall/client/src/index.css[22m
+[2m11:21:19[22m [31m[1m[vite][22m[39m [31mws proxy error:[39m
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:218:20)

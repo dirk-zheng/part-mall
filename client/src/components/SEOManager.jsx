@@ -32,14 +32,14 @@ function upsertCanonical(url) {
 }
 
 //seo:处理SEOManager相关逻辑
-export default function SEOManager({ faqs = [] }) {
+export default function SEOManager({ faqs = [], articles = [] }) {
   const { pathname } = useLocation();
   const { state } = useStore();
 
   useEffect(() => {
               //seo:处理SEO相关回调
 
-    const seo = getSeoForPath(pathname, state.products);
+    const seo = getSeoForPath(pathname, state.products, articles);
     const siteUrl = (import.meta.env.VITE_SITE_URL || defaultSiteUrl).replace(/\/$/, '');
     const canonicalUrl = seo.canonical ? `${siteUrl}${seo.canonical === '/' ? '/' : seo.canonical}` : null;
     const imageUrl = `${siteUrl}${seo.image}`;
@@ -69,7 +69,7 @@ export default function SEOManager({ faqs = [] }) {
       document.head.appendChild(structuredData);
     }
     structuredData.textContent = JSON.stringify(getStructuredData(seo, siteUrl, faqs));
-  }, [pathname, state.products, faqs]);
+  }, [pathname, state.products, faqs, articles]);
 
   return null;
 }

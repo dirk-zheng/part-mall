@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "article-fitment-001",
+    "category": "fitment",
+    "title": "Wheel Fitment Basics: PCD, Offset and Center Bore",
+    "slug": "wheel-fitment-pcd-offset-center-bore",
+    "summary": "A practical wheel fitment guide for importers covering PCD, offset, center bore, load rating and brake clearance before bulk ordering.",
+    "intro": "PCD, offset and center bore are essential, but a safe fitment decision also needs wheel size, load requirement and brake clearance.",
+    "sections": [
+      ["PCD identifies the bolt pattern", "PCD combines the number of mounting holes with the diameter of the circle through their centers. A matching number of holes is not enough: the circle diameter must also match exactly."],
+      ["Offset controls wheel position", "Offset is the distance between the mounting face and the wheel centerline. Changing it moves the wheel inward or outward, affecting suspension clearance, fender clearance and steering geometry."],
+      ["Center bore supports correct mounting", "The center bore must clear the vehicle hub. Where an appropriate hub ring is used, its dimensions and material should be confirmed as part of the complete fitment rather than treated as an afterthought."],
+      ["Verify the complete application", "Before a bulk order, record make, model, year, sales market, trim and brake or suspension changes. Then confirm diameter, width, PCD, offset, center bore, load rating, tire size and brake clearance together."]
+    ],
+    "content": "PCD identifies the bolt pattern and must match exactly. Offset controls wheel position and affects clearance. Center bore supports correct mounting. A complete application check also covers wheel size, load rating, tire size and brake clearance.",
+    "image": "/wheels/wheel-qc-lab.png",
+    "readTime": "8 min read",
+    "featured": true,
+    "status": "published",
+    "authorId": "system",
+    "authorName": "Driveline Wheels Editorial Team",
+    "publishedAt": "2026-08-12T00:00:00.000Z",
+    "createdAt": "2026-08-12T00:00:00.000Z",
+    "updatedAt": "2026-08-12T00:00:00.000Z"
+  },
+  {
+    "id": "article-buying-001",
+    "category": "buying",
+    "title": "How to Plan a Mixed-container Wheel Trial Order",
+    "slug": "mixed-container-wheel-order-guide",
+    "summary": "Plan a mixed-container alloy wheel order by balancing vehicle coverage, sizes, finishes, MOQ and loading efficiency.",
+    "intro": "A useful trial order is not simply a large number of styles. It should test a small number of clear market assumptions without creating slow-moving fragments.",
+    "sections": [
+      ["Start with vehicle demand", "List the locally popular vehicles and the customer segments you already serve. Group applications that can share practical wheel specifications and confirm all fitment details before ordering."],
+      ["Limit unnecessary variation", "Every extra finish, size and cap design can create another MOQ and production variable. Prioritize combinations with a clear sales reason and use common finishes where possible."],
+      ["Check carton and container utilization", "Item quantities must work with carton dimensions, production MOQ and container capacity. A visually balanced product mix can still be inefficient to load, so confirm the loading calculation before approval."],
+      ["Define the learning goal", "Decide what the trial should prove: a new vehicle application, finish, price band or dealer segment. Repeat the proven combinations and remove weak ones from the next shipment."]
+    ],
+    "content": "Start with vehicle demand and limit unnecessary variation. Check carton dimensions, production MOQ and container utilization before approval. Define what the trial order needs to prove so the next shipment can focus on proven combinations.",
+    "image": "/wheels/urbansport-set.png",
+    "readTime": "6 min read",
+    "featured": false,
+    "status": "published",
+    "authorId": "system",
+    "authorName": "Driveline Wheels Editorial Team",
+    "publishedAt": "2026-08-05T00:00:00.000Z",
+    "createdAt": "2026-08-05T00:00:00.000Z",
+    "updatedAt": "2026-08-05T00:00:00.000Z"
+  },
+  {
+    "id": "article-quality-001",
+    "category": "technical",
+    "title": "Wheel Pre-shipment Inspection Checklist for Importers",
+    "slug": "wheel-pre-shipment-inspection-checklist",
+    "summary": "Learn what a practical alloy wheel pre-shipment inspection covers, from random cartons and spoke roots to runout, coating and packing.",
+    "intro": "A useful inspection links every checkpoint to the approved specification, sample, packaging requirement and agreed sampling scope.",
+    "sections": [
+      ["Select cartons from finished stock", "Sampling should represent the shipment. Random carton selection reduces the risk of reviewing only factory-prepared display pieces. Record carton and product markings so findings remain traceable."],
+      ["Inspect finish and critical areas", "Review coating consistency, color, contamination, porosity and damage. Give particular attention to spoke roots, mounting surfaces, bolt holes, center bore and other areas specified in the inspection checklist."],
+      ["Measure agreed technical items", "Depending on the order, checks may cover dimensions, runout, dynamic balance, weight, coating adhesion and markings. Use calibrated equipment where the result depends on measurement accuracy."],
+      ["Close findings before release", "Record defects with clear photographs and quantities, isolate affected goods, agree corrective action and reinspect when required. Sampling does not replace laboratory certification or the manufacturer’s product responsibility."]
+    ],
+    "content": "Select cartons from finished stock, inspect finish and critical areas, measure the agreed technical items and close findings before shipment release. Sampling supports order control but does not replace laboratory certification or manufacturer responsibility.",
+    "image": "/quality-center.png",
+    "readTime": "9 min read",
+    "featured": false,
+    "status": "published",
+    "authorId": "system",
+    "authorName": "Driveline Wheels Editorial Team",
+    "publishedAt": "2026-07-21T00:00:00.000Z",
+    "createdAt": "2026-07-21T00:00:00.000Z",
+    "updatedAt": "2026-07-21T00:00:00.000Z"
+  }
+]
