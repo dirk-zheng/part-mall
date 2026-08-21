@@ -1,1 +1,134 @@
-[]
+[
+  {
+    "id": "faq-fitment-001",
+    "category": "Fitment",
+    "question": "How do you verify that a wheel fits my target vehicle?",
+    "answer": "Send us the vehicle make, model, year, market and any brake or suspension changes. We cross-check wheel diameter, width, PCD, offset, center bore, load requirement and brake clearance. Final specifications are confirmed on the quotation and proforma invoice before production.",
+    "status": "published",
+    "sortOrder": 10,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-fitment-002",
+    "category": "Fitment",
+    "question": "Can you help build a fitment list for my local market?",
+    "answer": "Yes. Tell us your sales country and the vehicles that sell well locally. We can turn that information into a focused application list, then recommend a practical mix of sizes, PCDs and offsets for a trial order.",
+    "status": "published",
+    "sortOrder": 20,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-orders-001",
+    "category": "Orders",
+    "question": "What is the minimum order quantity?",
+    "answer": "MOQ depends on construction, size, finish and whether an item is already in regular production. Mixed-container trial orders are welcome, so you can test several proven fitments without committing to a full container of one style.",
+    "status": "published",
+    "sortOrder": 30,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-orders-002",
+    "category": "Orders",
+    "question": "What information do you need for an accurate quotation?",
+    "answer": "Please share your destination market, target vehicle applications, wheel construction and sizes, preferred finishes, estimated quantity, packaging requirements and destination port. The clearer the brief, the more useful the quotation and loading plan will be.",
+    "status": "published",
+    "sortOrder": 40,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-quality-001",
+    "category": "Quality",
+    "question": "What does your pre-shipment inspection include?",
+    "answer": "Our team draws cartons at random from finished stock rather than accepting factory-selected samples. Depending on the order, checks cover appearance, spoke roots, porosity, dimensions, runout, dynamic balance, coating adhesion, markings, accessories and packaging.",
+    "status": "published",
+    "sortOrder": 50,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-quality-002",
+    "category": "Quality",
+    "question": "Can you provide wheel test reports?",
+    "answer": "Material, fatigue and impact test reports can be supplied where available or arranged according to the confirmed product and market requirement. Tell us which standard your customs authority or customer needs before placing the order.",
+    "status": "published",
+    "sortOrder": 60,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-customization-001",
+    "category": "Customization",
+    "question": "Can I order a custom finish, cap or logo?",
+    "answer": "Custom finishes, center caps, logos and cartons are possible for qualifying quantities. We confirm artwork, color reference, sample approval, tooling if needed, and any additional lead time before production begins.",
+    "status": "published",
+    "sortOrder": 70,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-shipping-001",
+    "category": "Shipping",
+    "question": "How are wheels packed for export?",
+    "answer": "Standard export packing typically uses protective sleeves, face protection, rim guards and strong cartons. Pallets, reinforced cartons, custom marks and accessory placement can be specified according to your handling and retail needs.",
+    "status": "published",
+    "sortOrder": 80,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-shipping-002",
+    "category": "Shipping",
+    "question": "Which shipping documents can you prepare?",
+    "answer": "We coordinate the commercial invoice, packing list and standard export documentation. Certificate of origin, test reports or market-specific supporting documents can be discussed during quotation so requirements are clear before loading.",
+    "status": "published",
+    "sortOrder": 90,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-shipping-003",
+    "category": "Shipping",
+    "question": "How long does production and delivery take?",
+    "answer": "Lead time varies with construction, finish, quantity and factory schedule. We provide an estimated production window with the quotation, follow progress during production, then coordinate loading through the agreed port. Transit time depends on the destination and sailing schedule.",
+    "status": "published",
+    "sortOrder": 100,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-after-sales-001",
+    "category": "After-sales",
+    "question": "What happens if goods arrive damaged or incorrect?",
+    "answer": "Keep the cartons and take clear photos or video of the packaging, labels and affected products as soon as the issue is found. Send us the quantity and order reference promptly. We review the evidence against inspection and loading records, then agree on a practical resolution under the confirmed order terms.",
+    "status": "published",
+    "sortOrder": 110,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  },
+  {
+    "id": "faq-after-sales-002",
+    "category": "After-sales",
+    "question": "What warranty coverage is included?",
+    "answer": "Coverage depends on the product and confirmed order terms. It applies to verified manufacturing defects, not incorrect fitment, overloading, impact damage, improper installation or normal cosmetic wear. Specific terms are stated in the sales agreement.",
+    "status": "published",
+    "sortOrder": 120,
+    "authorId": "system",
+    "createdAt": "2026-08-21T00:00:00.000Z",
+    "updatedAt": "2026-08-21T00:00:00.000Z"
+  }
+]

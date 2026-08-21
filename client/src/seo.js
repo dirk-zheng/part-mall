@@ -82,10 +82,22 @@ export function getSeoForPath(pathname = '/', products = []) {
 }
 
 //seo:处理getStructuredData相关逻辑
-export function getStructuredData(seo, siteUrl = defaultSiteUrl) {
+export function getStructuredData(seo, siteUrl = defaultSiteUrl, faqs = []) {
   const root = siteUrl.replace(/\/$/, '');
   const url = seo.canonical ? `${root}${seo.canonical}` : root;
   const organization = { '@type': 'Organization', name: 'Driveline Wheels', url: root, email: 'info@driveline-global.com', description: 'Guangzhou-based wheel sourcing, quality control and export service partner.' };
+  if (seo.path === '/faq') return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqs.map((faq) => {
+      //seo:将已发布FAQ转换为结构化问答数据
+      return {
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+      };
+    }),
+  };
   if (seo.schemaType === 'organization') return { '@context': 'https://schema.org', ...organization };
   if (seo.schemaType === 'product' && seo.product) return { '@context': 'https://schema.org', '@type': 'Product', name: seo.product.name, description: seo.product.description, image: `${root}${seo.product.image}`, sku: seo.product.id, url, audience: { '@type': 'BusinessAudience', audienceType: 'Wheel distributors and modification shops' } };
   if (seo.schemaType === 'article' && seo.article) return { '@context': 'https://schema.org', '@type': 'Article', headline: seo.article.title, description: seo.article.description, image: `${root}${seo.article.image}`, datePublished: seo.article.date, dateModified: seo.article.date, mainEntityOfPage: url, author: organization, publisher: organization };

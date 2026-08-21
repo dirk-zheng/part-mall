@@ -8,6 +8,7 @@ const clientRoot = path.resolve(scriptDir, '..');
 const projectRoot = path.resolve(clientRoot, '..');
 const distDir = path.join(clientRoot, 'dist');
 const productsFile = path.join(projectRoot, 'server', 'data', 'products.json');
+const faqsFile = path.join(projectRoot, 'server', 'data', 'faqs.json');
 const mode = process.env.NODE_ENV || 'production';
 const env = loadEnv(mode, clientRoot, '');
 const siteUrl = (process.env.SITE_URL || env.VITE_SITE_URL || 'https://www.driveline-global.com').replace(/\/$/, '');
@@ -54,7 +55,17 @@ function outputFileForRoute(route) {
 
 const template = await fs.readFile(path.join(distDir, 'index.html'), 'utf8');
 const products = JSON.parse(await fs.readFile(productsFile, 'utf8'));
+const faqs = JSON.parse(await fs.readFile(faqsFile, 'utf8'))
+  .filter((faq) => {
+            //seo:仅发布状态的FAQ进入公开页面
+    return faq.status === 'published';
+  })
+  .sort((a, b) => {
+          //seo:按照后台配置顺序排列公开FAQ
+    return (Number(a.sortOrder) || 9999) - (Number(b.sortOrder) || 9999);
+  });
 const serializedProducts = JSON.stringify(products).replaceAll('<', '\\u003c');
+const serializedFaqs = JSON.stringify(faqs).replaceAll('<', '\\u003c');
 const vite = await createServer({
   root: clientRoot,
   logLevel: 'error',
@@ -71,9 +82,9 @@ try {
 
   for (const route of prerenderPaths) {
     const seo = getSeoForPath(route, products);
-    const structuredData = getStructuredData(seo, siteUrl);
-    const appHtml = render(route, products);
-    const initialData = `<script>window.__INITIAL_PRODUCTS__=${serializedProducts}</script>`;
+    const structuredData = getStructuredData(seo, siteUrl, faqs);
+    const appHtml = render(route, products, faqs);
+    const initialData = `<script>window.__INITIAL_PRODUCTS__=${serializedProducts};window.__INITIAL_FAQS__=${serializedFaqs}</script>`;
     const html = template
       .replace(/<title>[\s\S]*?<\/title>/i, `<title>${escapeHtml(seo.title)}</title>`)
       .replace(/<meta name="description"[^>]*>/i, `<meta name="description" content="${escapeHtml(seo.description)}">`)

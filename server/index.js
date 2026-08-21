@@ -13,6 +13,7 @@ const productRoutes = require('./routes/products');
 const cartRoutes = require('./routes/cart');
 const supportRoutes = require('./routes/support');
 const quoteRoutes = require('./routes/quotes');
+const faqRoutes = require('./routes/faqs');
 
 const app = express();
 
@@ -48,6 +49,8 @@ app.use('/api/cart', cartRoutes);         // Shopping cart
 app.use('/api/support', supportRoutes);   // Customer support
 //挂载公开询价相关接口路由
 app.use('/api/quotes', quoteRoutes);      // Public and private quote intake
+//挂载公开FAQ内容接口路由
+app.use('/api/faqs', faqRoutes);          // Published FAQ content
 
 // ─── Health Check ────────────────────────────────
 //返回服务健康状态时间和运行时长

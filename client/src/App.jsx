@@ -45,14 +45,14 @@ function QuoteLinkInterceptor({ children }) {
 }
 
 //渲染:渲染AppContent组件或页面内容
-export function AppContent({ initialProducts = [] }) {
+export function AppContent({ initialProducts = [], initialFaqs = [] }) {
   return (
     <AuthProvider>
       <QuoteModalProvider>
         <StoreProvider initialProducts={initialProducts}>
           <QuoteLinkInterceptor>
           <div className="min-h-screen flex flex-col">
-            <SEOManager />
+            <SEOManager faqs={initialFaqs} />
             <Header />
             <AdminToolRail />
             <main className="flex-1">
@@ -64,7 +64,7 @@ export function AppContent({ initialProducts = [] }) {
                 <Route path="/news-blog/" element={<NewsBlog />} />
                 <Route path="/news-blog/:slug" element={<ArticleDetail />} />
                 <Route path="/services/:slug" element={<ServicePage />} />
-                <Route path="/faq" element={<FAQ />} />
+                <Route path="/faq" element={<FAQ initialFaqs={initialFaqs} />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route
@@ -106,10 +106,10 @@ export function AppContent({ initialProducts = [] }) {
 }
 
 //渲染:渲染App组件或页面内容
-function App({ initialProducts = [] }) {
+function App({ initialProducts = [], initialFaqs = [] }) {
   return (
     <BrowserRouter>
-      <AppContent initialProducts={initialProducts} />
+      <AppContent initialProducts={initialProducts} initialFaqs={initialFaqs} />
     </BrowserRouter>
   );
 }

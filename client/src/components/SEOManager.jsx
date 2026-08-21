@@ -32,7 +32,7 @@ function upsertCanonical(url) {
 }
 
 //seo:处理SEOManager相关逻辑
-export default function SEOManager() {
+export default function SEOManager({ faqs = [] }) {
   const { pathname } = useLocation();
   const { state } = useStore();
 
@@ -68,8 +68,8 @@ export default function SEOManager() {
       structuredData.dataset.seoStructuredData = 'true';
       document.head.appendChild(structuredData);
     }
-    structuredData.textContent = JSON.stringify(getStructuredData(seo, siteUrl));
-  }, [pathname, state.products]);
+    structuredData.textContent = JSON.stringify(getStructuredData(seo, siteUrl, faqs));
+  }, [pathname, state.products, faqs]);
 
   return null;
 }

@@ -2,37 +2,42 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, ChevronDown, HelpCircle, MessageCircle, Search } from 'lucide-react';
 
-const categories = ['All', 'Fitment', 'Orders', 'Quality', 'Customization', 'Shipping', 'After-sales'];
-
-const faqItems = [
-  { category: 'Fitment', question: 'How do you verify that a wheel fits my target vehicle?', answer: 'Send us the vehicle make, model, year, market and any brake or suspension changes. We cross-check wheel diameter, width, PCD, offset, center bore, load requirement and brake clearance. Final specifications are confirmed on the quotation and proforma invoice before production.' },
-  { category: 'Fitment', question: 'Can you help build a fitment list for my local market?', answer: 'Yes. Tell us your sales country and the vehicles that sell well locally. We can turn that information into a focused application list, then recommend a practical mix of sizes, PCDs and offsets for a trial order.' },
-  { category: 'Orders', question: 'What is the minimum order quantity?', answer: 'MOQ depends on construction, size, finish and whether an item is already in regular production. Mixed-container trial orders are welcome, so you can test several proven fitments without committing to a full container of one style.' },
-  { category: 'Orders', question: 'What information do you need for an accurate quotation?', answer: 'Please share your destination market, target vehicle applications, wheel construction and sizes, preferred finishes, estimated quantity, packaging requirements and destination port. The clearer the brief, the more useful the quotation and loading plan will be.' },
-  { category: 'Quality', question: 'What does your pre-shipment inspection include?', answer: 'Our team draws cartons at random from finished stock rather than accepting factory-selected samples. Depending on the order, checks cover appearance, spoke roots, porosity, dimensions, runout, dynamic balance, coating adhesion, markings, accessories and packaging.' },
-  { category: 'Quality', question: 'Can you provide wheel test reports?', answer: 'Material, fatigue and impact test reports can be supplied where available or arranged according to the confirmed product and market requirement. Tell us which standard your customs authority or customer needs before placing the order.' },
-  { category: 'Customization', question: 'Can I order a custom finish, cap or logo?', answer: 'Custom finishes, center caps, logos and cartons are possible for qualifying quantities. We confirm artwork, color reference, sample approval, tooling if needed, and any additional lead time before production begins.' },
-  { category: 'Shipping', question: 'How are wheels packed for export?', answer: 'Standard export packing typically uses protective sleeves, face protection, rim guards and strong cartons. Pallets, reinforced cartons, custom marks and accessory placement can be specified according to your handling and retail needs.' },
-  { category: 'Shipping', question: 'Which shipping documents can you prepare?', answer: 'We coordinate the commercial invoice, packing list and standard export documentation. Certificate of origin, test reports or market-specific supporting documents can be discussed during quotation so requirements are clear before loading.' },
-  { category: 'Shipping', question: 'How long does production and delivery take?', answer: 'Lead time varies with construction, finish, quantity and factory schedule. We provide an estimated production window with the quotation, follow progress during production, then coordinate loading through the agreed port. Transit time depends on the destination and sailing schedule.' },
-  { category: 'After-sales', question: 'What happens if goods arrive damaged or incorrect?', answer: 'Keep the cartons and take clear photos or video of the packaging, labels and affected products as soon as the issue is found. Send us the quantity and order reference promptly. We review the evidence against inspection and loading records, then agree on a practical resolution under the confirmed order terms.' },
-  { category: 'After-sales', question: 'What warranty coverage is included?', answer: 'Coverage depends on the product and confirmed order terms. It applies to verified manufacturing defects, not incorrect fitment, overloading, impact damage, improper installation or normal cosmetic wear. Specific terms are stated in the sales agreement.' },
-];
-
 //渲染:渲染FAQ组件或页面内容
-export default function FAQ() {
+export default function FAQ({ initialFaqs = [] }) {
+  const [faqItems, setFaqItems] = useState(initialFaqs);
   const [activeCategory, setActiveCategory] = useState('All');
   const [query, setQuery] = useState('');
-  const [openQuestion, setOpenQuestion] = useState(faqItems[0].question);
 
   useEffect(() => {
-              //执行组件副作用逻辑
+              //同步前台最新的已发布FAQ数据
+    let active = true;
 
-    document.title = 'Frequently Asked Wheel Purchasing Questions | Driveline Wheels';
+    //请求公开FAQ接口并更新页面内容
+    async function loadPublishedFaqs() {
+      try {
+        const response = await fetch('/api/faqs');
+        if (!response.ok) throw new Error('Unable to load published FAQs');
+        const result = await response.json();
+        if (active && Array.isArray(result.data?.list)) setFaqItems(result.data.list);
+      } catch (error) {
+        console.warn('Published FAQ refresh failed:', error);
+      }
+    }
+
+    loadPublishedFaqs();
     return () => {
-             //处理回调函数逻辑
-              document.title = 'Driveline Wheels'; };
+             //停止已卸载页面的数据更新
+      active = false;
+    };
   }, []);
+
+  const categories = useMemo(() => {
+                                  //根据已发布FAQ生成分类筛选项
+    return ['All', ...new Set(faqItems.map((item) => {
+                                           //提取FAQ分类名称
+      return item.category;
+    }).filter(Boolean))];
+  }, [faqItems]);
 
   const visibleItems = useMemo(() => {
                                  //计算并缓存派生数据
@@ -45,7 +50,7 @@ export default function FAQ() {
       const matchesSearch = !search || `${item.question} ${item.answer}`.toLowerCase().includes(search);
       return inCategory && matchesSearch;
     });
-  }, [activeCategory, query]);
+  }, [faqItems, activeCategory, query]);
 
   return (
     <div className="min-h-screen pt-16 bg-slate-50">
@@ -108,34 +113,20 @@ export default function FAQ() {
             </div>
             {visibleItems.length > 0 ? visibleItems.map((item) => {
                                                           //渲染:渲染列表内容
-
-              const isOpen = openQuestion === item.question;
               return (
-                <article key={item.question} className={`bg-white border rounded-2xl overflow-hidden transition-colors ${isOpen ? 'border-primary/30' : 'border-slate-200'}`}>
-                  <h3>
-                    <button
-                      type="button"
-                      aria-expanded={isOpen}
-                      onClick={() => {
-                                 //处理页面交互事件
-                                 return setOpenQuestion(isOpen ? '' : item.question);
-                               }}
-                      className="w-full flex items-center gap-4 p-5 md:p-6 text-left"
-                    >
-                      <span className={`w-9 h-9 shrink-0 rounded-xl flex items-center justify-center ${isOpen ? 'bg-primary text-white' : 'bg-orange-50 text-primary'}`}>
-                        <HelpCircle size={18} />
-                      </span>
-                      <span className="flex-1 font-semibold text-slate-900">{item.question}</span>
-                      <ChevronDown size={20} className={`shrink-0 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                  </h3>
-                  {isOpen && (
-                    <div className="px-5 md:px-6 pb-6 pl-[4.75rem] md:pl-[5.25rem] animate-fade-in">
-                      <p className="text-slate-600 leading-relaxed">{item.answer}</p>
-                      <span className="inline-block mt-4 text-xs font-semibold uppercase tracking-wider text-primary">{item.category}</span>
-                    </div>
-                  )}
-                </article>
+                <details key={item.id || item.question} className="group bg-white border border-slate-200 open:border-primary/30 rounded-2xl overflow-hidden transition-colors">
+                  <summary className="w-full flex cursor-pointer list-none items-center gap-4 p-5 md:p-6 text-left [&::-webkit-details-marker]:hidden">
+                    <span className="w-9 h-9 shrink-0 rounded-xl flex items-center justify-center bg-orange-50 text-primary group-open:bg-primary group-open:text-white">
+                      <HelpCircle size={18} />
+                    </span>
+                    <span className="flex-1 font-semibold text-slate-900">{item.question}</span>
+                    <ChevronDown size={20} className="shrink-0 text-slate-400 transition-transform group-open:rotate-180" />
+                  </summary>
+                  <div className="px-5 md:px-6 pb-6 pl-[4.75rem] md:pl-[5.25rem]">
+                    <p className="text-slate-600 leading-relaxed">{item.answer}</p>
+                    <span className="inline-block mt-4 text-xs font-semibold uppercase tracking-wider text-primary">{item.category}</span>
+                  </div>
+                </details>
               );
             }) : (
               <div className="text-center py-16 bg-white border border-slate-200 rounded-2xl">
